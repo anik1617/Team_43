@@ -1,6 +1,6 @@
 # 05 — Technical Architecture
 
-How the product actually works. Supersedes the "Built on Exo" framing in earlier docs: **the MVP uses a plain GraphRAG stack, not Exo.** That's a deliberate upgrade for this audience — GraphRAG's defining property is that **every output traces to a cited source**, which is exactly what wins AI-skeptic MD/neurosurgeon judges (see [04-judging-strategy-and-reframe.md](04-judging-strategy-and-reframe.md)).
+How the product actually works. Supersedes the "Built on Exo" framing in earlier docs: **the MVP uses a plain GraphRAG stack, not Exo.** That's a deliberate upgrade for this audience — GraphRAG gives us **provenance**: every recommendation is *traceable* to the sources behind it, which is exactly what wins AI-skeptic MD/neurosurgeon judges (see [04-judging-strategy-and-reframe.md](04-judging-strategy-and-reframe.md)). **Cited ≠ traceable:** the model is free to *reason* — the win is that its reasoning is **auditable** (it shows its sources and flags inference), not that it merely parrots retrieved text. See [08-build-plan-and-task-split.md](08-build-plan-and-task-split.md) for how this lands in the synthesis schema + abstention gate.
 
 **One line:** an offline, on-device mobile app where a small quantized multilingual model *synthesizes* answers from a local, source-cited knowledge graph — pre-loaded with canonical neurosurgery/surgery/triage knowledge and continuously enriched by a curated network of expert contributors.
 
@@ -11,10 +11,10 @@ Most of the hard problems dissolve once you stop fusing these:
 | | What it is | How it updates | Where it lives |
 |---|---|---|---|
 | **Knowledge** | KG content (protocols, cases, papers) | as **versioned data**, by sync | cloud master → shipped snapshot on device |
-| **Intelligence** | the quantized model that *synthesizes* | rarely (a model release) | fixed, shipped on device |
+| **Intelligence** | the quantized model that *reasons over* retrieved knowledge | by a **model release** (incl. our own fine-tunes for reasoning / abstention / format) | shipped on device |
 | **PHI** | the live patient's data | never | **on-device only, never synced** |
 
-> The hardest-sounding problem — "how do we bridge cloud uploads getting *trained* and distribute them offline" — is hard only because of the word *trained*. **We don't train.** New expert knowledge enters as **KG data, not model weights**. Updating the field's knowledge = shipping a new **data bundle** (like offline Wikipedia/Kiwix or offline maps), not retraining and redistributing a model. This is also *safer*: no fine-tuning means a bad upload can't silently corrupt model behavior, and every answer stays traceable to a cited node.
+> We *do* train the model — for **reasoning, abstention, and format** (see [08](08-build-plan-and-task-split.md) §5). What we **don't** do is route *expert knowledge contributions* through weights. New expert knowledge enters as **KG data, not a fine-tune**, and updating the field's knowledge = shipping a new signed **data bundle** (like offline Wikipedia/Kiwix or offline maps), not retraining and redistributing a model. Three reasons this separation holds no matter how good the model gets: **currency** (guidelines change faster than you can retrain + redistribute a model), **traceability** (a cited KG node shows its source — weights can't cite themselves), and **the moat** (the curated expert commons is *data*, contributed and reviewed). It's also *safer*: because uploads are reviewed data, not training signal, a bad contribution can't silently corrupt model behavior.
 
 ## Reference architecture
 
@@ -65,8 +65,8 @@ Your routing intuition still applies — it's *subgraph retrieval within one gra
 
 > Curation isn't overhead bolted on for safety — it **is** the product: "a peer-reviewed, offline knowledge commons for emergency neurosurgery in low-resource settings, curated by the global neurosurgery community." That's the moat (network effects), the safety mechanism (tiered trust + provenance), and the pitch (serves their mission; makes them the authors) — all at once. Layering (canonical for the critical path, crowdsourced for enrichment) is what lets moat and safety coexist.
 
-### The model — a constrained synthesizer, not an author
-A small quantized multilingual LLM on the device. **Its job is narrow:** retrieve vetted content, **cite it**, and *sequence/present* it — not free-generate surgical technique. Heavy output templating + structured steps + mandatory citations keep it inside the rails. A **confidence/defer gate** is a first-class, demonstrable feature: below threshold → "STOP, stabilize & transfer," with the fallback shown. *Knowing when NOT to act* is the headline safety feature.
+### The model — a competent, abstaining, transparent reasoner
+A small quantized multilingual LLM on the device. **It is allowed to reason and extrapolate** — 2026 small models are good enough that forcing it to merely parrot retrieved text would make a dumber, more brittle product. It's kept *safe* not by forbidding generation but by three rules it can demonstrate live: **traceability** (every step is labeled *guideline-grounded* vs *model inference* and shows its supporting sources), **transparency** (it reports confidence and its reasoning — glass box, not black box), and **abstention** (a first-class defer gate: on an irreversible/high-stakes action with weak grounding → "STOP, stabilize & transfer," fallback shown). Output stays structured (the synthesis JSON-schema in [08](08-build-plan-and-task-split.md)) so the labels and provenance are machine-enforced. *Knowing when NOT to act — and showing its work when it does* — is the headline safety feature.
 
 ### Privacy — two flows, privacy-by-architecture
 1. **Uploaded teaching content (cloud):** may contain PHI → **de-identify at ingestion** (automated scrub of Safe-Harbor-style identifiers — names, dates, MRNs, locations, faces in images — + a human confirmation step before it enters the KG). Clinically lossless: teaching content is about the *medicine*, not the patient.
@@ -88,12 +88,12 @@ Own the irony: a low-resource *region* often speaks a low-resource *language* wi
 
 ## At the edge of knowledge — degradation, self-healing & human escalation
 
-The hardest question for any retrieval system: **what happens when the knowledge base has nothing good for the scenario in front of the user?** The naive RAG failure is *not* silence — it's a weak/tangential match that the model confidently synthesizes into a plausible, un-vetted surgical plan. That is the lethal outcome. So the design goal is **degrade gracefully and never fabricate procedure**; "extrapolate" must mean *generalize to safe principles*, not *invent an operation*.
+The hardest question for any retrieval system: **what happens when the knowledge base has nothing good for the scenario in front of the user?** The naive RAG failure is *not* silence — it's a weak/tangential match that the model confidently synthesizes into a plausible, un-vetted surgical plan. That is the lethal outcome. So the design goal is **degrade gracefully, and gate reasoning by stakes**: extrapolation is allowed and *labeled as inference* — generalize to safe principles for reversible care — but it must **never present an invented irreversible procedure as protocol**; when grounding is weak on a high-stakes step, the model **abstains** rather than fabricates.
 
 ### 1. Gap detection — knowing it doesn't know
 The whole edge behavior depends on detecting the gap — which is also the #1 credibility feature for skeptical MDs ("an AI that admits when it's out of its depth"). Don't trust a single similarity score:
 - **Retrieval coverage** — do retrieved sources actually cover the *key entities* of the scenario? (If the case is "EDH + pregnant + on warfarin" and nothing retrieved mentions pregnancy/anticoagulation, that's a gap on the dimension that matters most — even though generic EDH content came back. This is where naive RAG kills people.)
-- **Grounding check** — is every claim in the draft answer supported by a retrieved citation? Un-cited claims are cut, not surfaced.
+- **Grounding check** — each claim is checked against retrieved sources and **labeled** *guideline-grounded* vs *model inference*. Inference isn't silently deleted (that throws away the model's competence) — it's surfaced **as inference**; an un-grounded **high-stakes/irreversible** claim trips abstention instead of being presented as protocol.
 - **Fail-safe default** — absence of strong evidence drops a tier; when unsure, stabilize-and-transfer, not "best guess."
 
 *(Honest caveat: calibration on small on-device models is genuinely hard. The MVP should demonstrate the mechanism on a few hand-picked gap scenarios, not claim robust calibration everywhere.)*
@@ -188,7 +188,7 @@ The judges score a deep, working, *safe-failing* offline core far higher than a 
 
 - *"Who validates the uploads?"* → Trust tiers; critical path is canonical-only; verified contributors; peer review.
 - *"What if the offline copy is stale?"* → Core is always sufficient; sync only enriches; safety never depends on freshness.
-- *"What stops it hallucinating a step?"* → Retrieves and **cites** vetted content and only *sequences* it; defers when unsure.
+- *"What stops it hallucinating a step?"* → Every recommendation is **traceable** (shows its sources, flags inference vs. guideline) and **transparent** (shows confidence); it **abstains** on irreversible actions when grounding is weak. Reasoning is allowed — never hidden, never acted on blindly.
 - *"Patient privacy?"* → Offline = data never leaves the room; uploads are de-identified.
 - *"Will it work in the actual languages?"* → Urdu + English for MVP; the long tail is honest roadmap.
 - *"Liability?"* → Decision support, clinician-in-the-loop, source-cited — not an autonomous surgeon.
