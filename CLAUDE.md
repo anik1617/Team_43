@@ -6,7 +6,23 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is **Team 43's** project repo for the **Mission:Brain Global Neurosurgery Hackathon 2026**. It is **not a conventional software codebase** — it is a competition workspace. The deliverable is a **5-minute business pitch** (plus optional MVP/prototype and validation evidence) for a solution that improves traumatic brain injury (TBI) / neurosurgical care for patients in **low- and middle-income countries (LMICs)**, grounded in a specific clinical case.
 
-As of this writing the repo is in the **brainstorming / pre-implementation phase**: it contains only the case materials (`Case Report and Hackathon Challenge/`), a minimal `README.md`, and a Python `.gitignore`. There is no build system, test suite, or application code yet. Do not invent build/lint/test commands — there are none until we choose a stack and scaffold it. The `.gitignore` is the standard GitHub Python template, which signals the anticipated implementation language is **Python**, but nothing is committed to that yet.
+The repo is still **pre-implementation** (no build system, test suite, or application code yet — do not invent build/lint/test commands; the Python `.gitignore` signals the anticipated language is **Python**). But it now holds substantial **research and strategy work**, not just the raw case:
+
+- `Case Report and Hackathon Challenge/` — the case, instructions, and rubric (PDFs).
+- `TBI Resources/` — 12 provided research papers / fact sheets (the evidence base).
+- `docs/` — **the team's synthesized working docs; start here.** Case brief + neuro glossary, the full evidence base distilled, the leading solution idea + an honest evaluation, and the judging strategy. Index: `docs/README.md`.
+- `brainstorm with gowrish.txt` — raw transcript of the founding brainstorm.
+
+## Current direction & the audience that decides everything (read this)
+
+**Leading direction (strong lean, not finalized):** pain point **#6 Surgical Task-Shifting** — specifically the case moment where the GMO's teleconsult call to a distant neurosurgeon kept dropping mid-emergency. The idea: an **offline, "expert-in-the-loop" surgical co-pilot** that delivers a neurosurgeon's validated EDH (epidural hematoma) protocol to a non-neurosurgeon and **knows when to say "STOP and transfer."** Built on the team's own product **Exo** (a knowledge-graph + identity-conditioned reasoning system; separate git repo at `C:\Personal_Coding\Exo`, which the team can fork freely — note Exo's pipeline currently ends in a cloud LLM, so making it truly offline/on-device is the core open problem).
+
+**The audience constraint that overrides aesthetics:** the **judges are mostly/all MDs, several are world-class neurosurgeons, and they are skeptical of AI.** Therefore:
+- **Never frame anything as AI "replicating a surgeon's intuition/reasoning"** — it attacks their identity and triggers an impossible proof burden. Frame as *task-sharing decision support* that *extends* a neurosurgeon's reach and *defers when unsure* (the neurosurgeon is the hero/author; the AI is a humble, auditable delivery mechanism).
+- Ground every claim in **their own literature** (esp. the Pakistan-written **Peshawar Recommendations**, which explicitly endorse supervised non-specialist EDH evacuation).
+- Bring **concrete, guideline-based validation** (guideline-concordance sign-off by a mentor neurosurgeon, a small decision benchmark, and a safety/refusal demo) — not "AI magic."
+
+Full reasoning in `docs/03-solution-idea-and-evaluation.md` and `docs/04-judging-strategy-and-reframe.md`.
 
 ## Source-of-truth documents (read these before proposing anything)
 
@@ -21,9 +37,11 @@ All three live in `Case Report and Hackathon Challenge/` (PDFs):
 
 A Participant Access Drive with extra resources is linked in `Instructions.pdf`.
 
+**Also in the repo:** `TBI Resources/` (12 research papers — the evidence base, distilled in `docs/02-evidence-base.md`) and `docs/` (the team's synthesized briefs — **start with `docs/README.md`**).
+
 ## The case in one paragraph (so any solution stays grounded)
 
-**HM**, a 31-year-old subsistence farmer in rural **Gilgit-Baltistan, Pakistan**, has years of unrecognized repetitive head impacts (recreational soccer) plus 3–4 years of behavioral/cognitive decline his family attributes to stress. A road-traffic rollover causes an acute head injury with a textbook **lucid interval → uncal herniation** (blown left pupil, contralateral weakness, GCS dropping 14 → 7). There is **no ambulance, no imaging, no neurosurgeon** nearby — nearest Basic Health Unit is nurse-led with no labs/imaging; nearest GMO 45 km away; nearest trauma center 200 km away. A general medical officer (GMO) with no neurosurgical training performs an **improvised emergency burr-hole** (hand-crank Hudson brace, phone guidance that keeps dropping) and evacuates an epidural hematoma, saving HM's life. HM survives but is left with **permanent cognitive, motor, behavioral, and psychiatric deficits**, **no rehabilitation services** within 200 km, an untrained family caregiver, social stigma, medical debt, and a first seizure six months later.
+**HM**, a 31-year-old subsistence farmer in rural **Gilgit-Baltistan, Pakistan**, has years of unrecognized repetitive head impacts (recreational soccer) plus 3–4 years of behavioral/cognitive decline his family attributes to stress. A road-traffic rollover causes an acute head injury with a textbook **lucid interval → uncal herniation** (blown left pupil, contralateral weakness, GCS dropping 14 → 7). There is **no ambulance, no imaging, no neurosurgeon** nearby — nearest Basic Health Unit is nurse-led with no labs/imaging; nearest GMO 45 km away; nearest trauma center 200 km away. A general medical officer (GMO) with **general surgical training but no neurosurgery experience** performs an **improvised emergency burr-hole** (hand-crank Hudson brace, phone guidance that keeps dropping) and evacuates an epidural hematoma, saving HM's life. HM survives but is left with **permanent cognitive, motor, behavioral, and psychiatric deficits**, **no rehabilitation services** within 200 km, an untrained family caregiver, social stigma, medical debt, and a first seizure six months later.
 
 The journey spans **prevention → prehospital recognition → transport/triage → diagnosis without imaging → surgical task-shifting → perioperative monitoring → postoperative management → rehabilitation → systems/policy**.
 
