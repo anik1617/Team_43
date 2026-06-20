@@ -10,7 +10,7 @@ The repo is still **pre-implementation** (no build system, test suite, or applic
 
 - `Case Report and Hackathon Challenge/` — the case, instructions, and rubric (PDFs).
 - `TBI Resources/` — 12 provided research papers / fact sheets (the evidence base).
-- `docs/` — **the team's synthesized working docs; start here.** Case brief + neuro glossary, the full evidence base distilled, the leading solution idea + an honest evaluation, the judging strategy, and the technical architecture. Index: `docs/README.md`.
+- `docs/` — **the team's synthesized working docs; start here.** Case brief + neuro glossary, the full evidence base distilled, the leading solution idea + an honest evaluation, the judging strategy, the technical architecture, and the tech stack. Index: `docs/README.md`.
 - `brainstorm with gowrish.txt` — raw transcript of the founding brainstorm.
 
 ## Current direction & the audience that decides everything (read this)

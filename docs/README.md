@@ -9,6 +9,7 @@ These docs capture everything the team has worked out so far, so anyone can get 
 3. **[03-solution-idea-and-evaluation.md](03-solution-idea-and-evaluation.md)** — our leading idea (an offline, GraphRAG-based surgical co-pilot, enriched by a curated expert-upload network) and an honest evaluation of its strengths and risks.
 4. **[04-judging-strategy-and-reframe.md](04-judging-strategy-and-reframe.md)** — the most important strategic doc: the judges are MDs / top neurosurgeons who are skeptical of AI, what that means for us, and how to reframe so we win the room instead of losing it.
 5. **[05-architecture.md](05-architecture.md)** — the technical architecture: the offline on-device GraphRAG stack, the cloud→edge sync, privacy, speech/translation, and the MVP-vs-vision split.
+6. **[06-tech-stack.md](06-tech-stack.md)** — the concrete 2026 tooling per layer (on-device LLM, ASR, TTS, MT, GraphRAG, mobile runtime, cloud build plane, escalation), with the weekend-MVP subset.
 
 ## Where we are right now (status)
 
