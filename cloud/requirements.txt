@@ -1,0 +1,17 @@
+# Kyro cloud / knowledge-bundle pipeline
+# Hour-one mock bundle needs only these three:
+numpy>=1.26
+sqlite-vec>=0.1.6        # vec0 virtual tables; pin the SAME version on-device (manifest guard)
+cryptography>=42.0       # ed25519 bundle signing
+
+# --- step ③ (real BGE-M3 embeddings) — uncomment when standing up the real pipeline ---
+# FlagEmbedding>=1.2       # BAAI/bge-m3, dim=1024 (must match on-device embedder byte-for-byte)
+# graphrag                 # Microsoft GraphRAG (override embeddings to bge-m3 in settings.yaml)
+
+# --- later (C1/C4/C7 cloud services) ---
+# fastapi
+# uvicorn
+# pymupdf
+# presidio-analyzer
+# presidio-anonymizer
+# supabase

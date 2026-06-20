@@ -1,0 +1,8 @@
+# dev signing private key — NEVER commit. The public key (dev_signer.pub) IS committed
+# so the edge app can pin it.
+keys/dev_signer.key
+
+__pycache__/
+*.pyc
+.venv/
+venv/
