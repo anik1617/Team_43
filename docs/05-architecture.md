@@ -86,6 +86,78 @@ Voice matters because a surgeon **can't tap a screen mid-burr-hole** — hands-f
 
 Own the irony: a low-resource *region* often speaks a low-resource *language* with little NLP support. Urdu (well-supported) + English (medical lingua franca) is a credible, honest MVP; the long tail is roadmap. *(Specific model picks should be validated against current 2026 options before committing.)*
 
+## At the edge of knowledge — degradation, self-healing & human escalation
+
+The hardest question for any retrieval system: **what happens when the knowledge base has nothing good for the scenario in front of the user?** The naive RAG failure is *not* silence — it's a weak/tangential match that the model confidently synthesizes into a plausible, un-vetted surgical plan. That is the lethal outcome. So the design goal is **degrade gracefully and never fabricate procedure**; "extrapolate" must mean *generalize to safe principles*, not *invent an operation*.
+
+### 1. Gap detection — knowing it doesn't know
+The whole edge behavior depends on detecting the gap — which is also the #1 credibility feature for skeptical MDs ("an AI that admits when it's out of its depth"). Don't trust a single similarity score:
+- **Retrieval coverage** — do retrieved sources actually cover the *key entities* of the scenario? (If the case is "EDH + pregnant + on warfarin" and nothing retrieved mentions pregnancy/anticoagulation, that's a gap on the dimension that matters most — even though generic EDH content came back. This is where naive RAG kills people.)
+- **Grounding check** — is every claim in the draft answer supported by a retrieved citation? Un-cited claims are cut, not surfaced.
+- **Fail-safe default** — absence of strong evidence drops a tier; when unsure, stabilize-and-transfer, not "best guess."
+
+*(Honest caveat: calibration on small on-device models is genuinely hard. The MVP should demonstrate the mechanism on a few hand-picked gap scenarios, not claim robust calibration everywhere.)*
+
+### 2. The graceful-degradation ladder (a traffic light)
+The system runs in modes, gated by evidence strength, and **shows the user which mode it's in**:
+
+| Mode | When | What it does | Trust |
+|---|---|---|---|
+| 🟢 **Protocol** | Strong, specific retrieval | Step-by-step, **cited**, guideline-concordant | High — act on it |
+| 🟡 **Principles** | Gap / weak match | General stabilization + reasoning, labeled "general guidance, not a validated protocol for your case"; conservative | Low — informs, doesn't direct surgery |
+| 🔴 **Stop** | No safe guidance | "STOP. Stabilize per below. Here's your escalation path." | Stabilize + escalate only |
+
+**The rule that keeps it safe:** gate the *boldness* of guidance by **evidence strength × action reversibility.** An irreversible, high-stakes action (a burr hole) requires 🟢 Protocol mode with cited content — never a weak match. A low-risk, reversible action (elevate head, secure airway, avoid hypotension, *don't* give drug X) is safe in 🟡 Principles mode because it's broadly correct and hard to make worse.
+
+The 🟡 principles layer is well-grounded — it's the established "prevent secondary injury + stabilize + transfer within the golden window" standard (Peshawar, Khellaf). **Design directive:** the cold-start core must ship the *general* frameworks (trauma ABCs, raised-ICP management, the stabilize-vs-transfer decision tree), not only specific procedures — that general layer is what catches the long tail.
+
+### 3. The self-healing flywheel — gaps become the moat
+A gap isn't just handled, it's harvested. Modeled on **open-source issues + pull requests, for clinical knowledge** (gaps = issues with a count = priority; contributions = PRs; the canonical core = `main`):
+
+```
+GMO hits gap (offline) → device logs a de-identified "knowledge request"
+  → on reconnect, request syncs to cloud
+  → similar requests CLUSTER into one ranked "need" (+count, +urgency)
+  → pushed to matched subspecialists AND visible on an open request board
+  → an expert contributes data/protocol      ← a "pull request," not a direct push
+  → REVIEW GATE: credential check + multi-reviewer + conflict detection
+  → merges as Tier-1 *provisional* (labeled), hardens toward canonical over time
+  → ships in next signed bundle → every device heals
+  → requester notified: "the scenario you flagged now has guidance"
+```
+
+**The rule that keeps it safe: contributions are pull requests, not pushes to `main`.** A new contribution enters as Tier-1 *provisional* (labeled single-expert/unreviewed) and only hardens toward canonical after multi-reviewer consensus — especially on the critical path. So the graph heals *fast* (a labeled provisional answer beats nothing) without *fast = unsafe*.
+
+Make it work: **aggregate** requests into ranked needs (clean signal; the count motivates contributors; and abstracting to the *clinical pattern* protects privacy — a detailed case in a small district can re-identify even when "de-identified"); **push** to the right subspecialist (not just a passive board — better quality, survives cold-start); and **engineer incentives** (citable attribution, CME credit, impact metrics) so busy experts actually show up.
+
+Strategic note: the **gap log is the most valuable asset you own** — a ranked, ground-truth map of unmet clinical need in real LMIC emergencies that no competitor or journal has. It's simultaneously your product roadmap, your research dataset, and a fundable artifact.
+
+### 4. Human escalation — when only a human will do
+When the system hits a gap on a **critical** case **and** the user is **online**, it does the most responsible thing possible: find the best *available* opted-in expert and connect them, human-to-human. This redeems the case's core failure (the teleconsult that dropped) — and for an AI-skeptic neurosurgeon panel it is the strongest trust signal in the product: *the AI's highest function is knowing when to get out of the way and summon a human.*
+
+The full acute decision at the edge:
+```
+AI reaches its limit on a case:
+  ├─ not critical .............. 🟡 principles guidance + log async knowledge request
+  ├─ critical + offline ........ 🔴 stabilize & transfer + queue store-and-forward consult
+  ├─ critical + online + a matched expert is AVAILABLE
+  │     ........................ 🆘 warm human handoff (pre-briefed) — 🔴 stabilization runs in parallel
+  └─ critical + online + no one available
+        ........................ async store-and-forward + 🔴 stabilize   (never a dead end)
+```
+
+Design rules:
+- **Match on availability, not just expertise** — the best *reachable-now* expert beats the best one asleep. Weight by on-call status × timezone × language × responsiveness; produce a **ranked fallback list** (no answer in ~60s → next). A global volunteer pool gives near follow-the-sun coverage.
+- **Structured warm handoff, not a cold number** — the system already captured the structured case (vitals, GCS, pupils, mechanism, what's been tried, the gap); push that brief to the expert *with* the request so they pick up already reading the case. Turns a 10-minute fumble into a 60-second consult.
+- **Proxy the channel; protect & consent the expert** — WhatsApp is the right LMIC channel (ubiquitous, low-bandwidth, voice/images, E2E-encrypted), but **mask the expert's number** (per-consult relay, Uber-style) for privacy, auditability, and to survive the first bad experience. Granular opt-in (windows, subspecialty, frequency) + one-tap decline → routes to next.
+- **Ration escalation** — gate to *critical* ∧ *AI-can't-help* ∧ *online*; over-paging burns out the volunteer corps and the supply side collapses.
+- **Parallel stabilization + a floor** — 🔴 stabilize-and-transfer runs *while* connecting; if no human lands, fall to async store-and-forward, then offline principles. The human tier is the *best* outcome when available, never a single point of failure.
+
+**Medico-legal flag (a judge will raise it):** a remote expert advising a GMO across borders has real licensing/liability questions (cross-jurisdiction "curbside consults"). Defensible posture: **peer-to-peer advisory support; the treating clinician retains authority and responsibility**; consent + audit logging; full cross-border telemedicine compliance is an honest roadmap item for partners (medical societies, NGOs). Naming the limit is itself credibility.
+
+### Success, redefined
+The target isn't omniscience — it's **never leave the GMO worse off than the phone call that dropped.** A total knowledge miss that yields correct stabilization + a clean escalation path is a *win*, not a failure. And the safest demo you can give an AI-skeptic neurosurgeon is the gap case done right: the system recognizes it can't help, refuses to invent, drops to stabilize-and-transfer, fires a pre-briefed human handoff, and logs the request — proving the one thing they need to believe: *it won't confidently hurt someone.*
+
 ## MVP vs. Vision — draw this line or category 4 suffers
 
 | | What we DO this weekend (build deeply) | What we STORYBOARD (the vision) |
@@ -96,6 +168,7 @@ Own the irony: a low-resource *region* often speaks a low-resource *language* wi
 | Sync | n/a (ships with the core) | versioned bundles + delta + sneakernet |
 | Language | English + an Urdu toggle; maybe one voice command | full multilingual + ASR |
 | Privacy | local-only patient input | full de-ID pipeline + audit |
+| Edge behavior | gap → 🟡 stabilize + a *pre-briefed* 🆘 handoff to one on-call mentor; demo the gap case | full degradation ladder + self-healing flywheel + global on-call network |
 
 The judges score a deep, working, *safe-failing* offline core far higher than a broad demo of a platform that doesn't exist yet. **The WiFi-off moment is the demo.** Validate the core's content against the Peshawar guideline + a mentor neurosurgeon.
 
@@ -107,9 +180,12 @@ The judges score a deep, working, *safe-failing* offline core far higher than a 
 - *"Patient privacy?"* → Offline = data never leaves the room; uploads are de-identified.
 - *"Will it work in the actual languages?"* → Urdu + English for MVP; the long tail is honest roadmap.
 - *"Liability?"* → Decision support, clinician-in-the-loop, source-cited — not an autonomous surgeon.
+- *"What if you have nothing for the case?"* → It detects the gap, degrades to stabilize-and-transfer (never invents procedure), escalates critical cases to a live matched expert when online, and logs the gap to self-heal. See **At the edge of knowledge**.
 
 ## Open decisions (genuinely the team's call)
 
 1. **How tightly to gate uploads** — open-but-moderated wiki vs. invite-only verified board for v1 (moat-speed vs. safety/credibility). Lean: invite-only-verified at launch, loosen later.
 2. **How much of the platform to even mention** vs. lead purely with the offline in-room hero (doc 04's "de-AI the front" question).
 3. **Specific stack picks** (GraphRAG library, quantized LLM, on-device ASR, MT) — validate against current 2026 benchmarks before committing.
+4. **How fast provisional contributions influence guidance** — heal-fast-and-label vs. gate-hard-before-anything-ships (lean: provisional → 🟡 principles only; canonical-reviewed → 🟢 protocol).
+5. **Escalation specifics** — raw number vs. proxied/masked channel, and how aggressively to ration human pages to protect the volunteer corps.

@@ -46,3 +46,5 @@ Don't build a real surgical AI. Build **the demo that makes a judge feel the dro
 > An **offline phone/tablet app**. Input HM's exact scenario (blown pupil, GCS 7, no CT). It walks the GMO through EDH burr-hole evacuation **step-by-step, fully offline** — landmark ID, the operate-vs-transfer decision, and a confidence gate that says "stop and transfer" when uncertain. **Mid-demo, turn off WiFi** to show it doesn't care. Validate the *content* against the Peshawar guideline and a **mentor neurosurgeon** (the hackathon provides mentors).
 
 That hits category 4 (a real, testable MVP), proves category 2 (offline = feasible), and the live WiFi-off moment is the category 6 mic-drop.
+
+For the harder, even more credible demo — what the product does when it *doesn't* know the answer (graceful degradation, the self-healing "knowledge request" flywheel, and live human-expert escalation) — see [05-architecture.md](05-architecture.md) → "At the edge of knowledge."

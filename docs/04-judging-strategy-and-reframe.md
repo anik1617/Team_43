@@ -29,6 +29,7 @@ What this fixes:
 - **No "intuition" claim.** Intelligence = retrieval, sequencing, checklist enforcement, confidence gating — not invented judgment. Defensible, not threatening.
 - **Proof burden collapses** from "did you replicate surgical judgment?" (impossible) to "did you faithfully encode the established guideline?" (a mentor neurosurgeon verifies it in the room).
 - **Provenance + a confidence/defer gate become the safety story:** every recommendation shows its source (GraphRAG), and below a confidence threshold the tool says *"STOP and transfer"* instead of guessing. The headline is *"the AI that knows when NOT to act."* Neurosurgeons love a junior who knows when to call for help.
+- **The ultimate fallback is a human, not the AI:** on a critical case it can't safely cover, the system finds the best *available* expert and connects them (the case's dropped call, fixed). To this panel, *"the AI's job is to summon one of you for the hardest cases"* is the strongest trust signal you can send — and it makes the experts the heroes. See `docs/05-architecture.md` → "At the edge of knowledge."
 
 ## Vocabulary: ban vs. use
 

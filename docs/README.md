@@ -16,6 +16,7 @@ These docs capture everything the team has worked out so far, so anyone can get 
 - **Leading pain point:** Surgical Task-Shifting (case pain point #6) — specifically the moment the GMO's teleconsult call kept dropping during HM's emergency burr-hole.
 - **Leading idea:** an offline, on-device **GraphRAG** surgical co-pilot that delivers a neurosurgeon's validated, *source-cited* protocol to a non-neurosurgeon, and knows when to say "STOP and transfer." Knowledge base ships pre-loaded with canonical guidelines and grows via a curated network of verified expert contributors.
 - **Architecture:** specified in [05-architecture.md](05-architecture.md) — offline-first; "knowledge as versioned data, not model weights"; one provenance-tagged KG; sneakernet-friendly sync; patient data never leaves the device.
+- **Edge-of-knowledge behavior** (doc 05): when the KB has a gap the product degrades gracefully (stabilize-and-transfer, never invents), self-heals via expert "knowledge requests" (open-source-issues-style), and escalates *critical* cases to a live matched expert over WhatsApp. This is arguably our strongest trust signal for the AI-skeptic panel.
 - **Open decision (whole team):** how hard to lean on the "AI" framing given an AI-skeptic neurosurgeon judging panel (doc 04's three paths), and how tightly to gate expert uploads (doc 05).
 
 ## Deliverable & judging (quick reminder)
