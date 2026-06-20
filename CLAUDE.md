@@ -1,28 +1,96 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository. It is the **auto-loaded orientation doc** — read it first; it is meant to be self-sufficient.
+
+> **Handoff note (2026-06-20):** **Gowrish now owns this whole repo.** (Previously: Aniket = cloud, Gowrish = edge.) This file and the `docs/` set were consolidated so a fresh agent inherits full, coherent, contradiction-free context with no drift.
 
 ## What this repository is
 
 This is **Team 43's** project repo for the **Mission:Brain Global Neurosurgery Hackathon 2026**. It is **not a conventional software codebase** — it is a competition workspace. The deliverable is a **5-minute business pitch** (plus optional MVP/prototype and validation evidence) for a solution that improves traumatic brain injury (TBI) / neurosurgical care for patients in **low- and middle-income countries (LMICs)**, grounded in a specific clinical case.
 
-The repo is still **pre-implementation** (no build system, test suite, or application code yet — do not invent build/lint/test commands; the Python `.gitignore` signals the anticipated language is **Python**). But it now holds substantial **research and strategy work**, not just the raw case:
+The repo is still **pre-implementation** (no build system, test suite, or application code yet — do not invent build/lint/test commands; the Python `.gitignore` signals one anticipated language is **Python**, though the on-device app is **React Native** — see `docs/06-tech-stack.md`). But it now holds substantial **research and strategy work**, not just the raw case:
 
 - `Case Report and Hackathon Challenge/` — the case, instructions, and rubric (PDFs).
 - `TBI Resources/` — 12 provided research papers / fact sheets (the evidence base).
-- `docs/` — **the team's synthesized working docs; start here.** Case brief + neuro glossary, the full evidence base distilled, the leading solution idea + an honest evaluation, the judging strategy, the technical architecture, the tech stack, and the canonical product context/pitch. Index: `docs/README.md`.
+- `docs/` — **the team's synthesized working docs; start here.** Case brief + neuro glossary, the distilled evidence base, the judging strategy, the technical architecture, the tech stack, the canonical product context/pitch, the build plan, and the prior-art/feasibility analysis. Index: `docs/README.md`.
 - `brainstorm with gowrish.txt` — raw transcript of the founding brainstorm.
 
-## Current direction & the audience that decides everything (read this)
+## Current direction — Kyro (FINALIZED)
 
-**Leading direction (strong lean, not finalized):** pain point **#6 Surgical Task-Shifting** — specifically the case moment where the GMO's teleconsult call to a distant neurosurgeon kept dropping mid-emergency. The idea, now named **Kyro** (for Chiron, who taught the healer Asclepius): an **offline, "expert-in-the-loop" surgical co-pilot** that delivers a neurosurgeon's validated EDH (epidural hematoma) protocol to a non-neurosurgeon and **knows when to say "STOP and transfer."** Sharpened thesis: **the problem isn't knowledge, it's continuity** — Kyro's core innovation is a **procedure state machine** that captures operative state passively from voice, so a dropped call loses nothing and any reconnection auto-generates a pre-briefed expert handoff. **Architecture (MVP):** a plain **GraphRAG** stack (not Exo) — an offline, on-device mobile app where a small quantized multilingual model *synthesizes* answers from a local, **source-cited** knowledge graph. The KB ships with a canonical, guideline-grade core and is grown by a **curated network of verified expert contributors** (the moat). Keystone principle: **knowledge = versioned data, not model weights** (updates ship as signed data bundles, not retrained models), and **patient data never leaves the device** (privacy-by-architecture). Full design in `docs/05-architecture.md` — including explicit **edge-of-knowledge behavior**: graceful degradation (stabilize, never invent un-vetted procedure), a self-healing "knowledge request" flywheel, and live human-expert escalation (WhatsApp) for critical cases. (For the MVP we use a plain **GraphRAG** stack — simpler, and its provenance is a credibility upgrade with skeptical MD judges. **Exo** — the team's own product, repo at `C:\Personal_Coding\Exo` — is the *post-hackathon* architecture: TRHN for temporal procedure tracking, the DDM under the confidence gate, identity manifold for state continuity. Starlink/hardware = future roadmap, not core. Full product context in `docs/07-kyro-product-and-pitch.md`.)
+**Pain point:** **#6 Surgical Task-Shifting**, anchored on the case moment where the GMO's teleconsult to a distant neurosurgeon kept dropping mid-emergency.
 
-**The audience constraint that overrides aesthetics:** the **judges are mostly/all MDs, several are world-class neurosurgeons, and they are skeptical of AI.** Therefore:
-- **Never frame anything as AI "replicating a surgeon's intuition/reasoning"** — it attacks their identity and triggers an impossible proof burden. Frame as *task-sharing decision support* that *extends* a neurosurgeon's reach and *defers when unsure* (the neurosurgeon is the hero/author; the AI is a humble, auditable delivery mechanism).
+**Product: Kyro** (for Chiron, who taught the healer Asclepius) — an **offline, on-device emergency clinical *decision* co-pilot** for acute TBI in low-resource settings. The user is a **general medical officer / general surgeon, not a neurosurgeon**. Beachhead: **Namibia**.
+
+### The re-aim (read this — it supersedes any "guide the drilling" framing)
+
+Kyro does **not** guide the burr-hole drilling. The **imaging wall** is real and fatal to that claim: without a CT you cannot know where to drill, and software cannot supply imaging. Instead Kyro is a **decision co-pilot** that:
+
+1. **Decisively drives structured evidence-gathering** (GCS, pupils, BP, lucid interval, lateralizing signs, mechanism, time-since-injury).
+2. **Walks a guideline decision tree** to a guideline-sanctioned conclusion.
+3. **Recommends** stabilization + secondary-injury prevention + the **operate-vs-transfer** decision, **with cited sources**.
+4. **Abstains and connects a live human expert** on the irreducible surgical/localization step.
+5. **Captures the encounter by voice** to grow a community knowledge base.
+
+### Hero / thesis: "Continuity, not knowledge"
+
+The true differentiator is the **dropped-call procedure state machine**: Kyro captures encounter/operative state so a dropped call **loses nothing**, and any reconnection **auto-generates a pre-briefed expert handoff**. Lead the pitch with: **continuity + structured evidence-gathering discipline + hands-free voice + auditable citations.**
+
+**Do NOT pitch "the AI decides better than a flowchart."** On the actual operate-vs-transfer decision a simple elastic-net was non-inferior to deep learning — a laminated card rivals the AI there. The win is continuity, discipline, and auditability, not superhuman reasoning.
+
+### Architecture — 3-layer neuro-symbolic (the inversion)
+
+**The inversion (this supersedes any earlier "the model reasons/extrapolates, gated by its confidence" framing in docs 05/08): code and a deterministic tree reason; the model only talks.**
+
+- **L1 — Reasoning spine (the brain; the credibility core).** A hand-authored **deterministic clinical guidance tree (CGT)** in MedDM "IEET" format — one acute-TBI/EDH triage tree, each node carrying a Peshawar/BTF citation — executed by a CDM-style loop where **code decides traversal** (advance / act / ask). **The spine sits in veto position over the model.** Plus the working-memory object `<evidence, hypotheses, trajectory>` = the procedure state machine = the continuity primitive.
+- **L2 — Knowledge.** A small, curated, source-cited **GraphRAG** graph (a ~160-node-class graph is proven sufficient), built **offline on the supercomputer**, shipped as a **signed SQLite bundle** (`edh-core-v{N}.kyro`). Uses MedGraphRAG's Triple-Graph idea (entity/source/definition) for citations and MedRAG discriminability (1/degree-centrality) to order questions with **no LLM call**.
+- **L3 — Language I/O only (a mouth, not a brain).** A **stock Qwen-4B-Q4** model via llama.rn + whisper.cpp (ASR) + Piper/OS-TTS. **English first; Urdu = roadmap** (on-device Urdu ASR is an unsolved research problem). The model does **four narrow jobs only**: clean ASR text, classify the operator's answer at each node, phrase the next question, and assemble the final cited recommendation **from the leaf the deterministic tree reached**. **Nothing load-bearing sits on the critical path.**
+
+Full engineering detail: **`docs/05-architecture.md`** (design), **`docs/06-tech-stack.md`** (stack), **`docs/08-build-plan-and-task-split.md`** (build), **`docs/09-prior-art-and-feasibility.md`** (feasibility/evaluation). The seam: the signed bundle `edh-core-v{N}.kyro` (manifest + chunks + chunk_vec + nodes + node_vec + edges); **BGE-M3 1024-d embeddings pinned byte-identical on both the build and device planes** (a mismatch here is the #1 project-killer).
+
+### Safety model — abstention is NOT gated on model confidence (the inversion)
+
+Kyro abstains based on the **deterministic structure**, not on the model's self-reported confidence:
+
+- (a) The deterministic tree must reach a **guideline-sanctioned leaf**.
+- (b) **Hard out-of-bounds rules** fire on missing required inputs, contradictory vitals, out-of-protocol values, or **any out-of-tree input**.
+- (c) **Cannot terminate while critical evidence is missing.**
+
+Model confidence is **near-random** at predicting correctness (AUROC ~0.5 — we cite the UQ survey *against ourselves*); it is a weak **secondary** flag only. Every critical field gets **read-back confirmation** before it enters the tree (anti-sycophancy: "I heard left pupil fixed, correct?").
+
+**Hard rule:** **no multi-agent, no MCTS, no self-consistency on the critical path** (multi-round latency is ~70s/question on a *server* GPU = minutes/case on a phone). Reserve N=2-3 sampling for the **single operate-vs-transfer checkpoint** only.
+
+### The audience constraint that overrides aesthetics
+
+The **judges are mostly/all MDs, several are world-class neurosurgeons, and they are skeptical of AI.** Therefore:
+
+- **Never frame anything as AI "replicating a surgeon's intuition/reasoning."** A 4B model is **not** a reliable reasoner (a fine-tuned 8B scored 42% on USMLE; there is no 4B datapoint anywhere) — so it **must not reason on the critical path.** Reposition Kyro as a **"Verifiable Workflow Automator + Grounded Synthesizer"** (the lowest clinical-risk corner of the field taxonomy) and explicitly disclaim the free-reasoning "Latent Space Clinician" the judges fear. Frame as *task-sharing decision support* that *extends* a neurosurgeon's reach and *defers when unsure* — the neurosurgeon is the hero/author; the deterministic tree reasons (auditable, guideline-concordant); the model talks. **Cited ≠ traceable: the win is auditability** (it shows its sources and flags inference), not parroting.
 - Ground every claim in **their own literature** (esp. the Pakistan-written **Peshawar Recommendations**, which explicitly endorse supervised non-specialist EDH evacuation).
-- Bring **concrete, guideline-based validation** (guideline-concordance sign-off by a mentor neurosurgeon, a small decision benchmark, and a safety/refusal demo) — not "AI magic."
+- **Win with science** (mentor's words): bring concrete, guideline-based validation — not "AI magic."
 
-Full reasoning in `docs/03-solution-idea-and-evaluation.md`, `docs/04-judging-strategy-and-reframe.md`, `docs/05-architecture.md`, and `docs/07-kyro-product-and-pitch.md`.
+### Validation / win condition (every metric is a delta vs a named baseline)
+
+Six headline numbers:
+
+1. **Triage accuracy** (operate-vs-transfer) ≥80% exact / ≥90% within-safe-band, plus a **directional confusion matrix** (errors must cluster on the safe / transfer side).
+2. **Info-gathering completeness** ≥0.90 (MedKGEval history-taking 0-2 metric).
+3. **Guideline-concordance AND citation-faithfulness** ≥90% on critical-path steps.
+4. **Abstention accuracy** ≥95% must-abstain recall (**the** safety number) + honest false-abstention rate + AUROC vs the ~0.5 baseline.
+5. **vs unaided generalist:** +20 to +25 points.
+6. **vs generic LLM:** the **ablation ladder** (bare Qwen → +graph → +spine → +gate).
+
+**The single most persuasive artifact = the spine-ablation collapse chart** (Kyro with vs without the L1 spine).
+
+Eval tiers: **A** = 30-50 mentor-signed EDH vignettes (the HM case is #1 + the live demo; ~20 operate / ~10 transfer / ~10-20 must-abstain) — validation pillar #1; **B** = AMIE-style self-play synthetic dialogues (volume + fine-tune fuel, reported as engineering regression metrics **only**, never headline); **C** = MIMIC-IV head-trauma slice (**start PhysioNet/CITI credentialing now** — days of lead time). Harness = MedKGEval-style multi-turn, **run on the supercomputer, not the phone.** Reporting discipline (PROBAST armor): report calibration + abstention alongside accuracy; name Tier A vs Tier C as two distributions; honestly name N~30 single-rater as a limitation first. Full plan in **`docs/09-prior-art-and-feasibility.md`** and **`docs/08-build-plan-and-task-split.md`**.
+
+### Scope, keystones, business
+
+- **Scope (v1):** acute-TBI emergency pathway, deepest on **EDH**, **English only**. **In:** L1 CGT spine + L2 small GraphRAG bundle + L3 voice I/O + abstention-on-boundaries + the state machine + a ~30-vignette benchmark + the spine-ablation chart. **Roadmap (cut from v1):** Urdu, fine-tuning (use **stock Qwen-4B first**; fine-tune is a later swap), multi-agent, real masked-WhatsApp escalation, broader neuro/TBI coverage, the full community-contribution flywheel/portal.
+- **Keystone principles:** knowledge = versioned **signed data bundles**, never retrained weights (the model may be re-trained for **I/O behavior only** — format/parsing/phrasing — never as the knowledge source); **PHI stays on-device** (offline = data never leaves the room); the pre-loaded canonical core is always sufficient (sync only enriches).
+- **Business:** Kyro = the **philanthropic wing of Exo**; funding via NGO licensing (MSF/PIH) + ministry procurement + Gates/Wellcome/Fogarty grants; beachhead **Namibia**; the **cost/accessibility wedge** (runs offline on 8-10-year-old phones) is central. KB licensing leans **hybrid** (open the Tier-0 canonical core for trust/adoption; keep the contribution platform + provenance + gap-log/flywheel as the moat). Full product context + pitch in **`docs/07-kyro-product-and-pitch.md`**.
+
+> **Exo footnote:** **Exo** (repo at `C:\Personal_Coding\Exo`) — TRHN temporal procedure tracking, the DDM, the identity manifold — is the **post-hackathon scaling substrate**, a roadmap footnote only, **not** the MVP architecture. Starlink/hardware = future roadmap, not core.
+
+> **First artifact to build:** the acute-TBI/EDH **Clinical Guidance Tree** (the L1 spine), mentor-signed — it is both the credibility core and the benchmark answer key. Then the **E0 spike**: measure Qwen-4B-Q4 tokens/sec + peak RAM on the real phone, and confirm op-sqlite loads sqlite-vec on Android.
 
 ## Source-of-truth documents (read these before proposing anything)
 
@@ -47,7 +115,7 @@ The journey spans **prevention → prehospital recognition → transport/triage 
 
 ## The 11 candidate pain points (from the case)
 
-Pick **one (at most two)** — a narrow, deep solution beats a broad, shallow one.
+Pick **one (at most two)** — a narrow, deep solution beats a broad, shallow one. (We chose **#6.**)
 
 1. **Prehospital Recognition** — help family/bystanders distinguish a neuro emergency from "he just needs rest."
 2. **Prevention & Education** — community TBI/concussion awareness, "invisible symptoms" messaging.
@@ -88,6 +156,7 @@ Every idea built or pitched here must survive the case's real-world setting:
 
 ## Working conventions for this repo
 
-- **Don't try to solve the whole case.** Scope to the chosen pain point(s).
+- **Don't try to solve the whole case.** Scope to the chosen pain point (#6).
 - Keep large source PDFs in `Case Report and Hackathon Challenge/`; reference them rather than duplicating their content.
-- When a stack is chosen, scaffold it conventionally (Python per `.gitignore`) and **update this file** with the real build/run/test commands at that point.
+- **Doc set (after the 2026-06-20 consolidation):** `CLAUDE.md` (this orientation) + `docs/README.md` (index) + `docs/01` case + `docs/02` evidence + `docs/04` judging-strategy + `docs/05` architecture + `docs/06` tech-stack + `docs/07` product-and-pitch + `docs/08` build-plan + `docs/09` prior-art-and-feasibility. **`docs/03` has been deleted — do not reference "03" anywhere; for its old content point to `docs/07` (product) or `docs/09` (evaluation/feasibility).**
+- When scaffolding the app, follow `docs/06-tech-stack.md` (React Native on-device; offline build pipeline) and **update this file** with the real build/run/test commands at that point.
