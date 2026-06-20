@@ -11,8 +11,7 @@ These docs capture everything the team has worked out so far, so anyone can get 
 5. **[05-architecture.md](05-architecture.md)** — the technical architecture: the offline on-device GraphRAG stack, the cloud→edge sync, privacy, speech/translation, and the MVP-vs-vision split.
 6. **[06-tech-stack.md](06-tech-stack.md)** — the concrete 2026 tooling per layer (on-device LLM, ASR, TTS, MT, GraphRAG, mobile runtime, cloud build plane, escalation), with the weekend-MVP subset.
 7. **[07-kyro-product-and-pitch.md](07-kyro-product-and-pitch.md)** — **the product, now named "Kyro": context & current framing** — the name, the *"continuity, not knowledge"* thesis, the procedure state machine, validation, business model, competitors, and the demo. (A context doc, not a locked pitch.)
-
-## Where we are right now (status)
+8. **[08-knowledge-sources.md](08-knowledge-sources.md)** — **the data behind Kyro:** the master sourcing catalog for the knowledge graph, organized by trust tier (Tier 0 canonical core vs. Tier 1 enrichment) — TBI guidelines, the EDH burr-hole procedure spine, the no-neurosurgeon LMIC consensus, operative atlases/video libraries, named authorities, lecture series, and validation datasets. Includes the recommended ingestion priority for the weekend MVP bundle.
 
 - **Phase:** converging on a named product (**Kyro**); MVP scoped, not yet built.
 - **Leading pain point:** Surgical Task-Shifting (case pain point #6) — specifically the moment the GMO's teleconsult call kept dropping during HM's emergency burr-hole.
