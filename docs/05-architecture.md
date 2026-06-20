@@ -22,7 +22,7 @@ Most of the hard problems dissolve once you stop fusing these:
 
 | | What it is | How it updates | Where it lives |
 |---|---|---|---|
-| **Knowledge** | KG content + the guidance tree (protocols, cases, papers, cited nodes) | as **versioned signed data**, by sync | supercomputer master → shipped signed bundle on device |
+| **Knowledge** | KG content + the guidance tree (protocols, cases, papers, cited nodes) | as **versioned signed data**, by sync | build-plane master → shipped signed bundle on device |
 | **Language I/O** | the quantized model that *talks* (ASR cleanup, answer classification, question phrasing, final synthesis from the reached leaf) | by a **model release** for I/O **behavior only** (format / parsing / phrasing) | shipped on device |
 | **PHI** | the live patient's data | never | **on-device only, never synced** |
 
@@ -38,7 +38,7 @@ A hand-authored **deterministic clinical guidance tree (CGT)** in MedDM "IEET" f
 Alongside the tree lives the **working-memory object** `<evidence, hypotheses, trajectory>` — this **is** the procedure state machine and the **continuity primitive** (see §"The procedure state machine"). It records what's been gathered, what's still open, and exactly where the encounter is.
 
 ### L2 — Knowledge (the source-cited graph)
-A small, curated, source-cited **GraphRAG** graph (a ~160-node-class graph is proven sufficient for this scope), built **offline on the supercomputer** and shipped as a **signed SQLite bundle** (`edh-core-v{N}.kyro`). It uses MedGraphRAG's **Triple-Graph** idea (entity / source / definition) for citations and MedRAG's **discriminability** (1 / degree-centrality) to order questions **with no LLM call**. The graph supplies the cited content the spine's leaves synthesize from; it never decides traversal.
+A small, curated, source-cited **GraphRAG** graph (a ~160-node-class graph is proven sufficient for this scope), built on the **cloud build plane** (a cloud LLM API + light compute; no supercomputer needed — that's Gowrish's, reserved for the heavy evals) and shipped as a **signed SQLite bundle** (`edh-core-v{N}.kyro`). It uses MedGraphRAG's **Triple-Graph** idea (entity / source / definition) for citations and MedRAG's **discriminability** (1 / degree-centrality) to order questions **with no LLM call**. The graph supplies the cited content the spine's leaves synthesize from; it never decides traversal.
 
 ### L3 — Language I/O only (a mouth, not a brain)
 A small quantized model (Qwen-4B-Q4) plus ASR and TTS. **English first; Urdu is roadmap** (on-device Urdu ASR is an unsolved research problem). The model does **four narrow jobs only**:

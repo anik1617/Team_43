@@ -28,7 +28,7 @@ The CGT is also the **benchmark answer key** (see doc 08). It is mentor-signed b
 
 ## L2 — KNOWLEDGE (the curated, source-cited graph)
 
-A small curated GraphRAG graph, built **offline on the supercomputer**, shipped as a **signed SQLite bundle**. A 160-node-class graph is proven sufficient for the EDH core.
+A small curated GraphRAG graph, built on the **cloud build plane** (a cloud LLM API + light compute — **no supercomputer needed**), shipped as a **signed SQLite bundle**. A 160-node-class graph is proven sufficient for the EDH core.
 
 | Layer | Primary pick | Why | Fallback |
 |---|---|---|---|
@@ -83,7 +83,7 @@ Verify licenses before vendoring. These are the building blocks we adapt rather 
 
 ## CLOUD — the build plane (ingestion → graph → signed bundle)
 
-Heavy, online, runs on the supercomputer. Python (matches the repo's `.gitignore`).
+Online and **light** — runs on normal cloud compute + a **cloud LLM API** for indexing; a ~160-node build needs **no supercomputer** (that's Gowrish's, reserved for the heavy evals/MIMIC/fine-tune). Owned by Aniket. Python (matches the repo's `.gitignore`).
 
 | Layer | Primary pick | Why |
 |---|---|---|
@@ -96,7 +96,7 @@ Heavy, online, runs on the supercomputer. Python (matches the repo's `.gitignore
 
 ---
 
-## Benchmark harness (runs on the supercomputer, not the phone)
+## Benchmark harness (Aniket-built; runs on Gowrish's supercomputer, not the phone)
 
 Validation is the win condition (doc 08). The harness is offline tooling, not shipped to the device.
 
@@ -105,7 +105,7 @@ Validation is the win condition (doc 08). The harness is offline tooling, not sh
 | **Multi-turn eval harness** | **MedKGEval**-style; produces the **spine-ablation collapse chart** (the single most persuasive artifact) |
 | **Triage eval + MIMIC extraction** | **medLLMbenchmark** (MIT) over the MIMIC-IV head-trauma slice |
 | **Synthetic dialogue generation** | **AMIE**-style self-play (Tier B — volume + fine-tune fuel; reported as engineering regression metrics only, never headline) |
-| **Credentialing** | start **PhysioNet / CITI** for MIMIC-IV now — days of lead time |
+| **Credentialing** | **Gowrish already holds PhysioNet / CITI** — the MIMIC-IV slice runs on his creds + supercomputer (per-user DUA; keep data in-project) |
 
 ---
 
@@ -158,7 +158,7 @@ Build **only** the edge app deeply; mock/storyboard the rest.
 6. **Abstention is NOT gated on model confidence** — gate on the deterministic tree + hard out-of-bounds rules. Model confidence (AUROC ≈ 0.5) is a weak secondary flag only.
 7. **English only for v1** — Urdu (on-device ASR especially) is an unsolved research problem; honest scope.
 8. **Fine-tuning is roadmap** — ship **stock Qwen-4B-Q4** first; a fine-tune is a later drop-in swap for I/O *behavior* only.
-9. **Don't index on-device** — graph construction is cloud/supercomputer-only; the phone just retrieves over a pre-built bundle.
+9. **Don't index on-device** — graph construction is **build-plane only** (cloud LLM API; not the supercomputer); the phone just retrieves over a pre-built bundle.
 
 ---
 

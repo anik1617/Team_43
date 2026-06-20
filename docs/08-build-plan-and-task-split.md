@@ -62,16 +62,20 @@ CREATE TABLE node_community (node_id TEXT, community_id TEXT, level INTEGER);
 
 ---
 
-## 2. Ownership
+## 2. Ownership & compute
 
-Single repo owner: **Gowrish.** Two parallel work-streams during the sprint:
+Single repo owner: **Gowrish.** Two parallel work-streams. **Compute reality:** only **Gowrish** has the **supercomputer + MIMIC/PhysioNet credentials**; **Aniket has neither — and his stream is deliberately built not to need them.**
 
-| Plane | Work-stream | Why |
-|---|---|---|
-| **Cloud platform** (ingestion → GraphRAG → signed bundles → portal → deploy) | Aniket | Cloud experience; home turf |
-| **Edge app + spine + on-device I/O** (RN app, CGT spine executor, on-device model as I/O, embeddings/voice, retrieval, state machine) | Gowrish | ML knowledge; owns on-device runtime; owns the repo |
+| Stream | Owner | Owns | Compute |
+|---|---|---|---|
+| **Cloud / knowledge pipeline** | **Aniket** | ingestion → GraphRAG index → BGE-M3 embed → **bundle compiler + ed25519 sign → `edh-core.kyro`**; any deployed cloud; **writes the benchmark harness code** | **none heavy** — the ~160-node graph builds on a **cloud LLM API + CPU/cheap-GPU embed**; *no supercomputer* |
+| **Edge + on-device + heavy compute** | **Gowrish** (repo owner) | RN app + CGT executor + llama.rn I/O + state machine + abstention gate + the E0 spike; **runs all evals** (ablation, multi-turn sim, **MIMIC-IV Tier-C**, synthetic gen, any fine-tune) | **his supercomputer + MIMIC creds** |
 
-Asymmetry to manage: **the edge stream holds the riskiest work** (new platform + on-device model + the spine executor). The E0 spike (§4) front-loads that risk; the cloud stream pairs in if E0 wobbles.
+**Benchmark handoff:** Aniket ships Gowrish (a) the signed bundle, (b) the eval set, (c) the harness; **Gowrish runs it** (he has the engine, the MIMIC data, the GPUs). Aniket's output = *bundle + harness*; Gowrish's = *the numbers*.
+
+Asymmetry to manage: the edge stream holds the riskiest work (new platform + on-device model + the spine executor) **and** the heavy compute. The E0 spike (§4) front-loads the device risk; Aniket pairs in if E0 wobbles. **Stock Qwen-4B ships first** — fine-tuning stays roadmap *even though the GPUs exist* (the model is I/O-only; see §5/§7).
+
+> **Aniket — start here (ordered):** ① lock the §1 bundle contract with Gowrish → ② hand-build the mock bundle (so Gowrish is unblocked) → ③ stand up ingestion + the GraphRAG project with the **BGE-M3 override in `settings.yaml`** (the #1 killer) → ④ index the canonical EDH corpus via a **cloud LLM API**, then compile + sign `edh-core.kyro` → ⑤ fork `medLLMbenchmark` for the harness. **Critical path = ③→④** (the signed bundle). No supercomputer needed for any of it.
 
 ---
 
@@ -95,7 +99,7 @@ This spine is the highest-leverage component in the project. Everything else exi
 |---|---|---|---|
 | C1 | Ingestion API (upload → parse → chunk) | FastAPI + PyMuPDF | |
 | C2 | De-identify | Microsoft Presidio (text) | scrub PHI before content enters KG |
-| C3 | **Graph build** | **Microsoft GraphRAG** + strong open LLM (on supercomputer) + **BGE-M3 embeddings** | run indexing on the supercomputer (free, private, fast); **override embeddings to BGE-M3**. A **160-node-class graph is proven sufficient** — do not over-build. |
+| C3 | **Graph build** | **Microsoft GraphRAG** + a **cloud LLM API** (Claude/GPT) + **BGE-M3 embeddings** (CPU/cheap GPU) | a ~160-node corpus is a **small** build — **no supercomputer needed**; **override embeddings to BGE-M3** (the #1 killer). A **160-node-class graph is proven sufficient** — do not over-build. |
 | C4 | Master store | **Supabase** (Postgres + pgvector) | accounts, provenance, trust-tier, review state |
 | C5 | **Bundle compiler** → sign → object storage | custom: GraphRAG parquet → SQLite/sqlite-vec → **ed25519 sign** → Supabase Storage / R2 | the §1 artifact; bundles the L1 CGT + L2 graph |
 | C6 | Distribution endpoint (`/bundles/latest?scope=edh-core`) | FastAPI | delta sync is post-MVP; full-bundle download first |
@@ -155,7 +159,7 @@ Build on proven work; do not reinvent the spine or the harness.
 - **Aniket:** scaffold C1 + C4 + C7; get a "hello world" **deployed live**; hand-build the mock bundle (§1).
 
 **Block 1 — Parallel core (the bulk)**
-- **Aniket:** C1→C6 — a real signed `edh-core` bundle landing in storage (GraphRAG indexed with BGE-M3 on the supercomputer).
+- **Aniket:** C1→C6 — a real signed `edh-core` bundle landing in storage (GraphRAG indexed with BGE-M3 via a **cloud LLM API** — no supercomputer needed).
 - **Gowrish:** E1→E5 over the **mock bundle** — load → traverse the spine → ask/classify/cite → synthesize the leaf → abstain on boundary → state machine. Neither waits on the other.
 
 **Block 2 — Integration (together)**
@@ -170,7 +174,7 @@ Build on proven work; do not reinvent the spine or the harness.
 
 ## 5. Validation / benchmark playbook (category 4 — "win with science")
 
-Every metric is a **delta vs a named baseline.** Run all of it on the **supercomputer**, not the phone (the harness is MedKGEval-style multi-turn). **Stock Qwen-4B first — fine-tuning is demoted to roadmap** (a later I/O-behavior swap; the model is never the knowledge source).
+Every metric is a **delta vs a named baseline.** The harness (MedKGEval-style multi-turn) is **Aniket-built**; the runs happen on **Gowrish's supercomputer** (he has the engine, the MIMIC data, and the GPUs), not the phone. **Stock Qwen-4B first — fine-tuning is demoted to roadmap** (a later I/O-behavior swap; the model is never the knowledge source).
 
 **The six headline numbers (each a delta):**
 1. **Triage accuracy** on operate-vs-transfer: **≥80% exact / ≥90% within-safe-band**, plus a **directional confusion matrix** (errors must cluster on the safe/transfer side).
@@ -183,7 +187,7 @@ Every metric is a **delta vs a named baseline.** Run all of it on the **supercom
 **Three eval tiers:**
 - **Tier A — 30–50 mentor-signed EDH vignettes** (the HM case = #1 + the live demo; ~20 operate / ~10 transfer / ~10–20 must-abstain). **This is validation pillar #1.**
 - **Tier B — AMIE-style self-play synthetic dialogues** (volume + fine-tune fuel). Reported as **engineering regression metrics ONLY — never headline.**
-- **Tier C — MIMIC-IV head-trauma slice.** **START PhysioNet / CITI credentialing NOW** — it has days of lead time.
+- **Tier C — MIMIC-IV head-trauma slice.** **Unblocked — Gowrish holds PhysioNet + CITI**; he extracts the slice (via `medLLMbenchmark`) and scores it on his supercomputer. Keep the data inside the project (per-user DUA — don't redistribute).
 
 **Reporting discipline (PROBAST armor):**
 - Report **calibration + abstention alongside accuracy.**
@@ -199,7 +203,8 @@ Every metric is a **delta vs a named baseline.** Run all of it on the **supercom
 |---|---|
 | Postgres + pgvector + Auth + Storage | **Supabase** |
 | FastAPI ingestion + bundle compiler | container on **Railway / Render / Fly / Cloud Run** |
-| GraphRAG indexing | **supercomputer** (batch) |
+| GraphRAG indexing (build) | **cloud LLM API + CPU/cheap-GPU embed** (Aniket; no supercomputer) |
+| Heavy eval / MIMIC / fine-tune | **Gowrish's supercomputer** |
 | Expert portal | **Next.js on Vercel** |
 | Bundle object storage | Supabase Storage / Cloudflare R2 |
 
@@ -236,7 +241,7 @@ The payoff: a **live URL where a neurosurgeon uploads a protocol and watches it 
 ## 9. Open items
 
 - **Test phone RAM** → confirms Qwen-4B-Q4 vs a smaller model and Q4 vs Q5 (resolved at E0).
-- **PhysioNet / CITI credentialing** for the Tier-C MIMIC-IV slice — start immediately (lead time).
+- ~~PhysioNet / CITI credentialing~~ — **DONE**: Gowrish already holds it; the MIMIC-IV Tier-C slice runs on his creds + supercomputer.
 - **Cloud platform** — Supabase recommended for all-in-one speed.
 - How aggressively to attempt real masked-WhatsApp escalation vs. simulate it in v1 (escalation is roadmap).
 - Delta sync vs. full-bundle download (full first; delta is post-MVP).
