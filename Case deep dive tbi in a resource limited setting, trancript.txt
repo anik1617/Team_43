@@ -1,0 +1,1232 @@
+0:24
+Hello.
+0:25
+>> Yes, we can hear you and see you.
+0:27
+>> Everything is fine now.
+0:28
+>> Yes, everything's fine now. Um, are you able to screen?
+0:31
+>> I'm really sorry. I have uh actually it's 700 p.m. My patients were waiting
+0:36
+in the clinic so I had to rush and keep them waiting and I didn't want to miss
+0:42
+this lecture and wanted to talk to you and it's so much important for me to uh
+0:47
+present here right.
+0:48
+>> Thank you so much. So we're very happy to have you. Are you able to screen
+0:51
+share?
+0:52
+>> If you could help me uh I have shared you my presentation. If you could share
+0:56
+it from your end because I'm facing problems in managing zoom at uh separate
+1:02
+uh laptop.
+1:03
+>> Of course sir I can most certainly
+1:06
+>> or wait I think I can share.
+1:14
+>> Yeah.
+1:14
+>> Are you good? Perfect.
+1:16
+>> It's live.
+1:17
+>> It's loading for us. Okay. we're able to see um Dr. Khan is it?
+1:21
+>> Yes, it's it's visible. I'm just going to go ahead and introduce you and then
+1:25
+we can begin.
+1:28
+>> Okay. Uh I'm Dr. Nawas. I am head of neurosurgery department uh leadering
+1:34
+hospital Pakistan and Pishawar is a remote uh capital of a
+1:41
+small province of Pakistan and I'm from the largest neurosurgical department of
+1:46
+that province and uh today uh I will be discussing
+1:53
+uh managing TBI in the resource limited setting.
+1:58
+Are we ready
+2:00
+>> sir? I have a formal introduction for you. Is it okay if we do a formal
+2:03
+introduction for you? I'll do it myself.
+2:06
+>> Okay.
+2:07
+>> Yeah. Perfect. Thank you so much.
+2:09
+>> Thank you everybody and welcome to day three which is officially now day three
+2:13
+of the hackathon. We're very happy to see a good number again at one of our
+2:17
+sessions. Today we have a very special guest Dr. Mohammad Naz Khan. Dr. Khan is
+2:24
+a consultant neurosurgeon and assistant professor in the department of
+2:28
+neurosurgery at lady reading hospital medical teaching in institution in
+2:32
+pashesaw Pakistan he specializes in neurot trauma and traumatic brain injury
+2:37
+with extensive experiences managing complex head injuries as Dr. was
+2:42
+mentioned at one of Pakistan's busiest tertiary care and trauma centers. His
+2:46
+clinical and research interest includes severe TBI, trauma systems, emergency
+2:52
+neurosurgical care, neurocritical care and improving neurosurgical outcomes in
+2:57
+low and middle inome countries. In addition to his expertise in neurot
+3:01
+trauma, Dr. Khan has completed fellowship training in pediatric
+3:04
+neurosurgery broadening his scope of practice to include the management of
+3:08
+complex neurosurgical conditions in children. He has contributed to numerous
+3:12
+academic and research initiatives aimed at advancing evidence-based
+3:15
+neurosurgical care and strengthening neurosurgical capacity across LMIC's.
+3:20
+Dr. Khan is also actively involved in mentorship, education, and global
+3:24
+neurosurgery initiatives. He currently serves as the president of the mission
+3:28
+ring chapter at MTL reading hospital where he leads efforts to promote
+3:33
+research, innovation, and collaboration among students, trainees, and
+3:37
+neurosurgical professionals. Through his leadership and clinical work and
+3:41
+academic contribution, Dr. Khan continues to play a pivotal role in your
+3:45
+surgical care and education in Pakistan and beyond. Dr. Khan, welcome to our
+3:50
+event and we're very happy to have you. Thank you Ali for uh such a nice
+3:57
+introduction and you elaborated lot of things and uh honestly uh we are in the
+4:03
+lower middle income country knowing doing work and u uh we try to bridge the
+4:09
+gap which like it's a uh topic of my presentation that is the closing the gap
+4:15
+so I will be starting it it everybody is ready
+4:20
+>> yes sir ready to go you can put to presenter mode
+4:23
+>> managing TBI in resource limited settings right this is what we do
+4:27
+routinely I present you a case which we receive uh such cases in hundreds uh
+4:34
+daily uh this is a case in which a 24 year old male uh presented to us as a
+4:40
+traumatic brain injury uh as a result of road traffic accident that is primarily
+4:45
+a motorbike accident and of course they are not wearing the helmets and the
+4:51
+patient was uh struck uh at a remote area of our province that is a swad
+4:56
+which is a hilly area uh some 300 kilometers away from the my unit which
+5:02
+where I work and it was initially presented as 10 by 15 GCS at uh the
+5:09
+local hospital there which has a neurosurgical department there uh but of
+5:14
+course we have limitations in each and every neurosurgical department in the
+5:18
+lower middle- inome countries of course uh the diffic CT findings as you can see
+5:22
+is uh he has impact on the right side and there is a midline shift and
+5:27
+diffused exonal injury and some little contusions as well.
+5:32
+The story which I want to explain is that this patient was referred from Swat
+5:37
+to uh Marddan Medical Complex which is about 115 kilometer away from the
+5:43
+primary impact area which is a huge uh distance and uh the reason of referral
+5:51
+from primary hospital which was having the neurosurgical facility was that this
+5:56
+patient needed of course critical care and ICU care which was not available. it
+6:01
+was all full. So patient was referred to the uh another hospital 115 kilometer
+6:08
+away. And uh when the patient arrived at that hospital
+6:14
+uh he found that even the hospital the the receiving hospital does not have any
+6:20
+vacant ICU bed. Right? So what happens with the patient that
+6:24
+this patient is referred to another third hospital
+6:29
+and uh patient reaches to that hospital that is a heing hospital and uh
+6:35
+unfortunately he couldn't find ICU bed in that hospital as well. Ultimately
+6:41
+this patient landed into the fourth hospital which is my hospital and our
+6:45
+department of neurosurgery and upon arrival his GCS was 6 by 15 and he was
+6:52
+delayed uh up to 8 hours long. So this is a daily story which we see in our
+7:00
+lower middle income country in traumatic brain injury management and uh so what
+7:05
+we did we obviously did followed the standard protocols of uh ICU care and
+7:10
+provided uh emergency care which included the decompressive traintomy and
+7:16
+then later on shift into the ICU. The patient uh was in ICU with us for more
+7:22
+than three months with extensive management and patient was in vegetative
+7:27
+state because of the initial impact and his initial delay which was more than
+7:32
+eight plus hours and u of course it was a daily story uh of ours. So this is a
+7:40
+type of problem which lower middle income countries face in routine.
+7:46
+So as I explained this is our local experience and uh we have published some
+7:51
+data on that which is uh from our last year we have published 1,68 severe TBI
+7:59
+patients in which uh in hospital mortality was 12.2%.
+8:05
+And uh poor Glasgow outcome scale uh at discharge was uh less than three in
+8:12
+95.9%. And the reason for this poor uh outcome
+8:19
+in these 95.9% patient is the same type of scenario which I have explained all
+8:26
+of you uh now in a scenario right so in our study we we we can we can uh we
+8:36
+found that 72% of our patients are coming from the uh rural origin and our
+8:41
+median prehos delay was up to 6 hour and uh
+8:48
+within hospital a delay till surgery was about 42 minutes.
+8:56
+There's another slide of whole study uh which is showing us the key predictors
+9:01
+of inhosp mortality of 1,68 patients which you can see uh
+9:09
+this uh fixed pupil which is 19.92 which is the largest number of the
+9:15
+patients and hypotension is another key factor then low GCS less than six is
+9:21
+another factor so all these fixed pupils hypotension, late arrivals, low GCS
+9:28
+presentations all are because of the same thing that we are uh a huge uh
+9:34
+country with a limited resources and uh we are practicing in setups in which we
+9:39
+receive patients very late and uh poorly managed at site and uh other hospitals
+9:45
+which come in the way. This is a data which I have already
+9:50
+discussed. This green bar which you can see is glass scale three. Majority of
+9:55
+the patients were discharged in this. Uh the type of patients which we received
+10:00
+uh on the CT 31% were like exadural hematoma and 27% were contusion and
+10:06
+traumatic subnite hemorrhage were in 19% and acute subdial 18%. And the other
+10:11
+rest of the mixed pathologies were 5%. Here
+10:17
+is a important slide which is showing median prehosp uh delay in hours from
+10:23
+the rural we get almost 9 hour delay if a patient is received from a rural
+10:29
+background and from the urban uh we get almost some 3 hours delay and overall
+10:36
+our prehosp delay is 6 hours which is a huge delay uh if if you if you are
+10:43
+discussing traumatic brain injury And it the situation gets more complex when
+10:48
+there is no on-site uh trauma care uh or there is no uh
+10:54
+adequate care in the uh on the way to the hospital when they are being
+10:58
+traveled in the ambulances. Uh let's it's some more
+11:07
+data. In nutshell, I want to convey a message
+11:13
+that traumatic brain injury in itself is lethal. But if a patient is receiving at
+11:21
+a hospital 6 to 8 hours delayed, so the prospects are or the chances of his
+11:27
+recovery are very reduced and the outcomes are not very good. So this was
+11:32
+the problem which we we were facing and we are doing uh this practice and we are
+11:39
+living in this practice since a decade. So we come up with the solution. We have
+11:43
+devised a system. We have studied it thoroughly in depth and we came to know
+11:49
+that there is no referral mechanism. Actually if you could could focus in uh
+11:55
+uh the case or recall the case which I have discussed that the patient was uh
+12:00
+visit after traumatic brain injury visit and neurosurgical setup which did not
+12:05
+have ICU care but the patient was sent to another then another and then another
+12:10
+and at the end at the fourth hospital we provided the ICU care and everything. So
+12:15
+the question is why he could have uh why he did not receive the ICU care at the
+12:21
+first hospital which is which was probably not possible
+12:25
+because of the lower middle income country setups. We have the limited ICU
+12:29
+beds. But one factor which could be modified is that that that single that
+12:35
+that the primary hospital should have contacted the other hospital which has
+12:39
+ICU bed availability and patient should have referred directly to that hospital
+12:44
+rather than he is visiting each and every hospital and in the hope of
+12:48
+finding an ICU bed which is a very traumatic torturing uh for the patients
+12:54
+and attendants and as well as it reduces the uh like it's poorly
+13:00
+U reflects the system and it affects the
+13:03
+outcome as well. So with this experience we have studied
+13:10
+and we have devised a system uh which is basically um trauma emergency referral
+13:17
+system. If you could see this slide, all of the uh international
+13:23
+organizations like the World Health Organization, the National Health
+13:25
+Service UK and agency for healthcare research and quality of the USA, they
+13:30
+clearly state that international that structured and uh clear digital
+13:36
+trackable referral system is very much important for the optimal trauma care.
+13:42
+And if you see the international system, there are many examples in the developed
+13:48
+world. They have very accurate and very extensive referral systems available.
+13:54
+But the problem with the Pakistan and the problem with the other lower middle
+13:58
+inome countries is that these emergency referral systems require a lot of funds,
+14:02
+lot of resources uh in terms of equipment, ambulances, vehicles,
+14:07
+communication systems. We don't have all these things available and we have a lot
+14:13
+of patience as well and we have problems. So we have a problem but we
+14:16
+don't have the resources for it solution.
+14:21
+This is so this is the healthcare burden snapshot of my province of my country.
+14:28
+If you could see I am representing a province in which I have 40 million
+14:33
+population and I have 10 to 15 tertiary care
+14:37
+hospital and more than 250 secondary care hospitals.
+14:42
+I have only seven to eight functioning neurosurgical
+14:46
+units in all this healthcare infrastructure and my province hospital
+14:52
+uh bed capacity is up to 35,000 to 40,000
+14:56
+but neurosurgical trauma bed capacity is not more than 200
+15:04
+and uh the emergency burden in general in the province is up to 8 to 12
+15:10
+million. which is based on the global health
+15:14
+system utilization data and estimates and the referral load is up to 1 to2
+15:20
+million per year in general and uh we don't have any system to
+15:25
+tackle to streamline and to manage all these reference systems in which
+15:31
+definitely traumatic brain injury uh is one of that trauma which requires an
+15:38
+effective communication coordination and reference
+15:41
+to further complicate the system to for this this scenario.
+15:47
+There is a very complex uh situation in the uh lower middle inome countries and
+15:54
+I believe the situation is the same in the other lower middle- inome countries
+15:59
+as well. We have a broken communication system. We have a broken or not
+16:04
+available referral system. So what happens? What is the normal flow of the
+16:08
+patient? Suppose if a patient uh strucks with the uh some sustains some uh
+16:15
+traumatic brain injury as the case which I have discussed with you. You can see
+16:21
+uh patient has two three options and he is following either those routes to uh
+16:29
+go to this green box which you can see secondary level care hospitals. They
+16:34
+visit there or they directly follow the route to
+16:38
+bypass the secondary level hospital and reach the tertiary care hospital.
+16:44
+Then the tertiary care hospital in the periphery they are not that much well
+16:49
+equipped to deal all these emergency cases. So what they do they do refer all
+16:54
+these t the patients to the tertiary care hospitals located in the capital of
+17:00
+the province which are only three or four hospitals. So in general we have 15
+17:07
+tertiary care hospitals or neuros traumaos uh caring facilities but they
+17:12
+narrow down at three facilities and what happens at these three
+17:18
+facilities as you can see these are some names of three facilities ladyanging
+17:22
+hospital at the medical complex and kyber teaching hospital these are three
+17:26
+facilities but they are choked with the overburdened uh load of the patient and
+17:34
+they unfortunately they refer patient to each other and patients do suffer in
+17:39
+between all these referrals. So this is the primary reason due to which our 95%
+17:49
+low uh Glasco outcome score in our traumatic brain injury discharge
+17:54
+patients. Uh okay this slide another challenging
+18:04
+problem which we are facing in our uh lower middle inome countries there is
+18:10
+problem with the manual referral as well. We usually in the our countries
+18:14
+refer the patient on some uh uh manual prescriptions and as you can see here no
+18:22
+data is mentioned here just a single word referred to a hospital name right
+18:27
+so this broken uh referral system this inadequate documentation this crowded
+18:34
+hospitals and the incomplete data patient data at manual refer forms is
+18:39
+complicating entire scenarios and badly affecting the outcomes.
+18:44
+So what we came what what what what we did about it we came up with the idea
+18:52
+we decided to make a digital referral system. As you can see, we have made a
+18:58
+comprehensive uh digital referral system which
+19:02
+consists of a website and a mobile device, a mobile application actually
+19:08
+because in our lower middle income country countries we have limited
+19:12
+resources. We have no money for expensive equipment systems and uh
+19:17
+hiring the staff. So we decided to make an mobile application for
+19:25
+referrals of these patients. And this in our uh idea this mobile application has
+19:31
+to be downloaded by each and every doctor working in the secondary or
+19:36
+tertiary level hospital. And whenever they receive a patient what they have to
+19:40
+do they have to click uh login they have to click the uh uh new referral and they
+19:48
+have to fill in all the required fields to structurally add all data of the
+19:53
+patient. And with a single click they have to choose the hospital which they
+19:58
+feel is the appropriate hospital for this patient. And with a single click
+20:04
+within seconds the whole uh referral form will reach to the target hospital.
+20:10
+The target hospital will review all the information and they will decide whether
+20:16
+they have the required facility or not. If you recall my initial uh like um
+20:23
+scenario in this scenario if this app was in use so the patient would have
+20:27
+data would have been feeded in this app and refer to the uh second hospital. The
+20:33
+second hospital would have checked whether they have available ICU care ICU
+20:38
+bed empty or not. If they did not have ICU bed they would have rejected the
+20:43
+refer. So within seconds the primary hospital would have got the notification
+20:48
+that we are we are also full. We do not have ICU bed kindly referred the patient
+20:52
+to another hospital. In that scenario they would have contacted the other
+20:57
+hospital and so and so wherever they found the bed the patient would have
+21:02
+directly referred to that. In that in that case the patient would have
+21:07
+received at least minimum basic trauma care at the primary hospital which is
+21:12
+the maintaining uh uh uh normal saturation of the patient and uh
+21:19
+lowering ICP and avoiding hypotension. So the outcome might have been a bit
+21:25
+different in this scenario. If you can see
+21:31
+this is what we have achieved. If you can see here from this uh manual perch
+21:36
+or you we call it a manual slip in which there is a single handwritten words
+21:41
+written. On other hand, now we are referring patient through digital system
+21:46
+in which as you can see there is a complete bio data of the patient,
+21:51
+complete clinical status and his uh diagnosis. The treatment given at the
+21:56
+primary hospital and the reason for which the patient need to be referred is
+22:00
+mentioned and even the images have been attached and sent to the second
+22:06
+hospital. This is the workflow of the digital
+22:12
+reference system which we have devised all the above systems. I have already
+22:18
+discussed the the boxes which you are seeing in the lower down. You are seeing
+22:22
+these three bars like orange bar and semi or the the brown and uh the other
+22:27
+one the grayish. This part is for the accountability of
+22:32
+the reference like as I have discussed there are millions of reference of
+22:36
+different trauma patient different emergency patient medical non-medical uh
+22:40
+emergencies and trauma patients which includes traumatic brain injury and they
+22:45
+are being half-hazardly referred and uh there is no accountability. So our
+22:50
+system has internal system of accountability.
+22:54
+All the traffic of the patients referrals from one hospital to other and
+22:58
+back and forth will be real time happening and the data will be uh being
+23:04
+sent to the medical director of the different hospitals
+23:08
+and the policy board or the board of governors of each hospital. They will be
+23:14
+aware of the real situation that how many patients are being referred out
+23:17
+from their hospital. What are the reasons? What are the deficiencies due
+23:21
+to which uh the patients are being referred and what are the areas where
+23:26
+the funds could be diverted to improve the services so that the reference could
+23:32
+be min minimized. Right? So these are the accountability bars and we have
+23:37
+included this in our system. If you could see this is uh the front
+23:44
+view of our referral app. When you log into it, you can see this S
+23:56
+screen in which you can see my hospital logo, my personalized name because I'm a
+24:01
+personalized registered doctor in login in this uh app and my speciality is
+24:08
+referred uh written here and there I have option of create new referral. If I
+24:13
+click the button of create new referral, what will happen? I will get this. Okay,
+24:19
+this is registration form. I I I will skip it because I have to go to the part
+24:25
+which is required and which is uh part of this presentation. Okay. So why while
+24:31
+referring a patient when I click the button what I will see this referral
+24:36
+form which is very extensive as I have discussed I have to in uh enter the uh
+24:41
+patient de demographic information the patient comorbids and his vital uh
+24:48
+record and then I have to add some uh uh diagnosis of the patient in which I have
+24:55
+designed it in such way that we will be adding the surgical diagnosis because uh
+25:00
+it's a surgical department. So it is made for the surgical uh specialty.
+25:06
+So surgical diagnosis, the poly trauma diagnosis and the
+25:11
+associated medical conditions will be entered. Then the treatment given at the
+25:16
+primary hospital will be entered and the further treatment required
+25:20
+will be um written in the field and then one of the five reason will be chosen
+25:29
+before referring the patient. He has to choose uh either there is no
+25:35
+vacant bed available in the primary hospital. It's the reason for the
+25:38
+referring the patient or there is no required speciality or staff in the
+25:42
+primary hospital. That's why the doctor chose to refer the patient or there is
+25:46
+no required equipment in the primary hospital or the patient is not satisfied
+25:50
+with the facilities available. So he is opting to be referred. This is another
+25:56
+dilemma of the middle and lower income countries. Our people are very violent.
+26:00
+You cannot restrict them otherwise they create a lot of dilemas. So we have not
+26:05
+restricted. If patient is not satisfied and wish to go to other hospital, we are
+26:09
+referring them but we are recording them as an event and it is accountable and uh
+26:15
+like auditable uh point. The health authorities have to
+26:22
+uh discuss with the hospitals that why so number of the patients are not
+26:27
+satisfied from your hospital and they are being referred with this reason. And
+26:31
+then if you look at this uh last uh screenshot you can see there's an option
+26:37
+for uploading the x-rays and then we are referring the patient.
+26:42
+This form you can see uh this form will be instantly within seconds appear in
+26:50
+the receiving uh uh neurosurgical unit of uh any trauma center where the
+26:58
+patient is being referred. As you can see nicely patient referred from KTH
+27:02
+neurosurgery to LRH neurosurgery. Patient name, age, gender, date and time
+27:08
+is mentioned. His diabetes, his hypertension, his BP, heart rate and his
+27:13
+GCS is mentioned. His diagnosis head injury, fractured femur, abdominal
+27:17
+trauma. He has been given IV fluids and oxygen and required uh treatment is
+27:22
+cranottomy and ICU care and reason referral is patient requires specialized
+27:27
+neurosurgical intervention and adise advanced trauma care not available at
+27:31
+current facility and these are the images. So that's why patient is sent.
+27:35
+The receiving hospital has the option either to approve or reject with the
+27:39
+reason. Rejection reason means they have to give the reason why they are not
+27:44
+taking this patient and there are very limited reason either they do not have
+27:49
+beds their beds are full or they uh like the reason is the referral is wrong.
+27:56
+Suppose if hospital A refers this patient to the hospital B for the
+28:00
+neurosurgical care and the hospital B uh does not have the neurosurgical care at
+28:05
+that moment available because of so many reasons which is real case scenarios in
+28:09
+our uh lower middle income countries. Well
+28:18
+probably I will not go into the much details of the lot of uh functions more
+28:22
+functions which I have in this app. I will be basically uh containing myself
+28:27
+to only one function which I have described to you and I will come to the
+28:33
+accountability part of this app. This is the dashboard which you can see it's a
+28:39
+medical director dashboard. While all these referrals are happening the way I
+28:44
+have described the medical director of the hospital
+28:48
+from which the referrals are made is live watching the data. He can watch it
+28:55
+daily. He can watch it weekly, monthly or three monthly. Like he can see if you
+29:01
+can see the the bars on the charts. Top three departments with the highest
+29:05
+referral in rates and the top three departments with the highest referral
+29:09
+out rates. And you can see here that top three departments with the highest
+29:15
+referral rejection rates and the top non-compliant
+29:19
+departments list as well. By which I mean those departments which are not
+29:25
+following the e referral system and still going with the old school of
+29:30
+thoughts and using that same uh manual handwriting on the uh manual slips
+29:35
+referral slips. So this is the accountability part at
+29:39
+the medical director office and this is the board of governor's dashboard in
+29:45
+which the board of governor will have a bird eye view of his hospital that how
+29:50
+many patients are being referred with and what are the reasons top three
+29:55
+reasons of these patient being referred and u
+30:00
+what is happening to those patient which are being referred to them either they
+30:04
+are accepted or they are denied of the care because of some reasons. So
+30:09
+everything is transparent, open and uh accountable.
+30:16
+Here another dashboard which is at the uh policy making level which is at the
+30:21
+province level which is at the government level who make the policy
+30:26
+they will be getting the data real time that what is happening in entire promise
+30:31
+with the 40 million population what is happening with that like how many
+30:37
+referrals in in a day or in a month or in a year
+30:42
+are happening real time and from which hospital they are referred to which
+30:47
+hospital and what are the top reasons for the those reference and what is the
+30:52
+median delay and what is uh like um which are the sending hospitals and
+30:58
+which are the receiving end hospitals so that they uh datadriven decide what are
+31:05
+the needs for these hospitals and where to give funds and where to to consume
+31:10
+these funds to get maximum from this all limit ated fund which they have right.
+31:18
+So these are all dashboards lot many detailed dashboards
+31:26
+these are you can see we have a web platform for that and each and every
+31:33
+referral uh is recorded there and we can export
+31:38
+all this data into Excel sheets and CV CSV files and PDFs and we can take any
+31:45
+data of any day any month or any duration of any hospital or all hospital
+31:52
+or any subset we can apply and we can get all such type of data. It's a bird
+31:58
+eye view of all hospitals as we had discussed that we have almost 250
+32:03
+hospitals of secondary care and 10 to 15 tertiary care hospitals
+32:08
+and in the future what we are aiming that we need to add some realtime bed
+32:14
+availability on these dashboard so that before referring a patient the doctor
+32:18
+will be able to see that how many beds are available there and only then they
+32:23
+will be referring the patient if there is a vacant bed available and if we got
+32:29
+the funds. So we are aiming to integrate all this mobile app system with the
+32:36
+already functioning 1122 ambulance emergency services uh within our country
+32:41
+so that the patient gets instantly not uh uh ambulance from uh provincial uh
+32:49
+emergency ambulance service. And last but not least, uh we are aiming
+32:56
+to add some second opinion chat option before deciding referral because we uh
+33:03
+somehow uh get patients uh from as we have uh already discussed from 100, 200
+33:10
+or 3 400 difficult mountainous areas. they travel for three to four hours for
+33:16
+some minor problems uh which are treatable at their initial uh like um
+33:23
+hospital. So they will be able to send us CT scan
+33:28
+and the patient history and we will be remotely deciding and uh giving them
+33:32
+treatment and probably they might not come for opinion only at the mid of
+33:36
+night traveling four hours in their cars and each and everything.
+33:41
+this app will be a great uh addition and help for the masses.
+33:49
+So this is the uh like okay implementation strategy we are already
+33:55
+in the process of that. Let me a bit give update where we are. We have made
+34:02
+this app we have made this web and we have approved it from the government. We
+34:07
+have approved it from the policy uh board and we have started registrations
+34:13
+and today we had uh given go ahead for 10 hospitals to start uh registrations
+34:20
+and within a week we are going to start uh uh realtime referrals between
+34:27
+hospitals hopefully. Thank you.
+34:33
+>> Thank you so much Dr. Khan. It was a lovely session and especially uh given
+34:38
+that you have such a busy practice, we're very grateful that you were able
+34:42
+to take out the time for our participants as as you can see the
+34:45
+applause coming through. U the impact of it is huge and it just goes to show that
+34:52
+with innovation can come from anywhere be any LMIC and we are best equipped to
+34:57
+solve our own problems and before and I'll just jump into taking questions
+35:01
+from the participants. I think my favorite part was when you compared the
+35:05
+manual slip of referrals to the referral that we now have with your app and the
+35:09
+stark difference between the two was incredible and we just want to thank you
+35:13
+for your incredible work. We're going to now move towards the Q&A session of Q&A
+35:17
+part of the session. I would encourage if any participants have any questions I
+35:21
+see some in the chat to unmute themselves,
+35:24
+introduce themselves where they where they are from, what their country is and
+35:28
+then ask Dr. their question and then we'll take it from there. So you can go
+35:34
+ahead unmute yourself, turn on your camera, introduce and ask your question.
+35:44
+>> Yes, Ashish, go ahead.
+35:54
+>> Am I audible?
+35:55
+>> Yes.
+35:56
+>> Hello Dr. Khan. uh your presentation was highly inspiring for me and uh the your
+36:02
+app is really innovative. Um I am also I am a doctor at low and middle countries
+36:09
+in Nepal and I'm also practicing medicine here and uh a lot of patients
+36:14
+come to us with TVI but we are not able to diagnose them. We just uh we just get
+36:19
+the you know the basic idea that this patient has eye impact eye velocity
+36:24
+injury and then the patient is um uh patient is like they have a low GCS
+36:31
+so sometimes they have GCS above 9 and we don't need to intubate them right so
+36:35
+my question for you is that uh what are the things that we do in a non ICU
+36:39
+setting where we don't have CTMR facility so that's that so that the
+36:43
+patient has a better prognosis for for a better good prognosis
+36:50
+Well, Ashish, how are you? Uh, we have been in touch last week and I'm very
+36:54
+thankful you you took interest and you appreciated the work which I have uh I'm
+36:59
+trying to do. Coming toward your question Ashish uh yes it's our daily
+37:05
+routine we are receiving the patients in the bad shape and in the low GCS and uh
+37:11
+what I propose a single theory uh saving traumatic brain injury
+37:17
+patients might not require as much resources as we as we presume they
+37:23
+require only two factors number one you do not have to let hypotension even a
+37:28
+single hypotensive episode causes more than 50% uh mortarity, right? And u you
+37:36
+you have to oxygenate the patient. Hypotension and uh h this um uh low
+37:45
+oxygen saturation that is the independent predictors of mortality
+37:51
+and after that appropriate referral to a
+37:56
+neurosurgical setup. these three if we we combine so we can save many lives.
+38:05
+>> Thank you so much Dr. Khan. Thank you so much.
+38:08
+>> Thank you Ash. Thank you Dr. Khan. Um Aari Isaiah you have your hand up. You
+38:12
+can go ahead and then Kenzia can go ahead.
+38:16
+>> Okay. Hello. Can I be heard?
+38:18
+>> Yes.
+38:20
+>> Okay. Great. Hello. My name is Isaiah Hari. I am a medical student in Kenya
+38:25
+and thank you for the talk doc. which was really informative and insightful.
+38:30
+Uh I wanted to think about on the implementation side of it. You mentioned
+38:33
+that you're able to get your government to green light the whole um you know the
+38:38
+app and that you've had it implemented at different hospitals. I wanted to ask
+38:42
+how you managed to get the policy and government on your side because as I'm
+38:46
+sure it is the same over there the hospitals are already overworked. You
+38:50
+have a lot of doctors who are just trying to get uh you know through each
+38:54
+day. How did you convince them to implement this whole new app into their
+38:58
+workflow and okay doctor it's a pertinent question.
+39:06
+Uh it took me two years like idea was in my mind and it took me one year to
+39:13
+convince all and every policy makers to allow me to make this system and they
+39:19
+were not convinced to be very honest. What what I did I started working on
+39:24
+that without convincing them. Okay. When I I had built it then I showed it to
+39:30
+them that now this is the thing this is really working. I had to give almost
+39:37
+20 presentations to the different level of people and uh now uh in the last two
+39:44
+months I had uh discussed with the health minister and with the policy
+39:49
+board chairman and uh they were convinced if you have will and you are
+39:54
+persistent and you are doing something and your idea is practical it is really
+39:59
+originating from the problem and it's a real solution to the problem. So it get
+40:04
+noticed ultimately. So we did it.
+40:10
+>> Okay. Wow. And then just my final question would be how does your app
+40:15
+maintain data security like for each of these patients since
+40:19
+it's a third party to these hospitals?
+40:23
+>> It's a very pertinent question. Uh what we have make us made a system
+40:30
+before uh getting access to the app you have to enter all your credentials in
+40:38
+which you have to add your HR ID hospital related ID and uh when you all
+40:45
+this add all HR ID you upload your photo you upload your national ID card and you
+40:51
+upload your hospital ID card this goes to the back which are huge website and
+40:57
+each hospital has a IT representative and that is defined data goes to him. He
+41:03
+he sees your picture your ID card your hospital
+41:08
+card and from HR ID he enters it into the computer and your all data is
+41:12
+verified. If it is verified only this then you are allowed to work and your
+41:17
+account is activated otherwise it is deleted
+41:20
+and the app is will be uh secure enough that it uh is uh uh it does not allow
+41:28
+the screenshot to all patients so that none of the content of the patient is
+41:35
+being uh leaked to the media or some some other uh breaches.
+41:42
+Okay. Wow. Thank you so much.
+41:45
+>> Thank you. I see Kia, you have your hand up. You can go ahead now.
+41:55
+I think there's something off with kids collection. If anyone wants to go ahead,
+42:00
+we'll take
+42:01
+>> I'm back.
+42:02
+>> Oh, perfect. Yeah, you can go ahead.
+42:06
+>> Okay. Hello everyone. My name is Ka and I'm a medical student here in Indonesia.
+42:11
+I would like to ask uh you a question. I think the app is really really good but
+42:16
+uh I'm curious because I'm from Indonesia. Uh is the app like you could
+42:21
+apply it to every region like in Asia maybe like in Europe or is is it like
+42:26
+something that can only work in a certain place? Thank you.
+42:35
+>> Sorry I didn't get your point. I think so. Dar Khan the question is that uh if
+42:41
+the app is only available in Asia or you can take it anywhere you can apply it in
+42:46
+other regions as well like Europe or beyond right you can correct me.
+42:50
+>> Okay I got it Ali. Uh yeah okay actually this app currently it's first of its
+42:56
+kind in the emergency referral system because as I mentioned we are working in
+43:01
+a unique situations. We have lot of limitations in the Europe and in the
+43:06
+advanced countries. They have lot of robust systems which are more secure
+43:11
+which are more uh facilitated and they have lot of systems. They they don't
+43:16
+have limitations of money and lot of computers and phone systems and uh that
+43:22
+ambulance services are available. I think this can be applicable to all
+43:28
+lower middle inome countries right where there is limitation of the resources
+43:33
+computers and uh infrastructure and lot many things all you need is a mobile
+43:39
+phone which everybody uh every individual uh in lower middle countries
+43:44
+at least they have the the the healthcare worker which I'm talking
+43:48
+about and they have to download the app and they they have a working uh internet
+43:52
+connection which is now nowadays available to almost globally. So it can
+43:57
+be used in all lower middle- inome countries but in the developed countries
+44:01
+I think it's not the option for them. Probably they might be uh
+44:06
+using some advanced version of it but I think they have robust systems better
+44:11
+than this. Thank you so much Dr. Khan. I hope that
+44:18
+answered your question. We'll just take one last question. Andrew you have your
+44:21
+hand raised. Please go ahead, introduce yourself and ask your question.
+44:26
+>> Yeah, thank you so much. Um, my name is Andrew. I'm a nurse practicing here in
+44:31
+Uganda. Um my question was actually similar to Kia's question though she put
+44:37
+it out and I just want to add on something and inquire um what then needs
+44:43
+to be put in place to have such an application moved from whether from Asia
+44:48
+let me say to start bringing it and make it more applicable in other countries
+44:52
+let me say where I am from Uganda cuz you did share your statistics and they
+44:57
+really look similar to what we have back this side in Uganda and the challenges
+45:01
+are really revolved moving around the same thing and I think an application of
+45:06
+such a sort would really do would go way beyond to help very many patients in our
+45:10
+end. So what needs to be done are there like any limitations or it can just be
+45:17
+straightforward presentations and presentations and things get going.
+45:21
+Thank you
+45:26
+>> Ali. I have some uh audio system issues in my uh laptop. So if you could
+45:32
+simplify the question for me.
+45:34
+>> Of course. So what I think Andrew is trying to say is that he the application
+45:38
+currently works in a nation LMIC. What would be the steps or what would be the
+45:43
+challenges to apply this application in another LMIC in a different area for
+45:48
+example Uganda or any other LMIC?
+45:51
+>> Okay. Got it. Got it. Thank you. I'm sorry I could not understand it because
+45:55
+the volume of my laptop is a bit slow. Okay. Well, this uh application is
+46:02
+primarily now for my province because the uh organizational structure, the
+46:08
+dashboards, the uh medical director, the policy board, the chairman, board of
+46:13
+governors and the that's it's all customized for their products. But the
+46:18
+idea behind is a constant thing. When we will be applying this uh system to other
+46:24
+countries, what we we are going to do first we have to uh run this system at
+46:30
+least for six months to one year in our province and generate a robust data and
+46:36
+share that data with all of you and publish it. Right? And afterwards we
+46:43
+will be sharing the blueprint outsource blueprint of this whole idea and we will
+46:49
+be uh making a room for your uh setup your your country health system and you
+46:58
+will be the person who will be uh tailoring it to towards your system.
+47:04
+Like my hospital or my province has a board of governors who is overseeing a
+47:09
+medical director and a medical director is seeing lot of the consultants who are
+47:15
+heading the units right and above the policy board
+47:20
+of governor there's a policy board who are seeing the tertiary care hospitals
+47:24
+and then there is a government who are seeing the secondary tertiary care both
+47:28
+so you will be like suppose if I'm giving this app to you there are two
+47:32
+options number on one I give the app idea the entire blueprint and I guide
+47:41
+you to uh make it uh dashboards according to your health
+47:47
+structure. Second idea, second thing uh the way is that you discuss with us your
+47:53
+health system and we tailor the same app redesign it for your country and we give
+48:01
+it to you. So both ways it is available but
+48:06
+in simple words the idea is important. It is not something which cannot be done
+48:10
+by someone else now because we did it first time we are applying it and now
+48:16
+this can be done by any country who wish to do it according to their health
+48:20
+systems norms and policy structure.
+48:25
+>> Perfect. Thank you so much Dr. Khan. I think since we have had so much interest
+48:28
+in question we're just going to make one more question. Dr. Khan, we're very
+48:32
+sorry to keep making you stay. Adi, do you want to just go ahead and quickly
+48:36
+ask your question?
+48:37
+>> Yeah. Um, sir, you said that the the systems in the higher income countries
+48:42
+have more robustness over there. What do you think this robustness comes from?
+48:47
+What makes them more robust? But also more importantly, why can't this
+48:50
+robustness get transferred or acquired or developed in lower income or lower
+48:55
+resource settings? Ali I would again refer it to you kindly
+49:00
+if you could summarize or a bit loud
+49:03
+>> of course. So I think Adi's question and correct me if I'm wrong Adi is that Dr.
+49:08
+Khani mentioned how countries in the west have a very robust referral system.
+49:13
+Where do you think that robustness comes from? How are their systems so good?
+49:18
+uh and what stops that the same robustness being developed in lower
+49:22
+income
+49:23
+>> and why we can't develop that.
+49:31
+>> Sorry, I couldn't hit properly.
+49:33
+>> So Dr. Khan, you said you said the systems in the western part of the world
+49:40
+are more robust for TBI care.
+49:43
+>> Yeah.
+49:44
+>> Why do you think they're so robust and why can't we do the same?
+49:49
+Okay. Okay. I got it. Ali. Uh where there is patients and referral system of
+49:57
+the patients. The best and robust system is that each and every patient data is
+50:04
+uh transferred from one hospital to other through a robust health management
+50:09
+information system HMIS. Right. And from that HMI system uh it should be uh
+50:17
+through uh like secure channels not through uh mobile phones or not not
+50:24
+through the like you can you can say personal mobile phones right it's health
+50:29
+security system if you can afford each and every hospital has each and every
+50:37
+doctor has um hospital owned computer with the
+50:42
+secured internet and intact HMI system and entire uh uh hospitals of the
+50:49
+country are connected through that robust system. So this is the best
+50:53
+secure and verifiable system. But the problem in our countries, our entire
+50:59
+countries are not linked hospital. Hospitals are not linked with the one
+51:04
+HMS system. All hospitals are individual. They lack computers. They
+51:10
+lack HMS systems. They like uh robust communication system and
+51:16
+ambulance systems which is a huge uh resource needing uh system and so that's
+51:25
+why what we are doing we are using the mobile apps of the doctors u mobile
+51:32
+mobile phones of the doctors data of the doctors we are just providing them the
+51:36
+app to facilitate the patient reference so I call zero budgeting
+51:44
+with this app. Government is not spending even a penny and they are
+51:49
+facilitating the patients. This is idea behind. If western countries are going
+51:54
+to do it, what they have to do like they have lot of uh ethical issues their
+51:59
+doctors they would be not happy to use their mobile phones for this because
+52:05
+it's a external service for the hospital. Why they would be using their
+52:08
+personal mobile phones? Right? There might be some ethical issues or their HR
+52:12
+issues or even the hospitals might not might not allow their personal mobiles
+52:18
+for the patient data to be transferred. Right? So because they have everything
+52:23
+system is intact they have no issue of money. They have computers they have uh
+52:29
+everything. So they don't have excuse. We have excuses. We don't have
+52:34
+computers. We we don't have intact systems. So that's why we probably
+52:39
+borrowing the health care uh individuals mobiles for the patient services
+52:45
+and their data. Perfect. Thank you so much Dr. Khan. I
+52:50
+hope that answers your question. I know there are so many questions that we have
+52:54
+and all of you can email us and we can forward your questions to Dr. Khan. I
+52:59
+would now request all participants to turn on your camera and as is mission
+53:02
+brain hackathon tradition, we'll take our final picture at the end of the
+53:05
+event. So everybody can turn on their camera and look in the middle and smile
+53:10
+as brightly as they can. And Ko, can you help me take the picture
+53:15
+>> first? So we'll count down from three. Everyone smile, please.
+53:19
+>> So three, two, one. There we go. Thank you so much to
+53:27
+everyone who was able to turn on their cameras.
+53:30
+>> Thank you so much, Caro. Thank you so much, Dr. Naz Khan. It was a lovely
+53:34
+session. I learned a lot. that I'm sure the participants learned or not and
+53:37
+we're really grateful that you were able to make out the time. Uh we'll share out
+53:41
+our email and any other channels that you can contact our Khan from and keep a
+53:45
+watch out on the Slack for the team building activity for the day. See you
+53:49
+all soon. Bye everyone.
+53:55
+>> Thank you.
+53:56
+>> Bye.
+53:56
+>> Thank you.
+53:57
+>> Bye. Thank you.
+54:00
+>> Thank you.
