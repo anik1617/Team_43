@@ -52,6 +52,29 @@ CREATE TABLE node_community (node_id TEXT, community_id TEXT, level INTEGER);
 
 > The CGT spine (§3, L1) is authored and versioned as its own signed asset and travels alongside / inside the same bundle. The L2 graph above is the **evidence layer the spine and the synthesis step cite** — it does not by itself decide anything.
 
+**L1 spine tables** (the CGT travels in the same bundle; the **E3 executor traverses these — the model never does**):
+
+```sql
+-- L1 Clinical Guidance Tree: deterministic logic, separate from localizable text
+CREATE TABLE cgt_nodes (
+  id TEXT PRIMARY KEY,
+  kind TEXT,              -- 'gather' | 'decision' | 'action' | 'leaf'
+  field TEXT,             -- 'gcs','pupil_left','bp','spo2','lucid_interval','time_since_injury','time_since_deterioration',...
+  required INTEGER,       -- 1 = critical-evidence field (cannot terminate without it)
+  action TEXT,            -- leaves only: 'GUIDE' | 'OBSERVE' | 'STABILIZE_TRANSFER' | 'ABSTAIN_STOP'  (doc 19 vocab)
+  source_citation TEXT,   -- "WFNS Peshawar Recommendations 2019, p.4"
+  trust_tier INTEGER      -- 0 = canonical (critical path) | 1 = provisional
+);
+CREATE TABLE cgt_edges (src_id TEXT, dst_id TEXT, condition TEXT);  -- classified-answer that fires the branch; language-agnostic
+CREATE TABLE cgt_strings (        -- the ONLY localizable layer (v1 ships lang='en')
+  node_id TEXT, lang TEXT, prompt TEXT, recommendation TEXT,
+  PRIMARY KEY (node_id, lang)
+);
+CREATE TABLE cgt_meta (root_id TEXT, version INTEGER, signature TEXT);  -- ed25519, signed separately
+```
+
+> `action` uses the **doc 19 four-action vocabulary** (GUIDE / OBSERVE / STABILIZE+TRANSFER / ABSTAIN-STOP). Logic (`cgt_nodes`/`cgt_edges`) is **language-agnostic**; text lives in `cgt_strings` so adding a language = inserting rows, never re-authoring the tree. **Gowrish + Aniket confirm this block when locking the seam.**
+
 **The four fields that silently break everything if not pinned in hour one:**
 1. **`embedder_id` + `embedder_dim`** — **BGE-M3, 1024-d, BYTE-IDENTICAL model on both planes.** GraphRAG defaults to OpenAI embeddings → **must be overridden to BGE-M3 in `settings.yaml`**, or the cloud index lives in a different vector space than the offline phone and retrieval returns garbage. *This is the #1 project-killing gotcha.*
 2. **`source_citation`** — the app renders it as the **provenance** behind a recommendation. *Cited ≠ traceable:* the win is **auditability** — every recommendation traces back to its supporting sources and flags inference — the "glass box, not black box" story. (Use MedGraphRAG's Triple-Graph idea — entity/source/definition — to make citations first-class.)
