@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 180" width="780" height="180" role="img" aria-label="Kyro logo">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0E3A47"/>
+      <stop offset="1" stop-color="#125A6E"/>
+    </linearGradient>
+    <linearGradient id="serpent" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7DF3DC"/>
+      <stop offset="1" stop-color="#2DD4BF"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#FCD34D" stop-opacity="0.85"/>
+      <stop offset="1" stop-color="#FCD34D" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- ICON -->
+  <g transform="translate(24,30)">
+    <rect x="0" y="0" width="120" height="120" rx="28" fill="url(#tile)"/>
+    <!-- soft top highlight -->
+    <rect x="0" y="0" width="120" height="120" rx="28" fill="#ffffff" opacity="0.05"/>
+
+    <!-- beacon glow -->
+    <circle cx="60" cy="26" r="22" fill="url(#glow)"/>
+
+    <!-- staff -->
+    <line x1="60" y1="30" x2="60" y2="100" stroke="#DCFBF3" stroke-width="5" stroke-linecap="round" opacity="0.9"/>
+
+    <!-- serpent / pulse waveform weaving the staff -->
+    <path d="M60 34 C78 46 42 54 60 66 C78 78 42 86 60 98"
+          fill="none" stroke="url(#serpent)" stroke-width="7"
+          stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- serpent head -->
+    <circle cx="60" cy="34" r="5.5" fill="#7DF3DC"/>
+    <circle cx="61.5" cy="33" r="1.4" fill="#0E3A47"/>
+
+    <!-- beacon -->
+    <circle cx="60" cy="26" r="6" fill="#FCD34D"/>
+  </g>
+
+  <!-- WORDMARK -->
+  <g>
+    <text x="172" y="100" font-family="'Montserrat','Segoe UI',Arial,sans-serif"
+          font-size="68" font-weight="800" letter-spacing="2" fill="#0E3A47">KYRO</text>
+    <text x="174" y="132" font-family="'Montserrat','Segoe UI',Arial,sans-serif"
+          font-size="17.5" font-weight="600" letter-spacing="1.5" fill="#2DD4BF">THE GUIDE THAT NEVER DROPS THE CALL</text>
+  </g>
+</svg>
