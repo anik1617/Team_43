@@ -155,6 +155,18 @@ Design rules:
 
 **Medico-legal flag (a judge will raise it):** a remote expert advising a GMO across borders has real licensing/liability questions (cross-jurisdiction "curbside consults"). Defensible posture: **peer-to-peer advisory support; the treating clinician retains authority and responsibility**; consent + audit logging; full cross-border telemedicine compliance is an honest roadmap item for partners (medical societies, NGOs). Naming the limit is itself credibility.
 
+### 5. The procedure state machine — *never lose your place* (the core innovation)
+Running continuously in the background, **passively, from voice alone** (no extra input from the GMO), the system maintains live procedure state:
+- every completed step, timestamped;
+- current patient state (GCS, pupils, BP, drugs given, time since injury);
+- the last decision point + confidence-gate status;
+- exactly where uncertainty arose.
+
+**Why it matters:** when the call drops, the state is *already captured* — nothing is lost. When any connectivity returns (even 30s of 2G), it pushes a compressed state packet and auto-generates the **pre-briefed handoff brief** of §4, so the next expert picks up *mid-procedure in ~10 seconds, not from zero*:
+> *EDH evacuation, 23 min elapsed. Steps 1–4 complete. Currently at landmark identification for the second burr hole. Patient: GCS 6, left pupil fixed dilated, BP 160/90, mannitol given 18 min ago. GMO flagged uncertainty on drill angle. Needs: confirmation on posterior burr-hole placement.*
+
+This is the sharpened thesis in code: **the problem isn't knowledge, it's continuity** — the state machine is what makes "the call dropped, nothing was lost" literally true. *(MVP: a lightweight local state object updated from the ASR stream. Post-hackathon: Exo's TRHN temporal tracking + identity manifold are built to power exactly this. A future Starlink/facility-connectivity upgrade would make the handoff real-time where available — roadmap, not a dependency; the offline core stands alone.)*
+
 ### Success, redefined
 The target isn't omniscience — it's **never leave the GMO worse off than the phone call that dropped.** A total knowledge miss that yields correct stabilization + a clean escalation path is a *win*, not a failure. And the safest demo you can give an AI-skeptic neurosurgeon is the gap case done right: the system recognizes it can't help, refuses to invent, drops to stabilize-and-transfer, fires a pre-briefed human handoff, and logs the request — proving the one thing they need to believe: *it won't confidently hurt someone.*
 

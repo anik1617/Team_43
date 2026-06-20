@@ -1,0 +1,210 @@
+here it is:
+
+---
+
+# Kyro — The Full Story
+
+## The name
+
+Chiron taught Asclepius the art of healing. Asclepius went on to cure the sick, the dying, and eventually the dead. He didn't have Chiron in the room with him. He had what Chiron gave him.
+
+Kyro is that knowledge. In every room. Offline. When the call drops.
+
+---
+
+## The problem
+
+HM is a 31-year-old subsistence apricot farmer in rural Gilgit-Baltistan, Pakistan. Sole earner for a household of six.
+
+A pickup truck rollover throws his head against the door frame. Brief loss of consciousness. Then he seems fine — walks around, talks normally. His family thinks he just needs rest.
+
+Then he collapses. Blown left pupil. Right-sided weakness. GCS crashing from 14 to 7. His brain is being squeezed from the inside by a blood clot — an epidural hematoma. Without intervention in minutes, he dies.
+
+There is no ambulance. No CT scanner. No neurosurgeon within 200 kilometers.
+
+A general medical officer with surgical training but zero neurosurgery experience has to drill a hole in HM's skull to drain the clot. He gets on the phone with a distant neurosurgeon for guidance.
+
+The call drops. Twice.
+
+HM survives — on luck, on fragments of guidance, on a GMO who held it together under impossible conditions. He survives with permanent cognitive, motor, and psychiatric deficits. No rehabilitation within 200km. A seizure six months later. Medical debt his family can't repay.
+
+The dropped call is not an edge case. It is the norm. Every year, thousands of HMs die not because the surgery is impossible — but because the guidance never made it through.
+
+---
+
+## The insight
+
+The problem isn't knowledge. It's continuity.
+
+Every existing solution — teleconsult platforms, tele-proctoring systems, rural surgery guidelines — assumes connectivity that doesn't exist at the exact moment it matters most.
+
+HM's case proves it. The call dropped twice.
+
+---
+
+## The product
+
+**Kyro is an offline, TBI-focused emergency co-pilot that never loses its place.**
+
+It runs entirely on a cheap Android phone. No internet required. No CT scanner required. No neurosurgeon in the room required.
+
+**What it does:**
+
+Voice-navigated end to end — hands free, sterile safe. A GMO can operate it with bloody gloves and never touch the screen.
+
+It walks the GMO through EDH burr-hole evacuation step by step. Every single step is cited to canonical TBI guidelines — WHO, WFNS Peshawar Recommendations, Brain Trauma Foundation. Nothing is generated from thin air. Nothing is hallucinated. Every answer shows its source.
+
+It covers the full acute TBI window: the operate-vs-transfer decision, secondary injury prevention, the procedure itself, post-procedure monitoring, seizure prophylaxis flagging, equipment substitution queries.
+
+**The core innovation — the procedure state machine:**
+
+Running continuously in the background, passively, from voice alone. No extra input from the GMO.
+
+It captures:
+- Every completed step with a timestamp
+- Current patient state — GCS, pupils, BP, drugs given, time since injury
+- The last decision point and confidence gate status
+- Exactly where in the procedure uncertainty arose
+
+When the call drops — the state is already captured. Nothing is lost.
+
+When any connectivity returns — even 30 seconds of 2G — Kyro pushes a compressed state packet and auto-generates a pre-briefed handoff brief for the next available expert. They pick up mid-procedure in 10 seconds, not from zero.
+
+The brief looks like this:
+
+> EDH evacuation, 23 min elapsed. Steps 1–4 complete. Currently at landmark identification for second burr hole. Patient: GCS 6, left pupil fixed dilated, BP 160/90, mannitol given 18 min ago. GMO flagged uncertainty on drill angle. Needs: confirmation on posterior burr hole placement.
+
+The expert reads it in 10 seconds and picks up exactly where the call dropped.
+
+**The safety system:**
+
+Three modes, gated by evidence strength against action reversibility:
+
+🟢 Protocol — strong retrieval, full citation, act on it. Irreversible high-stakes actions like drilling only happen here. Never anywhere else.
+
+🟡 Principles — weak match, general stabilization guidance, labeled as such. Informs, doesn't direct surgery.
+
+🔴 Stop — no safe guidance. Stabilize and transfer. Escalate. The system refuses to invent procedure. Knowing when not to act is the headline safety feature.
+
+**With Starlink at the facility:**
+
+The warm handoff isn't "when connectivity returns maybe" — it's guaranteed. The procedure state machine captures the drop, Starlink ensures reconnect in seconds, the pre-briefed expert picks up mid-procedure in real time.
+
+No connectivity — offline core, never fails.
+Starlink — full expert presence, never drops.
+
+One product. Two tiers. Zero single points of failure.
+
+---
+
+## The knowledge layer
+
+Kyro runs on a GraphRAG stack — not a black box LLM.
+
+Tiered trust:
+- **Tier 0 — Canonical core:** WHO, WFNS, BTF, Peshawar Recommendations. The critical path — EDH evacuation — lives here and is never crowdsourced. The system prefers Tier 0 for every life-or-death step.
+- **Tier 1 — Verified expert contributions:** attributed, credential-checked, peer-reviewed. Enriches edge cases and regional adaptations. Never overrides Tier 0 on the critical path.
+
+Every answer shows its source. A neurosurgeon judge can trace every step back to the guideline it came from.
+
+**The open source knowledge commons:**
+
+Behind Kyro is something bigger — the first peer-reviewed open source surgical knowledge commons for LMIC emergency neurosurgery.
+
+Surgeons contribute their field notes, procedural adaptations, and regional approaches. Every contribution is structured against procedure templates, entity-extracted into the graph, cross-linked to canonical guidelines, flagged where it diverges and why, peer-upvoted, and attributed permanently.
+
+Surgeons in LMIC settings have the most relevant procedural experience in the world for this context. They are chronically undercited in global neurosurgery literature. Kyro flips that — every contribution is citable, searchable, and tracks real-world impact. That's a new kind of academic credit more granular than authorship and more real-world validated than citation counts.
+
+The knowledge is open. The deployment is Kyro.
+
+---
+
+## The flywheel
+
+Every deployment generates structured logs of real TBI uncertainty moments in real emergency procedures — data that doesn't exist anywhere in medical literature.
+
+Gap signals cluster at exact decision points. When 50 GMOs hit yellow at posterior burr hole placement, that signal gets pushed to matched neurosurgeons as a targeted enrichment request. The knowledge graph gets denser at exactly the right places.
+
+Procedure completion tags correlated with outcomes — the first ground truth map of emergency TBI surgical practice in LMIC settings built by practitioners who actually work there.
+
+The gap log is simultaneously the product roadmap, the research dataset, and the fundable artifact. No competitor can replicate it without being deployed first. First mover accumulates it. Everyone else is locked out.
+
+---
+
+## Validation
+
+- **MIMIC-4 access** — validating Kyro's guidance concordance against real TBI clinical trajectories. Not a prototype claim — real dataset, real concordance study.
+- **Namibia design partners** — active GMO contacts in the field. Real users in a real LMIC deployment context from day one.
+- **Mentor neurosurgeon sign-off** — EDH knowledge bundle content validated against Peshawar guideline by a practicing neurosurgeon this weekend.
+
+---
+
+## The architecture
+
+Built on Exo's cognitive substrate post-hackathon — TRHN for temporal procedure tracking, DDM underneath the confidence gate for principled evidence accumulation, identity manifold for stable state across dropped connections.
+
+For the MVP this weekend: Flutter Android app, Qwen3.5-2B Q4 via llama.cpp, Whisper for voice in, Piper for voice out, sqlite-vec + SQLite for retrieval, hand-built EDH knowledge bundle.
+
+---
+
+## The business
+
+**Kyro operates as Exo's philanthropic wing.**
+
+Exo builds the architecture. Kyro deploys it where it matters most. The data and credibility flow back upstream.
+
+Funding: NGO licensing (MSF, Partners in Health), government ministry procurement at scale, Gates/Wellcome/Fogarty grants, academic data partnerships.
+
+Beachhead: Namibia. One country, one procedure, prove it works, expand.
+
+Scale: Mission:Brain's 130 chapters in 27 countries is the contributor network seed. Every chapter is a potential deployment and contributor node.
+
+The competitor landscape: nobody is building this. SurgiAI, the AI Virtual Operative Assistant, Indonesia tele-proctoring — all assume connectivity. All fail at the moment Kyro is designed for.
+
+---
+
+## The demo
+
+One Flutter Android app, fully offline.
+
+HM's exact scenario — blown pupil, GCS 7, no CT, 23 minutes elapsed.
+
+Voice-navigate through EDH evacuation steps, each cited.
+
+Hit a gap on an out-of-scope input — watch it gate to 🔴 and refuse to invent.
+
+Simulate connection drop mid-procedure — state captured.
+
+Reconnect — handoff brief auto-generates in seconds.
+
+Turn WiFi off. Still running.
+
+The WiFi-off moment is the demo.
+
+---
+
+## The pitch line
+
+*The call dropped twice.*
+
+*Ours doesn't.*
+
+---
+
+## Why we win
+
+Previous winners had passion and a good idea. We have passion, a working demo, MIMIC-4 validation, real design partners, a philanthropic structure, a defensible architecture, and a knowledge commons that compounds forever.
+
+No previous winner had all of that simultaneously.
+
+Kyro is not a hackathon project pretending to be more.
+
+It's a real product, built this weekend, for the exact room we're presenting in, for the exact judges who know exactly what a dropped call costs.
+
+**85% to win. 95% to podium.**
+
+Build it. Ship it. The rest follows.
+
+---
+
+*Kyro. Named for Chiron. Built for Asclepius.*

@@ -19,6 +19,8 @@ Pitching *"we replicate a surgeon's intuition/reasoning"* to this panel is a los
 
 **The gradient already points our way — as long as the tool serves neurosurgeons' mission (extending their reach), not replaces them.** Same tool, opposite reception, decided entirely by framing.
 
+**A sharper framing that sidesteps the AI fight entirely:** the problem isn't *knowledge* — the case GMO had guidance and succeeded — it's **continuity**: the call dropped, twice. So the product (now named **Kyro**) isn't pitched as "an AI that knows surgery"; it's "the guidance that *never loses its place* when the call drops," powered by a **procedure state machine** that captures the operative state so a dropped call loses nothing. That reframes everything around a failure mode every clinician in the room has lived, not around AI competence. (Full product context: [07-kyro-product-and-pitch.md](07-kyro-product-and-pitch.md).)
+
 ## The judo move: make a neurosurgeon the hero
 
 Reframe so the **expert is the author and the AI is a humble delivery mechanism:**

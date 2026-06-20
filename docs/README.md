@@ -10,14 +10,17 @@ These docs capture everything the team has worked out so far, so anyone can get 
 4. **[04-judging-strategy-and-reframe.md](04-judging-strategy-and-reframe.md)** — the most important strategic doc: the judges are MDs / top neurosurgeons who are skeptical of AI, what that means for us, and how to reframe so we win the room instead of losing it.
 5. **[05-architecture.md](05-architecture.md)** — the technical architecture: the offline on-device GraphRAG stack, the cloud→edge sync, privacy, speech/translation, and the MVP-vs-vision split.
 6. **[06-tech-stack.md](06-tech-stack.md)** — the concrete 2026 tooling per layer (on-device LLM, ASR, TTS, MT, GraphRAG, mobile runtime, cloud build plane, escalation), with the weekend-MVP subset.
+7. **[07-kyro-product-and-pitch.md](07-kyro-product-and-pitch.md)** — **the product, now named "Kyro": context & current framing** — the name, the *"continuity, not knowledge"* thesis, the procedure state machine, validation, business model, competitors, and the demo. (A context doc, not a locked pitch.)
 
 ## Where we are right now (status)
 
-- **Phase:** brainstorming → converging. No code written yet.
+- **Phase:** converging on a named product (**Kyro**); MVP scoped, not yet built.
 - **Leading pain point:** Surgical Task-Shifting (case pain point #6) — specifically the moment the GMO's teleconsult call kept dropping during HM's emergency burr-hole.
-- **Leading idea:** an offline, on-device **GraphRAG** surgical co-pilot that delivers a neurosurgeon's validated, *source-cited* protocol to a non-neurosurgeon, and knows when to say "STOP and transfer." Knowledge base ships pre-loaded with canonical guidelines and grows via a curated network of verified expert contributors.
+- **Leading idea — "Kyro":** an offline, on-device **GraphRAG** surgical co-pilot whose core innovation is a **procedure state machine** that never loses its place — so *the call can drop and nothing is lost*. Source-cited; ships with a canonical core; grows via a curated expert network. Sharpened thesis: **the problem isn't knowledge, it's continuity.**
 - **Architecture:** specified in [05-architecture.md](05-architecture.md) — offline-first; "knowledge as versioned data, not model weights"; one provenance-tagged KG; sneakernet-friendly sync; patient data never leaves the device.
 - **Edge-of-knowledge behavior** (doc 05): when the KB has a gap the product degrades gracefully (stabilize-and-transfer, never invents), self-heals via expert "knowledge requests" (open-source-issues-style), and escalates *critical* cases to a live matched expert over WhatsApp. This is arguably our strongest trust signal for the AI-skeptic panel.
+- **Validation:** mentor neurosurgeon sign-off (this weekend) + MIMIC-4 concordance study + Namibia GMO design partners.
+- **Business:** Kyro = Exo's philanthropic wing; NGO/ministry/grant funding; beachhead Namibia; Mission:Brain's 130 chapters as the contributor seed. (Starlink/hardware = future roadmap, not core.)
 - **Open decision (whole team):** how hard to lean on the "AI" framing given an AI-skeptic neurosurgeon judging panel (doc 04's three paths), and how tightly to gate expert uploads (doc 05).
 
 ## Deliverable & judging (quick reminder)
