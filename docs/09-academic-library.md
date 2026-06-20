@@ -267,6 +267,59 @@ The evidence base that lets us make every claim **in the judges' own literature*
 
 ---
 
+# PART E — Surgical instruments, equipment & field logistics
+The physical kit for an emergency burr hole/craniotomy, frugal substitutes, supply lists, instrument atlases, and sterilization without power. *(Confirmed field fact: Wilson's "Emergency burr holes" lists a **minimal** set — knife, self-retainer, swab, drill, sharp+blunt hook, second knife — plus a **Hudson brace OR powered drill with a 14 mm perforator clutch bit**, and stresses pre-checking the bit fits the drill. → Kyro should include a "verify your kit before you start" step.)*
+
+### E1 · The cranial instrument set (drills, saws, elevators, clips, retractors, rongeurs)
+| Source | URL | Lic | Note |
+|---|---|---|---|
+| **WFNS + Aesculap — Basic Sets of Neurosurgical Instruments (2023)** | https://wfns.org/WFNSData/Uploads/files/Aesculap_Basic_Sets_of_Neurosurgical_Instruments_updated2023(1).pdf | 🟢 | **The definitive "essential cranial set" curated *for developing countries*** — the exact instrument list Kyro maps to. Highest-value catalog. |
+| Burr-hole Craniotomy — Global Surgical Atlas (VUMC) | https://www.vumc.org/global-surgical-atlas/sites/default/files/public_files/PDF/Burrhole%20craniotomy%20(Complete).pdf | 🟢 | Full **illustrated** burr-hole procedure for resource-limited settings, naming each instrument (incl. Kerrison rongeur to widen the hole). |
+| Lateral Craniotomy — Global Surgical Atlas (VUMC) | https://www.vumc.org/global-surgical-atlas/sites/default/files/public_files/PDF/Lateral%20Craniotomy%201-3.pdf | 🟢 | Craniotomy via burr holes + Gigli/rongeur, LMIC context. |
+| Basic Neurosurgical Instrumentation (Neupsy Key) | https://neupsykey.com/basic-neurosurgical-instrumentation/ | 🟡 | Instrument-ID: Penfield elevators 1–4, Kerrison/Leksell rongeurs, Weitlaner/mastoid retractors, suction tips, dural hooks, Raney clips, bipolar. |
+| The Humble Gigli Saw — instruments for craniotomy | https://www.researchgate.net/publication/335603910_Surgical_Instruments_for_Craniotomy_and_the_Success_of_the_Humble_Gigli's_Saw | 🟡 | Why the Gigli wire saw is ideal for low-resource craniotomy (connects burr holes). |
+
+### E2 · Hemostatic consumables & dural/drain management (prevent re-accumulation)
+| Source | URL | Lic | Note |
+|---|---|---|---|
+| Local hemostatic agents: bone wax, gelatin, collagen, oxidized cellulose (review) | https://pmc.ncbi.nlm.nih.gov/articles/PMC3592193/ | 🟢 | Authoritative: bone wax (70% beeswax/30% Vaseline), Gelfoam, Surgicel — what's in the EDH hemostasis kit + how to use each. |
+| Surgicel granuloma / swelling caution (case) | https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3999730/ | 🟢 | **Safety:** oxidized cellulose can swell/compress near bony confines/nerves — remove it. Kyro refusal/safety content. |
+| Dural tack-up (StatPearls EDH) | https://www.ncbi.nlm.nih.gov/books/NBK518982/ | 🟡 | Tack-up (3-0 nonabsorbable, 2–3 cm) to obliterate the epidural space → prevents re-accumulation. |
+| Prophylactic epidural closed drain after craniotomy | https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7534153/ | 🟢 | Epidural drain rationale to prevent post-op EDH re-accumulation — directly on point. |
+| Subgaleal drain placement (150 craniotomies) | https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7066100/ | 🟢 | Closed bulb-suction drain technique/efficacy. |
+
+### E3 · Improvised / frugal / power-independent substitutes
+| Source | URL | Lic | Note |
+|---|---|---|---|
+| IO vascular-access "burr hole" in a resource-limited setting (cadaver technical report) | https://pmc.ncbi.nlm.nih.gov/articles/PMC9126472/ | 🟢 | IO driver/needle as burr substitute; full improvised kit list + skull-thickness measurement to avoid plunging. Cornerstone frugal source. |
+| Complete recovery after EZ-IO burr hole for EDH (full text) | https://emergencymed.org.il/wp-content/uploads/2022/11/ez-io.pdf | 🟡 | Documented full-recovery case using EZ-IO (25 mm, 15 G) for EDH — proof-of-concept. |
+| EZ-IO emergency burr hole for EDH (Handtevy) | https://www.handtevy.com/ez-io-emergency-burr-hole-for-epidural-hematoma/ | 🟡 | Practical clinician walkthrough of the IO temporizing maneuver. |
+| Cordless engineering/battery drill for burr holes (developing countries) | https://jmscr.igmpublication.org/home/index.php/archive/156-volume-06-issue-11-november-2018/6200-burr-hole-making-with-cordless-engineering-battery-drill-in-neurosurgery | 🟡 | Hardware-store cordless drill as low-cost substitute (with safety caveats). |
+| Manual hand drill vs electric dual-motor drill for bedside craniotomy | https://www.sciencedirect.com/science/article/pii/S2214751920304898 | 🔴 | Head-to-head; flags manual hand-crank **plunging/slipping** risk — the real hazard to design against. |
+
+### E4 · WHO / district-hospital essential surgical equipment & supply lists
+| Source | URL | Lic | Note |
+|---|---|---|---|
+| WHO Generic Essential Emergency Equipment List (rev. 2012) | https://cdn.who.int/media/docs/default-source/integrated-health-services-(ihs)/csy/surgical-care/eeegenericlist_revaug2012.pdf | 🟢 | Authoritative baseline of what an ER/theatre should stock — anchors Kyro's "what your facility should have" list. |
+| WHO Guide to Infrastructure & Supplies (district hospital, anaesthetic+surgical) | https://cdn.who.int/media/docs/default-source/integrated-health-services-(ihs)/csy/surgical-care/imeesc-toolkit/equipment-lists-and-needs-assessment/anaesthetic-infrastructure-supplies.pdf | 🟢 | District-hospital tiered supply expectations. |
+| WHO Best Practice Guidelines on Emergency Surgical Care in Disaster Situations | https://www.who.int/publications/i/item/best-practice-guidelines-on-emergency-surgical-care-in-disaster-situations | 🟢 | Protocols + essential equipment for austere emergencies. |
+
+### E5 · Instrument atlases / catalogs (identification references)
+| Source | URL | Lic | Note |
+|---|---|---|---|
+| WFNS + Aesculap — Basic Sets (earlier ed.) | https://wfns.org/WFNSData/Document/Aesculap_Basic_Sets_of_Neurosurgical_Instruments.pdf | 🟢 | Cross-reference for set contents/eponyms. |
+| B. Braun / Aesculap — WFNS cranial & bipolar instrument sets | https://www.bbraun.com/en/products-and-solutions/therapies/neurosurgery/neurosurgical-instruments-wfns.html | 🔴 | Manufacturer breakdown w/ images/part numbers for ID. |
+| Eponyms of Cranial Neurosurgical Instruments (standardized naming) | https://www.sciencedirect.com/science/article/abs/pii/S1878875021009049 | 🔴 | Consistent instrument labels for the KB. |
+| Hudson Cranial Drill Set (product spec) | https://novosurgical.com/hudson-cranial-drill-set-n6871-11.html | 🔴 | Concrete Hudson brace + burr/perforator set composition (sizes) for the kit spec. |
+
+### E6 · Sterilization & instrument reprocessing without reliable electricity
+| Source | URL | Lic | Note |
+|---|---|---|---|
+| Decontamination of surgical instruments in disasters — what are the options? (scoping review) | https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8459170/ | 🟢 | The 3 no-electricity methods that achieve sterilization/HLD: **pressure cooking, boiling, chemical immersion**. Core field-sterilization guidance. |
+| Solar-steam autoclave for off-grid settings (MIT) | https://news.mit.edu/2020/autoclave-sterilize-medical-solar-1118 | 🟡 | Power-independent sterilization option. |
+
+> ⚠️ **Verification flag:** the project's "100% power-drill breakage in the field" claim was **not** substantiated by the harvest. The verified adjacent evidence is that manual hand-crank drills risk **plunging/slipping** (ScienceDirect S2214751920304898). Source the breakage stat from a specific military/austere field report before putting it in the pitch.
+
 ## 🎯 The ingestible spine — build Layer 3 from these first
 Clean licensing (🟢) **and** dead-on for the EDH/GMO critical path:
 1. **Wilson 2012 "Emergency burr holes: How to do it"** (CC-BY) — the procedure.
