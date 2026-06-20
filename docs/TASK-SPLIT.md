@@ -33,7 +33,7 @@
 |---|---|---|
 | C1 | Ingestion API | upload → parse → chunk (FastAPI + PyMuPDF) |
 | C2 | De-identify | Presidio scrubs PHI before content enters the KG |
-| C3 | **Graph build** | Microsoft GraphRAG **on the supercomputer**, **embeddings forced to BGE-M3** (overrides the OpenAI default — or retrieval = garbage). ~160-node graph is enough. |
+| C3 | **Graph build** | Microsoft GraphRAG via a **cloud LLM API** + **BGE-M3 embed** (CPU/cheap GPU) — **no supercomputer** (a ~160-node graph is small). **Force BGE-M3** (overrides the OpenAI default — or retrieval = garbage). |
 | C4 | Master store | Supabase (Postgres + pgvector) — accounts, provenance, trust-tier, review state |
 | C5 | Bundle compiler | GraphRAG parquet → SQLite/sqlite-vec → **ed25519 sign** → object storage (bundles L1 CGT + L2 graph) |
 | C6 | Distribution endpoint | `/bundles/latest?scope=edh-core` (full download first; delta = post-MVP) |
@@ -44,7 +44,7 @@
 
 ## 🟪 Shared / cross-cutting
 - **Integration (together):** Aniket's *real* bundle → Gowrish's app loads it → end-to-end. *Milestone: one product, not two demos.*
-- **Validation (on the supercomputer):** 6 headline deltas + the **spine-ablation collapse chart** (the hero artifact).
+- **Validation — compute split:** **Aniket builds the harness** (forks `medLLMbenchmark`); **Gowrish runs all evals on his supercomputer** (he alone has it + MIMIC). 6 headline deltas + the **spine-ablation collapse chart** (the hero artifact).
   - Tier A = 30–50 **mentor-signed** EDH vignettes (HM = #1) — *content from the spine workflow + mentor.*
   - Tier B = Aniket's C8 synthetic dialogues (regression only).
   - Tier C = **MIMIC-IV head-trauma slice — ✅ PhysioNet creds in hand, ready to pull.**
@@ -57,8 +57,8 @@
 - **Mentor's window** gates Tier-A + the credibility sign-off → batch everything for it.
 
 ## 🧰 Resources confirmed
-- ✅ **Supercomputer access** → C3 indexing + the full benchmark harness run here (not the phone).
-- ✅ **PhysioNet credentials** → Tier-C MIMIC-IV unblocked (no credentialing wait).
+- ✅ **Supercomputer + MIMIC/PhysioNet — Gowrish ONLY** (Aniket has neither; his stream is built not to need them). **C3 indexing runs on a cloud LLM API, NOT the supercomputer.** Heavy **evals, MIMIC-IV Tier-C, synthetic gen, any fine-tune run on Gowrish's supercomputer.**
+- ✅ **Tier-C MIMIC-IV unblocked** — Gowrish holds PhysioNet + CITI; keep the slice inside the project (per-user DUA).
 - 🖥️ **Android emulator** → functional dev only (use now). **Perf gate needs real ARM hardware** — no phone on hand → **cloud device farm (Firebase Test Lab / AWS Device Farm)** or borrow one; keep a **2B-Q4 fallback** so the model choice never blocks the build.
 
 ## 📌 Live status
