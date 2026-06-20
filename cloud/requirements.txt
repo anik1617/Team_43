@@ -1,12 +1,14 @@
 # Kyro cloud / knowledge-bundle pipeline
-# Hour-one mock bundle needs only these three:
+# Core (mock bundle + the C5 compiler's GraphRAG-parquet mapping + selftest):
 numpy>=1.26
 sqlite-vec>=0.1.6        # vec0 virtual tables; pin the SAME version on-device (manifest guard)
 cryptography>=42.0       # ed25519 bundle signing
+pandas>=2.0              # read GraphRAG output parquet
+pyarrow>=14.0            # parquet engine
 
-# --- step ③ (real BGE-M3 embeddings) — uncomment when standing up the real pipeline ---
+# --- step ③ (real index + BGE-M3 embeddings) — install when running the real pipeline ---
 # FlagEmbedding>=1.2       # BAAI/bge-m3, dim=1024 (must match on-device embedder byte-for-byte)
-# graphrag                 # Microsoft GraphRAG (override embeddings to bge-m3 in settings.yaml)
+# graphrag>=2.0            # Microsoft GraphRAG (extraction only; embeddings discarded — see graphrag/README)
 
 # --- later (C1/C4/C7 cloud services) ---
 # fastapi

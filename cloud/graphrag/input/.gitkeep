@@ -1,0 +1,5 @@
+# Drop the EDH corpus here as .txt files (one per source). Filename stem must match a key
+# in kyro_bundle/sources.py so each chunk gets its citation + trust_tier, e.g.:
+#   peshawar_recommendations_2019.txt
+#   btf_surgical_guidelines.txt
+#   who_tbi.txt
