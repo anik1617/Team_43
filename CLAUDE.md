@@ -10,19 +10,19 @@ The repo is still **pre-implementation** (no build system, test suite, or applic
 
 - `Case Report and Hackathon Challenge/` — the case, instructions, and rubric (PDFs).
 - `TBI Resources/` — 12 provided research papers / fact sheets (the evidence base).
-- `docs/` — **the team's synthesized working docs; start here.** Case brief + neuro glossary, the full evidence base distilled, the leading solution idea + an honest evaluation, and the judging strategy. Index: `docs/README.md`.
+- `docs/` — **the team's synthesized working docs; start here.** Case brief + neuro glossary, the full evidence base distilled, the leading solution idea + an honest evaluation, the judging strategy, and the technical architecture. Index: `docs/README.md`.
 - `brainstorm with gowrish.txt` — raw transcript of the founding brainstorm.
 
 ## Current direction & the audience that decides everything (read this)
 
-**Leading direction (strong lean, not finalized):** pain point **#6 Surgical Task-Shifting** — specifically the case moment where the GMO's teleconsult call to a distant neurosurgeon kept dropping mid-emergency. The idea: an **offline, "expert-in-the-loop" surgical co-pilot** that delivers a neurosurgeon's validated EDH (epidural hematoma) protocol to a non-neurosurgeon and **knows when to say "STOP and transfer."** Built on the team's own product **Exo** (a knowledge-graph + identity-conditioned reasoning system; separate git repo at `C:\Personal_Coding\Exo`, which the team can fork freely — note Exo's pipeline currently ends in a cloud LLM, so making it truly offline/on-device is the core open problem).
+**Leading direction (strong lean, not finalized):** pain point **#6 Surgical Task-Shifting** — specifically the case moment where the GMO's teleconsult call to a distant neurosurgeon kept dropping mid-emergency. The idea: an **offline, "expert-in-the-loop" surgical co-pilot** that delivers a neurosurgeon's validated EDH (epidural hematoma) protocol to a non-neurosurgeon and **knows when to say "STOP and transfer."** **Architecture (MVP):** a plain **GraphRAG** stack (not Exo) — an offline, on-device mobile app where a small quantized multilingual model *synthesizes* answers from a local, **source-cited** knowledge graph. The KB ships with a canonical, guideline-grade core and is grown by a **curated network of verified expert contributors** (the moat). Keystone principle: **knowledge = versioned data, not model weights** (updates ship as signed data bundles, not retrained models), and **patient data never leaves the device** (privacy-by-architecture). Full design in `docs/05-architecture.md`. (Exo — the team's own product, repo at `C:\Personal_Coding\Exo` — was considered but dropped for the MVP; GraphRAG is simpler and its provenance is a credibility upgrade with skeptical MD judges.)
 
 **The audience constraint that overrides aesthetics:** the **judges are mostly/all MDs, several are world-class neurosurgeons, and they are skeptical of AI.** Therefore:
 - **Never frame anything as AI "replicating a surgeon's intuition/reasoning"** — it attacks their identity and triggers an impossible proof burden. Frame as *task-sharing decision support* that *extends* a neurosurgeon's reach and *defers when unsure* (the neurosurgeon is the hero/author; the AI is a humble, auditable delivery mechanism).
 - Ground every claim in **their own literature** (esp. the Pakistan-written **Peshawar Recommendations**, which explicitly endorse supervised non-specialist EDH evacuation).
 - Bring **concrete, guideline-based validation** (guideline-concordance sign-off by a mentor neurosurgeon, a small decision benchmark, and a safety/refusal demo) — not "AI magic."
 
-Full reasoning in `docs/03-solution-idea-and-evaluation.md` and `docs/04-judging-strategy-and-reframe.md`.
+Full reasoning in `docs/03-solution-idea-and-evaluation.md`, `docs/04-judging-strategy-and-reframe.md`, and `docs/05-architecture.md`.
 
 ## Source-of-truth documents (read these before proposing anything)
 

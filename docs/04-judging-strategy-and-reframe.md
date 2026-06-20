@@ -28,7 +28,7 @@ Reframe so the **expert is the author and the AI is a humble delivery mechanism:
 What this fixes:
 - **No "intuition" claim.** Intelligence = retrieval, sequencing, checklist enforcement, confidence gating — not invented judgment. Defensible, not threatening.
 - **Proof burden collapses** from "did you replicate surgical judgment?" (impossible) to "did you faithfully encode the established guideline?" (a mentor neurosurgeon verifies it in the room).
-- **Exo's `belief_state` becomes a safety feature:** the headline is *"the AI that knows when NOT to act."* Neurosurgeons love a junior who knows when to call for help.
+- **Provenance + a confidence/defer gate become the safety story:** every recommendation shows its source (GraphRAG), and below a confidence threshold the tool says *"STOP and transfer"* instead of guessing. The headline is *"the AI that knows when NOT to act."* Neurosurgeons love a junior who knows when to call for help.
 
 ## Vocabulary: ban vs. use
 
@@ -56,12 +56,12 @@ We can't run a clinical trial, but we can bring data this panel respects:
 
 The reframe lowers risk but doesn't erase it — some clinicians have a "no AI near my patient" reflex no framing penetrates. Weigh team appetite:
 
-1. **Reframe (recommended).** Keep the endorsed pain point; ship the humble, offline, defers-when-unsure, guideline-concordant co-pilot; lead with the clinical problem + evidence, reveal Exo as the engine only if asked. Highest ceiling, uses our real asset, *with* the gradient — *if* we nail framing + bring the validation table.
-2. **De-AI the front of the pitch.** Same problem; the hero is an offline guideline-delivery + training tool / decision aid; Exo runs underneath but we barely say "AI." Safer with allergic judges; slightly less differentiated.
+1. **Reframe (recommended).** Keep the endorsed pain point; ship the humble, offline, defers-when-unsure, guideline-concordant co-pilot; lead with the clinical problem + evidence, reveal the GraphRAG engine only if asked. Highest ceiling, uses our real asset, *with* the gradient — *if* we nail framing + bring the validation table.
+2. **De-AI the front of the pitch.** Same problem; the hero is an offline guideline-delivery + training tool / decision aid; the GraphRAG engine runs underneath but we barely say "AI." Safer with allergic judges; slightly less differentiated.
 3. **Pivot the pain point.** If the read is that *any* OR-adjacent AI sinks with this panel, equally strong lanes that still use our software edge and dodge the allergy: **prevention/education** (community TBI/concussion awareness), **rehabilitation** (offline family-as-therapist coaching — huge unmet need, zero OR-AI threat), or **diagnosis-without-imaging triage** (lower stakes than the OR).
 
 ## Bottom line
 
 The teammates are right that the current framing would get torn apart — and that should change the design now. But the pain point itself is the one the organizers and the neurosurgery establishment explicitly asked for. The winning version isn't "abandon it" or "defend it as-is" — it's the **humble, expert-in-the-loop, knows-when-to-stop reframe, carried in with a guideline-validation table and a mentor's blessing.** That isn't against their gradient. That *is* their gradient.
 
-Because we own Exo, the most valuable thing to build into the fork is exactly what makes the reframe safe: **the confidence gate / "STOP and transfer" behavior as a first-class, demonstrable feature** — not buried internals.
+The most valuable thing to build is exactly what makes the reframe safe: **source-cited retrieval plus the confidence gate / "STOP and transfer" behavior as a first-class, demonstrable feature** — not buried internals. (Architecture in `docs/05-architecture.md`.)
