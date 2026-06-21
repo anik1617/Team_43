@@ -24,6 +24,7 @@ import {
   escalate, openExpertCall, escalationStatus, onEscalationStatus, type EscalationStatus,
 } from './src/escalation';
 import { openKnowledgePortal, checkCloudHealth } from './src/cloud';
+import { modelsPresent, downloadModels, MODELS, type DLProgress } from './src/modelDownload';
 import { C, F } from './src/theme';
 
 // Fields the model can classify from speech (categorical). Everything else (GCS components, SBP) is
@@ -142,6 +143,78 @@ const ESC_TEXT: Record<EscalationStatus, string> = {
   sent: 'Brief delivered · expert briefed', failed: 'Send failed — will retry on reconnect',
 };
 
+// ── first-run setup gate: download the on-device models once (B1) ──────────────
+function ProgressBar({ pct }: { pct: number }) {
+  return (
+    <View style={{ height: 8, borderRadius: 4, backgroundColor: 'rgba(255,255,255,0.18)', overflow: 'hidden', marginVertical: 10 }}>
+      <View style={{ height: 8, width: `${Math.max(2, pct)}%`, borderRadius: 4, backgroundColor: C.sky }} />
+    </View>
+  );
+}
+
+function SetupScreen({ phase, dl, error, onDownload, onSkip }: {
+  phase: 'checking' | 'needed' | 'downloading';
+  dl: DLProgress | null; error: string | null; onDownload: () => void; onSkip: () => void;
+}) {
+  const gb = (n: number) => (n / 1e9).toFixed(2);
+  const pct = dl && dl.overallTotal > 0 ? Math.min(100, Math.round((dl.overallReceived / dl.overallTotal) * 100)) : 0;
+  const downloading = phase === 'downloading';
+  return (
+    <View style={{ flex: 1, backgroundColor: C.bg }}>
+      <StatusBar barStyle="dark-content" backgroundColor={C.bg} />
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 9, paddingTop: 52, paddingHorizontal: 20, paddingBottom: 6 }}>
+        <View style={{ width: 27, height: 27, borderRadius: 8, backgroundColor: C.brand, alignItems: 'center', justifyContent: 'center' }}>
+          <View style={{ width: 9, height: 9, borderRadius: 2, backgroundColor: '#fff', transform: [{ rotate: '45deg' }] }} />
+        </View>
+        <Text style={T({ fontFamily: F.brand, fontSize: 20, letterSpacing: 0.5, color: C.ink })}>Kyro</Text>
+      </View>
+      <View style={{ paddingHorizontal: 20, paddingBottom: 10 }}>
+        <SectionLabel style={{ color: C.faint2, letterSpacing: 1.3, fontSize: 11 }}>FIRST-TIME SETUP</SectionLabel>
+      </View>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 16 }} showsVerticalScrollIndicator={false}>
+        <KyroMsg>Kyro runs entirely on this phone. I need to download my on-device models once — about 3.4 GB. Use Wi-Fi if you can; this happens only once, then I work fully offline.</KyroMsg>
+        <View style={{ backgroundColor: C.card, borderWidth: 1, borderColor: C.cardLine, borderRadius: 14, padding: 15, marginTop: 4 }}>
+          <SectionLabel>ON-DEVICE MODELS</SectionLabel>
+          {MODELS.map((m) => {
+            const active = downloading && dl?.key === m.key;
+            return (
+              <View key={m.key} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 12 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flex: 1 }}>
+                  <View style={{ width: 7, height: 7, borderRadius: 4, backgroundColor: active ? C.brand : C.faint2 }} />
+                  <Text style={T({ fontFamily: F.sans, fontSize: 13.5, color: C.ink2 })}>{m.label}</Text>
+                </View>
+                <Text style={T({ fontFamily: F.mono, fontSize: 12, color: C.faint })}>{gb(m.bytes)} GB</Text>
+              </View>
+            );
+          })}
+        </View>
+        {downloading ? (
+          <View style={{ backgroundColor: C.navy, borderRadius: 14, padding: 16, marginTop: 13 }}>
+            <Text style={T({ fontFamily: F.sans, fontWeight: '700', fontSize: 11, letterSpacing: 1.2, color: C.sky })}>{`DOWNLOADING · ${pct}%`}</Text>
+            <ProgressBar pct={pct} />
+            <Text style={T({ fontFamily: F.sans, fontSize: 13.5, color: '#fff' })}>{dl?.label ?? ''}</Text>
+            <Text style={T({ fontFamily: F.mono, fontSize: 11.5, color: C.sky, marginTop: 4 })}>{`${gb(dl?.overallReceived ?? 0)} / ${gb(dl?.overallTotal ?? 0)} GB · keep Kyro open`}</Text>
+          </View>
+        ) : null}
+        {error ? <Text style={T({ fontFamily: F.sans, fontSize: 13, color: '#C2453B', marginTop: 12, lineHeight: 19 })}>{error}</Text> : null}
+        <Text style={T({ fontFamily: F.sans, fontSize: 12, color: C.muted, marginTop: 14, lineHeight: 18 })}>Nothing leaves your phone. The models power the voice, the AI wording, and semantic retrieval — the clinical decisions are deterministic either way.</Text>
+      </ScrollView>
+      <View style={{ paddingVertical: 13, paddingHorizontal: 20, paddingBottom: 22, borderTopWidth: 1, borderTopColor: C.hair, backgroundColor: '#fff' }}>
+        {phase === 'checking' ? (
+          <Btn label="Checking…" onPress={() => {}} disabled />
+        ) : downloading ? (
+          <Btn label={`Downloading… ${pct}%`} onPress={() => {}} disabled />
+        ) : (
+          <>
+            <Btn label={error ? 'Retry download' : 'Download models · ~3.4 GB'} onPress={onDownload} />
+            <Btn label="Skip — text-only mode" variant="ghost" onPress={onSkip} style={{ marginTop: 10 }} />
+          </>
+        )}
+      </View>
+    </View>
+  );
+}
+
 export default function App() {
   const [phase, setPhase] = useState<Phase>('intro');
   const [stepIdx, setStepIdx] = useState(0);
@@ -154,6 +227,9 @@ export default function App() {
   const [micReady, setMicReady] = useState(false);
   const [micAllowed, setMicAllowed] = useState(Platform.OS !== 'android'); // non-android: no runtime grant
   const [esc, setEsc] = useState<EscalationStatus>(escalationStatus());
+  const [setupPhase, setSetupPhase] = useState<'checking' | 'needed' | 'downloading' | 'ready'>('checking');
+  const [dl, setDl] = useState<DLProgress | null>(null);
+  const [dlError, setDlError] = useState<string | null>(null);
   const scrollRef = useRef<ScrollView>(null);
 
   const step = STEPS[stepIdx];
@@ -161,12 +237,19 @@ export default function App() {
 
   // boot: load mic + model (both optional / non-fatal), subscribe to escalation status.
   useEffect(() => {
-    initMic().then((ok) => setMicReady(ok));
-    initModel().catch(() => {});
     const unsub = onEscalationStatus(setEsc);
     checkCloudHealth().then(setOnline).catch(() => {}); // real online/offline from the cloud /healthz
+    // First-run gate: are the on-device models present (adb-pushed or a prior download)? If not, setup.
+    modelsPresent().then((present) => setSetupPhase(present ? 'ready' : 'needed')).catch(() => setSetupPhase('needed'));
     return unsub;
   }, []);
+
+  // Once setup is satisfied, load the on-device models (mic + LLM). Non-fatal if a file is absent.
+  useEffect(() => {
+    if (setupPhase !== 'ready') return;
+    initMic().then((ok) => setMicReady(ok));
+    initModel().catch(() => {});
+  }, [setupPhase]);
 
   // keep the chat pinned to the latest message
   useEffect(() => { const id = setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 50); return () => clearTimeout(id); }, [messages, phase, stepIdx]);
@@ -287,6 +370,18 @@ export default function App() {
   const onSendExpert = () => { if (r) escalate(r.handoff).catch(() => {}); };
   const onOpenCall = () => { openExpertCall().catch(() => {}); };
   const onContributeKnowledge = () => { openKnowledgePortal().catch(() => {}); };
+
+  const startDownload = () => {
+    setDlError(null); setSetupPhase('downloading');
+    downloadModels(setDl)
+      .then(() => setSetupPhase('ready'))
+      .catch((e) => { setDlError(String(e?.message ?? e)); setSetupPhase('needed'); });
+  };
+
+  // First-run model download gate — blocks the app until models are present (or the user skips).
+  if (setupPhase !== 'ready') {
+    return <SetupScreen phase={setupPhase} dl={dl} error={dlError} onDownload={startDownload} onSkip={() => setSetupPhase('ready')} />;
+  }
 
   const answeredCount = Object.keys(answers).length;
   const showEvidence = phase !== 'intro' && answeredCount > 0;
