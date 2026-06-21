@@ -181,7 +181,7 @@ class Spine:
     strings: dict = field(default_factory=dict)   # node_id -> {lang: (prompt, recommendation)}; ONLY nodes with rows
 ```
 
-`load_spine(path, verify=True)` raises `BundleError` if the file is missing; opens the bundle with sqlite-vec (mirror `cloud/kyro_bundle/build_mock._open` / `bundle_writer.open_bundle`); when `verify=True`, reuses `kyro_bundle.signing` — `verify(manifest_digest(conn), m_sig, pub)` and `verify(cgt_digest(conn), cgt_sig, pub)` — raising `BundleError` on failure. Reads `cgt_nodes` (incl. `source_citation`, `trust_tier`), `cgt_edges`, `root_id`, and `cgt_strings` into the `Spine`. Mirror `conformance.load()` (lines 16–23) for nodes/edges/root. **Consumers MUST use `spine.strings.get(id, {})`** — terminals (N40/N98/N99) have no string row.
+`load_spine(path, verify=True)` raises `BundleError` if the file is missing; opens the bundle with sqlite-vec (mirror `cloud/kyro_bundle/bundle_writer.open_bundle`); when `verify=True`, reuses `kyro_bundle.signing` — `verify(manifest_digest(conn), m_sig, pub)` and `verify(cgt_digest(conn), cgt_sig, pub)` — raising `BundleError` on failure. Reads `cgt_nodes` (incl. `source_citation`, `trust_tier`), `cgt_edges`, `root_id`, and `cgt_strings` into the `Spine`. Mirror `conformance.load()` (lines 16–23) for nodes/edges/root. **Consumers MUST use `spine.strings.get(id, {})`** — terminals (N40/N98/N99) have no string row.
 
 - [ ] **Step 4: Run → PASS**
 
