@@ -57,16 +57,14 @@ export async function createQwenL3(modelPath: string, readLeafText?: (nodeId: st
   const llama: Llama = await getLlama();
   const model: LlamaModel = await llama.loadModel({ modelPath });
   const context: LlamaContext = await model.createContext({ contextSize: 2048 });
+  const sequence = context.getSequence();  // one reused sequence (avoids per-call sequence churn)
 
-  // one fresh chat turn per call (no cross-call history leakage into a classification)
+  // one fresh chat turn per call. History is cleared each call so classifications never leak into
+  // each other; the per-call system instruction is prepended to the user message.
+  const session = new LlamaChatSession({ contextSequence: sequence });
   async function turn(system: string, user: string, grammar?: any): Promise<string> {
-    const seq = context.getSequence();
-    try {
-      const session = new LlamaChatSession({ contextSequence: seq, systemPrompt: system });
-      return await session.prompt(user, grammar ? { grammar, maxTokens: 48 } : { maxTokens: 220, temperature: 0 });
-    } finally {
-      seq.dispose();
-    }
+    session.setChatHistory([]);
+    return await session.prompt(`${system}\n\n${user}`, grammar ? { grammar, maxTokens: 48 } : { maxTokens: 220, temperature: 0 });
   }
 
   return {
