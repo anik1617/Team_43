@@ -51,10 +51,40 @@ def test_cond_true_evaluates_against_env():
     assert cond_true("true", env) is True
 
 def test_cond_true_is_sandboxed():
-    # no builtins available inside the eval except range
+    # the AST whitelist rejects any escape attempt (no eval/compile anywhere)
     import pytest
     with pytest.raises(Exception):
-        cond_true("__import__('os')", {})
+        cond_true("__import__('os')", {})          # dunder Name → unknown name
+    with pytest.raises(Exception):
+        cond_true("().__class__", {})              # Attribute access → rejected
+    with pytest.raises(Exception):
+        cond_true("os.system('x')", {"os": object})  # Attribute on a real obj → rejected
+    with pytest.raises(Exception):
+        cond_true("len([1,2])", {})                # non-range Call → rejected
+
+def test_cond_true_chained_and_membership():
+    # behavioral parity with the old eval for the grammar's harder forms
+    assert cond_true("age_yr BETWEEN 15 AND 49", {"age_yr": 31}) is True
+    assert cond_true("age_yr BETWEEN 15 AND 49", {"age_yr": 60}) is False
+    assert cond_true("gcs_e NOT IN [3..15]", {"gcs_e": 7}) is False   # 7 in range(3,16)
+    assert cond_true("gcs_e NOT IN [3..15]", {"gcs_e": 20}) is True
+
+def test_cond_true_or_not_and_multiterm():
+    # exercise every _eval branch: OR -> any(), unary NOT, multi-term AND chain
+    env = {"a": 1, "b": 0, "mechanism": "fall"}
+    assert cond_true("a = 1 OR b = 1", env) is True
+    assert cond_true("a = 2 OR b = 1", env) is False
+    assert cond_true("NOT a = 2", env) is True
+    assert cond_true("a = 1 AND b = 0 AND mechanism = 'fall'", env) is True
+
+def test_cond_true_notequal_and_string_membership():
+    # evaluated <> (NotEq) and string-list IN/NOT IN (List literal path), parity with old eval
+    env = {"mechanism": "fall", "side": "left"}
+    assert cond_true("mechanism <> 'rta'", env) is True
+    assert cond_true("mechanism <> 'fall'", env) is False
+    assert cond_true("mechanism IN ['fall','rta']", env) is True
+    assert cond_true("side NOT IN ['right','none']", env) is True
+    assert cond_true("side NOT IN ['left','right']", env) is False
 ```
 
 - [ ] **Step 2: Run test to verify it fails** — `cd cloud && .venv/Scripts/python -m pytest tests/test_conditions.py -v` → FAIL (module not found)
@@ -64,8 +94,17 @@ def test_cond_true_is_sandboxed():
 ```python
 # cloud/kyro_engine/conditions.py
 """cgt_edges condition grammar → Python. Behavioral mirror of edge/e3/conformance.py
-to_py/cond_true and edge/e3/conditions.ts. PARITY-CRITICAL: keep byte-equivalent in behavior."""
-import re
+to_py/cond_true and edge/e3/conditions.ts. PARITY-CRITICAL: keep byte-equivalent in behavior.
+
+SECURITY: cond_true does NOT use eval/compile. to_py is the byte-identical string
+translation (the parity-critical half); cond_true parses to_py's output with ast.parse
+and evaluates it with a node-whitelist interpreter (_eval). For every valid grammar input
+the result is identical to the old `eval(...,{'__builtins__':{}})`; anything outside the
+whitelist (Attribute, Subscript, Lambda, non-range Call, dunder Name) raises ValueError.
+This removes the empty-builtins eval sandbox-escape class entirely. Gowrish to mirror this
+on edge/e3/conformance.py + conditions.ts so the implementation story stays consistent
+(functional parity already holds — to_py is unchanged and all real conditions evaluate identically)."""
+import ast, operator, re
 
 def to_py(cond: str) -> str:
     s = cond
@@ -79,10 +118,53 @@ def to_py(cond: str) -> str:
     s = re.sub(r'\bAND\b', 'and', s); s = re.sub(r'\bOR\b', 'or', s)
     return s
 
+_CMP = {ast.Lt: operator.lt, ast.LtE: operator.le, ast.Gt: operator.gt, ast.GtE: operator.ge,
+        ast.Eq: operator.eq, ast.NotEq: operator.ne,
+        ast.In: lambda a, b: a in b, ast.NotIn: lambda a, b: a not in b}
+
+def _eval(node, env):
+    if isinstance(node, ast.Expression):
+        return _eval(node.body, env)
+    if isinstance(node, ast.BoolOp):
+        vals = [_eval(v, env) for v in node.values]
+        if isinstance(node.op, ast.And):
+            return all(vals)
+        if isinstance(node.op, ast.Or):
+            return any(vals)
+        raise ValueError(f"disallowed bool op: {type(node.op).__name__}")
+    if isinstance(node, ast.UnaryOp) and isinstance(node.op, ast.Not):
+        return not _eval(node.operand, env)
+    if isinstance(node, ast.Compare):
+        left = _eval(node.left, env)
+        for op, comp in zip(node.ops, node.comparators):
+            right = _eval(comp, env)
+            fn = _CMP.get(type(op))
+            if fn is None:
+                raise ValueError(f"disallowed comparison: {type(op).__name__}")
+            if not fn(left, right):
+                return False
+            left = right
+        return True
+    if isinstance(node, ast.Name):
+        if node.id not in env:
+            raise ValueError(f"unknown name: {node.id}")
+        return env[node.id]
+    if isinstance(node, ast.Constant):
+        return node.value
+    if isinstance(node, (ast.Tuple, ast.List)):
+        return [_eval(e, env) for e in node.elts]
+    if isinstance(node, ast.Call):
+        if isinstance(node.func, ast.Name) and node.func.id == 'range' \
+                and not node.keywords:
+            return range(*[_eval(a, env) for a in node.args])
+        raise ValueError("only range() calls are permitted")
+    raise ValueError(f"disallowed expression: {type(node).__name__}")
+
 def cond_true(cond: str, env: dict) -> bool:
     if cond == 'true':
         return True
-    return bool(eval(to_py(cond), {'__builtins__': {}, 'range': range}, env))
+    tree = ast.parse(to_py(cond), mode='eval')
+    return bool(_eval(tree, env))
 ```
 
 - [ ] **Step 4: Run test to verify it passes** — same pytest command → PASS
@@ -123,7 +205,29 @@ def test_derive_flags_out_of_range_gcs():
 def test_derive_sbp_age_stratified():
     assert derive({**HM, 'age_yr': 60, 'sbp_mmhg': 95})['sbp_at_target'] is False
     assert derive({**HM, 'age_yr': 60, 'sbp_mmhg': 105})['sbp_at_target'] is True
+
+def test_derive_second_sbp_band_and_branches():
+    # 15-49 / >70 band uses threshold 110 (distinct from the 50-69 band's 100) — pin each clinical band
+    assert derive({**HM, 'age_yr': 31, 'sbp_mmhg': 105})['sbp_at_target'] is False
+    assert derive({**HM, 'age_yr': 31, 'sbp_mmhg': 115})['sbp_at_target'] is True
+    assert derive({**HM, 'age_yr': 80, 'sbp_mmhg': 105})['sbp_at_target'] is False   # >70 band, thr 110
+    # gcs_trend 'stable' branch (total 15 not < baseline 15) and setdefault respects a supplied value
+    assert derive({**HM, 'gcs_e': 4, 'gcs_v': 5, 'gcs_m': 6})['gcs_trend'] == 'stable'
+    assert derive({**HM, 'gcs_trend': 'stable'})['gcs_trend'] == 'stable'
+    # bilateral_fixed when both pupils fixed
+    assert derive({**HM, 'pupil_react_r': 'fixed'})['bilateral_fixed'] is True
+
+def test_derive_order_independence_pupils_optional():
+    # re-synced to the order-independent oracle (edge ac1c6a1): pupils read via .get(), so missing
+    # pupil evidence does NOT KeyError — they resolve to none/False until gathered.
+    partial = {k: v for k, v in HM.items() if k not in ('pupil_react_l', 'pupil_react_r')}
+    e = derive(partial)
+    assert e['bilateral_fixed'] is False
+    assert e['fixed_pupil_side'] == 'none'
+    assert e['gcs_total'] == 7          # GCS present -> still computed
 ```
+
+> **Re-sync note (2026-06-20):** the oracle's `derive()` became order-independent at edge commit `ac1c6a1` (gate GCS-derived fields on `gcs_known`, read pupils via `.get()`, set `gcs_trend` only when `gcs_known`, fire the out-of-range-GCS validation override only when `gcs_known`). `cloud/kyro_engine/derive.py` was re-ported to match. Full-evidence results are identical, so all prior tests stay green. (Observation for Gowrish, NOT fixed here to preserve parity: `herniation_signs` still reads `e['gcs_trend']` unconditionally, so a derive() on evidence missing GCS would `KeyError` — the order-independence holds only once GCS is gathered.)
 
 - [ ] **Step 2: Run → FAIL**
 
@@ -143,7 +247,7 @@ def test_derive_sbp_age_stratified():
 
 ```python
 # cloud/tests/test_loader.py
-import os
+import os, shutil, sqlite3
 from kyro_engine.loader import load_spine, BundleError
 import pytest
 
@@ -157,12 +261,35 @@ def test_load_spine_reads_cgt():
     assert 'en' in sp.strings['L40']                  # L40 is a leaf that HAS an en string
 
 def test_load_spine_verifies_signature_by_default():
-    # tampering is out of scope here; assert it does NOT raise on a genuine bundle
-    load_spine(MOCK, verify=True)
+    load_spine(MOCK, verify=True)                      # genuine bundle: must NOT raise
 
 def test_load_spine_rejects_missing_file():
     with pytest.raises(BundleError):
         load_spine('does-not-exist.kyro')
+
+def _tampered_copy(tmp_path, mutate_sql):
+    dst = str(tmp_path / 'tampered.kyro')
+    shutil.copy(MOCK, dst)
+    c = sqlite3.connect(dst); c.execute(mutate_sql); c.commit(); c.close()
+    return dst
+
+def test_load_spine_rejects_tampered_content(tmp_path):
+    # mutating a signed cgt_strings row breaks the manifest+cgt digests -> fail closed
+    dst = _tampered_copy(tmp_path,
+        "UPDATE cgt_strings SET recommendation = recommendation || ' X' WHERE node_id='L40'")
+    with pytest.raises(BundleError):
+        load_spine(dst)
+
+def test_load_spine_rejects_null_signature(tmp_path):
+    dst = _tampered_copy(tmp_path, "UPDATE cgt_meta SET signature=NULL")
+    with pytest.raises(BundleError):
+        load_spine(dst)
+
+def test_verify_false_skips_tampered(tmp_path):
+    # the skip path is genuinely different from the verify path: tampered bundle loads w/o raising
+    dst = _tampered_copy(tmp_path,
+        "UPDATE cgt_strings SET recommendation = recommendation || ' X' WHERE node_id='L40'")
+    load_spine(dst, verify=False)
 ```
 
 - [ ] **Step 2: Run → FAIL**
@@ -198,10 +325,9 @@ class Spine:
 ```python
 # cloud/tests/test_executor.py
 import os
-from kyro_engine.loader import load_spine
+from kyro_engine.loader import load_spine, Spine
 from kyro_engine.executor import run
-from kyro_engine.derive import derive  # for the HM/PEDS/INVALID fixtures
-from test_derive import HM             # reuse the fixture
+from test_derive import HM             # reuse the fixture (run() calls derive() internally)
 
 MOCK = os.path.join(os.path.dirname(__file__), '..', 'bundles', 'edh-core-v0-mock.kyro')
 
@@ -213,8 +339,30 @@ def test_run_three_canonical_cases():
 
 def test_result_has_trajectory_and_leaf():
     r = run(load_spine(MOCK), HM)
-    assert r.leaf_id and r.trajectory[0] == 'N00'
+    assert r.leaf_id == 'L21c' and r.trajectory[0] == 'N00'   # HM's known GUIDE leaf
     assert r.action in ('GUIDE','OBSERVE','STABILIZE_TRANSFER','ABSTAIN_STOP')
+
+def _node(action=None):
+    return {'kind': 'decision', 'field': 'x', 'action': action,
+            'source_citation': None, 'trust_tier': None}
+
+def test_run_no_edge_fires_is_stuck():
+    sp = Spine(nodes={'A': _node()},
+               edges=[{'src': 'A', 'dst': 'B', 'cond': 'gcs_total > 100'}],  # false for HM
+               root='A')
+    r = run(sp, HM)
+    assert r.action == 'ABSTAIN_STOP' and r.stuck is True
+    assert r.leaf_id == 'A' and r.trajectory == ['A']
+
+def test_run_loop_exhaustion_leaf_id_matches_trajectory():
+    sp = Spine(nodes={'A': _node(), 'B': _node()},
+               edges=[{'src': 'A', 'dst': 'B', 'cond': 'true'},
+                      {'src': 'B', 'dst': 'A', 'cond': 'true'}],
+               root='A')
+    r = run(sp, HM, max_steps=4)
+    assert r.action == 'ABSTAIN_STOP' and r.stuck is True
+    assert r.trajectory == ['A', 'B', 'A', 'B']
+    assert r.leaf_id == r.trajectory[-1] == 'B'   # the fix: leaf_id is last VISITED, not advanced-to
 ```
 
 - [ ] **Step 2: Run → FAIL**
@@ -254,10 +402,12 @@ def run(spine, raw_evidence: dict, max_steps: int = 60) -> KyroResult:
         if nxt is None:                                      # STUCK (no edge fired)
             return KyroResult(action='ABSTAIN_STOP', leaf_id=cur, trajectory=path, stuck=True)
         cur = nxt                                            # ADVANCE
-    return KyroResult(action='ABSTAIN_STOP', leaf_id=cur, trajectory=path, stuck=True)
+    # loop exhausted (cycle): leaf_id = last VISITED node == path[-1], NOT the un-visited cur
+    return KyroResult(action='ABSTAIN_STOP', leaf_id=(path[-1] if path else spine.root),
+                      trajectory=path, stuck=True)
 ```
 
-*(Note: a STUCK/loop fails safe to ABSTAIN_STOP — stricter than conformance.py's `STUCK@`/`LOOP` sentinels, which were diagnostic.)*
+*(Note: a STUCK/loop fails safe to ABSTAIN_STOP — stricter than conformance.py's `STUCK@`/`LOOP` sentinels, which were diagnostic. On loop-exhaustion `leaf_id` is the last visited node so it always equals `trajectory[-1]`.)*
 
 - [ ] **Step 4: Run → PASS**
 
@@ -283,9 +433,9 @@ def test_parse_mode_from_recommendation_tag():
 
 - [ ] **Step 2: Run → FAIL**
 
-- [ ] **Step 3: Implement** `parse_mode(text)` — regex `\[\s*(GREEN|YELLOW|RED)` → 🟢/🟡/🔴; **default 🟡** for text without a leading tag or for `None`/empty (never raises, never empty). Then in `executor.run`, on the ACT branch: `rec = spine.strings.get(leaf_id, {}).get('en', ('', ''))[1]` (tolerant — terminals have no string) → `mode = parse_mode(rec)`; collect `citations` by walking `path`, gathering each node's `source_citation` (dedup, drop None).
+- [ ] **Step 3: Implement** `parse_mode(text)` — regex `\s*\[\s*(GREEN|YELLOW|RED)` matched with **`.match()` (ANCHORED at the start)** → 🟢/🟡/🔴; **default 🟡** for text without a leading color tag or for `None`/empty (never raises, never empty, never silently 🔴). Anchoring (not `.search`) is the badge-safety guard: a color word mid-body — e.g. inside `[GUIDE - …; RED at the act]` — must NEVER fire 🔴. Verified: `match` changes 0 of the 30 current leaf badges. Then in `executor.run`, on the ACT branch: `rec = spine.strings.get(leaf_id, {}).get('en', ('', ''))[1]` (tolerant — terminals have no string) → `mode = parse_mode(rec)`; collect `citations` by walking `path`, gathering each node's `source_citation` (dedup, drop None).
 
-  **Modes the canonical cases actually yield** (verified against the spine — terminals have no string of their own): INVALID→N99 → **🟡** (graduated default, *not* 🔴); HM→L21c (`[GUIDE - …; RED at the act]`, no *leading* tag) → **🟡**. So assert `run(sp, {**HM,'gcs_e':7}).mode == '🟡'` and `run(sp, HM).mode in ('🟢','🟡','🔴')`. *(Fine-grained 🔴-on-invalid + 🟢-with-coverage is a SHOULD refinement tied to L2 retrieval; the MUST badge is the leaf tag with a 🟡 default.)*
+  **Modes the canonical cases actually yield** (verified against the spine — terminals have no string of their own): INVALID→N99 → **🟡** (graduated default, *not* 🔴); HM→L21c (`[GUIDE - …; RED at the act]`, no *leading* tag) → **🟡**. So assert `run(sp, {**HM,'gcs_e':7}).mode == '🟡'` and `run(sp, HM).mode == '🟡'` (HM→L21c verified: 30/30 en recs are tag-at-pos-0; the `; RED` mid-string has no preceding `[`). *(Fine-grained 🔴-on-invalid + 🟢-with-coverage is a SHOULD refinement tied to L2 retrieval; the MUST badge is the leaf tag with a 🟡 default.)*
 
 - [ ] **Step 4: Run → PASS** (both test_mode.py and test_executor.py)
 
