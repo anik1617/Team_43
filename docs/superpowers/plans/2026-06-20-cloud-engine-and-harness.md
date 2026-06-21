@@ -12,6 +12,8 @@
 
 **Test-harness setup (do FIRST — blocker fix):** tests run from **inside `cloud/`** and `tests/` is **NOT** a package (do not create `cloud/tests/__init__.py`). Run all tests: `cd cloud && .venv/Scripts/python -m pytest tests -v`. This is the one combination that resolves BOTH `import kyro_engine`/`kyro_harness` AND the flat `from test_derive import HM` cross-test imports (verified). Every `Run:` command below is relative to `cloud/`.
 
+**Execution — model selection (per Aniket):** dispatch the **implementer** subagents for all 13 tasks on **Haiku** (the tasks are well-specified, mechanical TDD — cheap + fast to validate the whole pipeline end-to-end). Run the **spec + code-quality reviewer** subagents on **Sonnet** (judgment). **Once the full suite is green on Haiku-built code, do a confirming Sonnet pass**; the SHOULD real-GraphRAG **index build also runs on Claude Sonnet** (`GRAPHRAG_MODEL=claude-sonnet-4-6`).
+
 ---
 
 ## Chunk 1: `kyro_engine` core (the deterministic executor)
