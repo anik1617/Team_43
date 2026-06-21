@@ -81,6 +81,7 @@ def test_embeddings_wellformed(conn):
 
 def test_embedding_determinism(conn):
     """Re-embed stored chunk texts with the build embedder; fp32 on this GPU is deterministic."""
+    pytest.importorskip("FlagEmbedding")  # heavy BGE-M3 dep — skip where it's absent (build pod has it)
     import struct
 
     from kyro_bundle.embedders import BgeM3Embedder
