@@ -2,15 +2,20 @@
   "name": "kyro-edge",
   "version": "0.0.0",
   "private": true,
-  "description": "Kyro edge stream — offline on-device TBI decision co-pilot (E1–E7). Pre-scaffold; this package.json currently exists to pin the seam-critical crypto + a sqlite-vec for the E1 parity harness.",
+  "description": "Kyro edge stream — offline on-device TBI decision co-pilot (E1–E7). Pre-scaffold; this package.json pins the seam-critical crypto (@noble) and tsx so the REAL shipping TS can be unit-tested before the RN scaffold exists.",
   "type": "module",
   "scripts": {
-    "parity": "node --experimental-sqlite --experimental-strip-types e1/parity.ts",
-    "e3": "python e3/conformance.py",
-    "e4": "python e4/conformance.py"
+    "test": "node --experimental-sqlite --import tsx tests/run.ts ../cloud/bundles/edh-core-v0-mock.kyro",
+    "parity": "node --experimental-sqlite --experimental-strip-types e1/parity.ts ../cloud/bundles/edh-core-v0-mock.kyro",
+    "oracles:e3": "python e3/conformance.py",
+    "oracles:e4": "python e4/conformance.py",
+    "oracles:e5": "python e5/conformance.py"
   },
   "dependencies": {
     "@noble/curves": "^1.6.0",
     "@noble/hashes": "^1.5.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.22.4"
   }
 }

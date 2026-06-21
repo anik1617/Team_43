@@ -44,11 +44,17 @@ export interface ExecResult { action: string; leaf: CgtNode; recommendation: str
 // encoded to match the spine's intent — counter-sign at clinical validation (mirrors conformance.py).
 export function derive(e: Env): Env {
   const num = (k: string) => Number(e[k]);
+  // ORDER-INDEPENDENCE: derive() runs after EVERY gather node (incremental capture), so it must
+  // never LOCK a derived value off evidence that hasn't been gathered yet. gcsKnown gates the two
+  // GCS-dependent derivations below; without it, an early derive() (pre-GCS) froze gcs_trend to
+  // 'stable' and tripped the validity override — making the executor order-dependent (caught by
+  // edge/tests/run.ts live-gather vs full-seed). [VERIFY-MENTOR] gcs_trend source unchanged.
+  const gcsKnown = e.gcs_e !== undefined && e.gcs_v !== undefined && e.gcs_m !== undefined;
   e.gcs_total = num('gcs_e') + num('gcs_v') + num('gcs_m');
   const lf = e.pupil_react_l === 'fixed', rf = e.pupil_react_r === 'fixed';
   e.bilateral_fixed = lf && rf;
   e.fixed_pupil_side = lf && !rf ? 'left' : rf && !lf ? 'right' : 'none';
-  if (e.gcs_trend === undefined) e.gcs_trend = num('gcs_total') < Number(e.patient_baseline ?? 15) ? 'declining' : 'stable';
+  if (e.gcs_trend === undefined && gcsKnown) e.gcs_trend = num('gcs_total') < Number(e.patient_baseline ?? 15) ? 'declining' : 'stable';
   e.hypoxic = e.spo2_available === 'yes' && num('spo2_pct') < 94;
   e.spo2_unknown = e.spo2_available === 'no';
   e.hypoglycemic = e.glucose_available === 'yes' && num('blood_glucose') < 60;   // [VERIFY-MENTOR] threshold
@@ -64,8 +70,9 @@ export function derive(e: Env): Env {
     persistent_vomiting: 'no', severe_or_increasing_headache: 'no', agitation: 'no',
     second_observer_confirmed: 'no', teleconsult_available: 'no', transfer_feasible_within_window: 'no' };
   for (const k in defaults) if (e[k] === undefined) e[k] = defaults[k];
-  // S3 validation: out-of-range GCS components fail validity → drives the safe abstain
-  if (!(num('gcs_e') >= 1 && num('gcs_e') <= 4 && num('gcs_v') >= 1 && num('gcs_v') <= 5 && num('gcs_m') >= 1 && num('gcs_m') <= 6)) {
+  // S3 validation: out-of-range GCS components fail validity → drives the safe abstain.
+  // Only when GCS is actually present, else a pre-gather derive() would falsely invalidate it.
+  if (gcsKnown && !(num('gcs_e') >= 1 && num('gcs_e') <= 4 && num('gcs_v') >= 1 && num('gcs_v') <= 5 && num('gcs_m') >= 1 && num('gcs_m') <= 6)) {
     e.gcs_valid = false; e.all_critical_fields_present = false; e.any_critical_field_missing = true;
   }
   return e;
