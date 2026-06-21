@@ -32,3 +32,20 @@ def test_cond_true_chained_and_membership():
     assert cond_true("age_yr BETWEEN 15 AND 49", {"age_yr": 60}) is False
     assert cond_true("gcs_e NOT IN [3..15]", {"gcs_e": 7}) is False   # 7 in range(3,16)
     assert cond_true("gcs_e NOT IN [3..15]", {"gcs_e": 20}) is True
+
+def test_cond_true_or_not_and_multiterm():
+    # exercise every _eval branch: OR -> any(), unary NOT, multi-term AND chain
+    env = {"a": 1, "b": 0, "mechanism": "fall"}
+    assert cond_true("a = 1 OR b = 1", env) is True
+    assert cond_true("a = 2 OR b = 1", env) is False
+    assert cond_true("NOT a = 2", env) is True
+    assert cond_true("a = 1 AND b = 0 AND mechanism = 'fall'", env) is True
+
+def test_cond_true_notequal_and_string_membership():
+    # evaluated <> (NotEq) and string-list IN/NOT IN (List literal path), parity with old eval
+    env = {"mechanism": "fall", "side": "left"}
+    assert cond_true("mechanism <> 'rta'", env) is True
+    assert cond_true("mechanism <> 'fall'", env) is False
+    assert cond_true("mechanism IN ['fall','rta']", env) is True
+    assert cond_true("side NOT IN ['right','none']", env) is True
+    assert cond_true("side NOT IN ['left','right']", env) is False

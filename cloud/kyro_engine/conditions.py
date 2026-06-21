@@ -5,8 +5,8 @@ to_py/cond_true and edge/e3/conditions.ts. PARITY-CRITICAL: keep byte-equivalent
 SECURITY: cond_true does NOT use eval/compile. to_py is the byte-identical string
 translation (the parity-critical half); cond_true parses to_py's output with ast.parse
 and evaluates it with a node-whitelist interpreter (_eval). For every valid grammar input
-the result is identical to the old eval({'__builtins__': {}}); anything outside the
-whitelist (Attribute, Subscript, Lambda, non-range Call, dunder Name) raises ValueError."""
+the result is identical to the old eval(to_py(cond), {'__builtins__': {}, 'range': range}, env);
+anything outside the whitelist (Attribute, Subscript, Lambda, non-range Call, dunder Name) raises ValueError."""
 import ast, operator, re
 
 def to_py(cond: str) -> str:
