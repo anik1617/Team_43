@@ -1,32 +1,27 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 180" width="780" height="180" role="img" aria-label="Kyro logo">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 180" width="720" height="180" role="img" aria-label="Kyro logo">
   <defs>
-    <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#6EC5EE"/>
-      <stop offset="1" stop-color="#3A9BD6"/>
-    </linearGradient>
-    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
-      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.85"/>
-      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
-    </radialGradient>
+    <mask id="braid">
+      <rect x="0" y="0" width="120" height="120" fill="white"/>
+      <rect x="53" y="46" width="14" height="11" rx="3" fill="black"/>
+      <rect x="53" y="80" width="14" height="11" rx="3" fill="black"/>
+    </mask>
   </defs>
 
   <!-- ICON -->
   <g transform="translate(24,30)">
-    <rect x="0" y="0" width="120" height="120" rx="28" fill="url(#tile)"/>
-    <rect x="0" y="0" width="120" height="120" rx="28" fill="#ffffff" opacity="0.06"/>
-    <circle cx="60" cy="26" r="20" fill="url(#glow)"/>
-    <line x1="60" y1="30" x2="60" y2="100" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" opacity="0.92"/>
-    <path d="M60 34 C78 46 42 54 60 66 C78 78 42 86 60 98"
-          fill="none" stroke="#FFFFFF" stroke-width="7"
-          stroke-linecap="round" stroke-linejoin="round"/>
-    <circle cx="60" cy="34" r="5.5" fill="#FFFFFF"/>
-    <circle cx="61.5" cy="33" r="1.4" fill="#3A9BD6"/>
-    <circle cx="60" cy="26" r="6" fill="#FFFFFF"/>
+    <rect x="0" y="0" width="120" height="120" rx="28" fill="#2E9BD6"/>
+    <g fill="#FFFFFF" stroke="#FFFFFF">
+      <circle cx="60" cy="22" r="6.5" stroke="none"/>
+      <line x1="60" y1="30" x2="60" y2="104" stroke-width="5" stroke-linecap="round"/>
+      <path d="M60 33 C78 38 78 46 60 51 C42 56 42 63 60 68 C78 73 78 80 60 85 C42 90 42 98 60 103"
+            fill="none" stroke-width="6" stroke-linecap="round" mask="url(#braid)"/>
+      <circle cx="60" cy="33" r="5.2" stroke="none"/>
+    </g>
   </g>
 
   <!-- WORDMARK -->
   <text x="172" y="100" font-family="'Montserrat','Segoe UI',Arial,sans-serif"
-        font-size="68" font-weight="800" letter-spacing="2" fill="#2E90CF">KYRO</text>
+        font-size="68" font-weight="800" letter-spacing="2" fill="#2E9BD6">KYRO</text>
   <text x="174" y="132" font-family="'Montserrat','Segoe UI',Arial,sans-serif"
-        font-size="17.5" font-weight="600" letter-spacing="1.5" fill="#6EC5EE">THE GUIDE THAT NEVER DROPS THE CALL</text>
+        font-size="16.5" font-weight="600" letter-spacing="1.4" fill="#2E9BD6" opacity="0.8">THE GUIDE THAT NEVER DROPS THE CALL</text>
 </svg>
