@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="Kyro centaur icon">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0E3A47"/>
+      <stop offset="1" stop-color="#125A6E"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#FCD34D" stop-opacity="0.6"/>
+      <stop offset="1" stop-color="#FCD34D" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect x="0" y="0" width="120" height="120" rx="28" fill="url(#tile)"/>
+  <rect x="0" y="0" width="120" height="120" rx="28" fill="#ffffff" opacity="0.05"/>
+  <circle cx="84" cy="34" r="24" fill="url(#glow)"/>
+
+  <!-- legs (tapered, walking stance) -->
+  <g fill="none" stroke="#E8FBF6" stroke-width="6" stroke-linecap="round">
+    <path d="M34 70 L29 95"/>   <!-- far back -->
+    <path d="M44 72 L46 95"/>   <!-- near back -->
+    <path d="M62 72 L60 95"/>   <!-- far front -->
+    <path d="M70 70 L75 95"/>   <!-- near front -->
+  </g>
+
+  <g fill="#E8FBF6">
+    <!-- flowing tail, hanging down from the hindquarter -->
+    <path d="M25 55 C12 55 6 68 12 84 C14 76 18 67 25 62 C28 60 30 58 31 57 Z"/>
+    <!-- horse body: rounded hindquarter -> belly -> chest -> back -->
+    <path d="M24 54 C15 58 15 68 25 74 C36 82 60 81 71 72
+             C77 67 77 57 72 53 C60 47 35 48 24 54 Z"/>
+    <!-- human torso rising from the front (slight archer lean-back) -->
+    <path d="M65 61 C61 51 62 40 69 33 C72 30 79 30 81 35
+             C83 43 80 55 74 62 Z"/>
+    <!-- neck + head -->
+    <rect x="71.5" y="26" width="5" height="9" rx="2.5"/>
+    <circle cx="75" cy="24" r="6.2"/>
+  </g>
+
+  <!-- arms -->
+  <g fill="none" stroke="#E8FBF6" stroke-width="4.2" stroke-linecap="round">
+    <path d="M76 35 C84 33 92 35 98 38"/>   <!-- bow arm -->
+    <path d="M74 38 C71 38 70 38 68 38"/>   <!-- draw hand at string -->
+  </g>
+
+  <!-- bow -->
+  <path d="M99 18 Q110 38 99 58" fill="none" stroke="#9DEFDC" stroke-width="3.4" stroke-linecap="round"/>
+  <path d="M99 18 L67 38 L99 58" fill="none" stroke="#9DEFDC" stroke-width="1.7"/>
+
+  <!-- arrow (amber) -->
+  <line x1="65" y1="38" x2="106" y2="38" stroke="#FCD34D" stroke-width="2.8" stroke-linecap="round"/>
+  <polygon points="105,33 114,38 105,43" fill="#FCD34D"/>
+</svg>
