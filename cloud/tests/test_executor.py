@@ -38,3 +38,10 @@ def test_run_loop_exhaustion_leaf_id_matches_trajectory():
     assert r.action == 'ABSTAIN_STOP' and r.stuck is True
     assert r.trajectory == ['A', 'B', 'A', 'B']
     assert r.leaf_id == r.trajectory[-1] == 'B'   # the fix: leaf_id is last VISITED, not advanced-to
+
+def test_run_sets_mode_and_citations():
+    sp = load_spine(MOCK)
+    rH = run(sp, HM)
+    assert rH.mode == '🟡'                # L21c leads with [GUIDE ...] (no color tag) -> default 🟡
+    assert isinstance(rH.citations, list)  # citations collected along the path
+    assert run(sp, {**HM, 'gcs_e': 7}).mode == '🟡'   # N99 has no string row -> default 🟡
