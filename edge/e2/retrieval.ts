@@ -144,8 +144,13 @@ export function retrieve(
     const isVector = scoreOf.has(id);
     context.push({ ...ch, score: isVector ? scoreOf.get(id)! : graphScore, via: isVector ? 'vector' : 'graph' });
   }
-  // 4 · order: trust_tier asc (prefer canonical), then score desc
-  context.sort((a, b) => (a.trust_tier ?? 99) - (b.trust_tier ?? 99) || b.score - a.score);
+  // 4 · order: trust_tier asc (prefer canonical), then score desc, then id asc.
+  //     The id tiebreak is a CROSS-PLANE PARITY fix: graph-expansion chunks all inherit the same
+  //     capped graphScore, so without a stable key the order among equal-scored chunks is arbitrary
+  //     and can differ between the device and cloud sorts. Ordering ties by the (plane-identical)
+  //     chunk id makes the ranking deterministic across planes. Mirrors cloud retrieval.py.
+  context.sort((a, b) => (a.trust_tier ?? 99) - (b.trust_tier ?? 99) || b.score - a.score
+    || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
 
   const coverage = computeCoverage(leafCitation, context, o);
   return { chunks: context, seedNodes, expandedNodes: expanded.nodes, communities, coverage };

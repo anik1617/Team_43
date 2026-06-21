@@ -10,8 +10,12 @@
  * the bar is NN-ORDER STABILITY (top-3 set identical, no swap within top-3). See cloud/parity/.
  *
  * ── PARITY-CRITICAL, do NOT change without re-running cloud/parity/compare_parity.py ──
- *   • model         : BAAI/bge-m3 GGUF (e.g. gpustack/bge-m3-GGUF · bge-m3-Q8_0.gguf). Pin the
+ *   • model         : BAAI/bge-m3 **FP16** GGUF (gpustack/bge-m3-GGUF · bge-m3-FP16.gguf). Pin the
  *                     same logical model the bundle was built on (manifest.embedder_id='bge-m3').
+ *                     PRECISION MATTERS FOR PARITY (measured, cloud/parity): with the cloud bundle
+ *                     built fp32 (FlagEmbedding), a llama.cpp device proxy hit the >=95% top-3
+ *                     NN-order bar on **FP16** (19/20) but only ~75-80% on **Q8_0** — quantization
+ *                     noise shifts near-tie graph-chunk boundaries. Ship FP16 (~1.2 GB), not Q8_0.
  *   • pooling_type  : CLS (=2). FlagEmbedding's dense_vecs is the [CLS] token representation;
  *                     llama.cpp MUST pool the same way or every vector is wrong. Most bge-m3
  *                     GGUFs set this in metadata, but we pass it explicitly to be safe.
@@ -20,7 +24,7 @@
  *                     and the vec0 L2-distance→similarity mapping (1 - d²/2) is exact.
  *
  * Model file (push alongside the Qwen GGUF):
- *   adb push bge-m3-Q8_0.gguf /sdcard/Android/data/com.kyroapp/files/bge-m3.gguf
+ *   adb push bge-m3-FP16.gguf /sdcard/Android/data/com.kyroapp/files/bge-m3.gguf
  */
 import { initLlama, type LlamaContext } from 'llama.rn';
 
