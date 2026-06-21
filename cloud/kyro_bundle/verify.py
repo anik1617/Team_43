@@ -48,7 +48,7 @@ def verify_bundle(path: str, expected_pubkey: str | None = None,
 
     ok = True
 
-    # 1. manifest signature  (recompute digest with sig/pubkey blanked — no commit)
+    # 1. manifest signature  (digest omits the signature/pubkey columns by construction)
     man_ok = signing.verify(signing.manifest_digest(conn), sig, pub)
     print(f"  [{'PASS' if man_ok else 'FAIL'}] manifest ed25519 signature")
     ok &= man_ok
@@ -74,8 +74,7 @@ def verify_bundle(path: str, expected_pubkey: str | None = None,
               f"(bundle={m['embedder_id']}/{m['embedder_dim']}/vec{m['sqlite_vec_version']})")
         ok &= e_ok
 
-    conn.rollback()  # discard the in-memory blanking from digest recomputation
-    conn.close()
+    conn.close()  # digests are pure reads now — nothing to roll back
     return bool(ok)
 
 
