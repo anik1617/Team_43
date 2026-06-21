@@ -33,6 +33,7 @@ from kyro_harness.score import Scores  # noqa: E402
 # The arms a collapse chart can carry, and their slide labels (the ladder rungs).
 ARM_LABELS = {
     1: "bare Qwen",
+    2: "+graph",
     3: "+spine",
     4: "+spine+gate",
 }

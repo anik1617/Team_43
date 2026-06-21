@@ -220,3 +220,36 @@ def bare_qwen_action(prose: str) -> str:
     )
     text = out['choices'][0]['message']['content']
     return parse_action(text)
+
+
+# --- ablation arm 2 (+graph): same model, now GROUNDED with retrieved L2 context (RAG). -------
+# The point of this rung: even when the model is handed the same cited knowledge the spine uses,
+# a 3B model without the deterministic spine still mis-triages — so the lift is the SPINE, not the
+# knowledge. The retrieval that produces `context` is pure (kyro_engine.retrieval); the model still
+# only TALKS. grounded_prompt is pure + always tested; grounded_qwen_action is the guarded call.
+_GROUNDED_PROMPT = (
+    "You are a rural GMO with no CT scanner. Use the retrieved clinical-guideline context below "
+    "to choose the next action.\n\nRetrieved context:\n{context}\n\nCase: {prose}.\n"
+    "Choose EXACTLY ONE next action: GUIDE, OBSERVE, STABILIZE_TRANSFER, or ABSTAIN_STOP. "
+    "Answer with only the action."
+)
+
+
+def grounded_prompt(prose: str, context: str) -> str:
+    """Build the +graph (RAG) prompt: the case prose plus the retrieved, cited context. Pure."""
+    return _GROUNDED_PROMPT.format(
+        context=context or "(no relevant context retrieved)", prose=prose)
+
+
+def grounded_qwen_action(prose: str, context: str) -> str:
+    """Arm 2: stock Qwen2.5-3B-Q4 answering WITH retrieved context -> one of the 4 actions.
+    Same single-turn deterministic call as bare_qwen_action; only the prompt differs. Call only
+    when model_available() is True."""
+    out = _get_llm().create_chat_completion(
+        messages=[{'role': 'user', 'content': grounded_prompt(prose, context)}],
+        max_tokens=16,
+        temperature=0.0,
+        top_p=1.0,
+        seed=0,
+    )
+    return parse_action(out['choices'][0]['message']['content'])

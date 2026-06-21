@@ -99,18 +99,21 @@ def main(argv=None) -> int:
         scores_by_arm[arm] = score_run(run_arm(arm, spine, cases))
         arm_status[arm] = 'ran'
 
-    # Bare-Qwen floor — gated on a real model. Absent is the EXPECTED state on the build plane.
+    # Model arms — gated on a real model. Absent is the EXPECTED state on the build plane.
+    #   arm 1 = bare Qwen (floor); arm 2 = +graph (model + retrieved L2 context, needs the bundle).
     if narrator.model_available():
-        try:
-            scores_by_arm[1] = score_run(run_arm(1, spine, cases))
-            arm_status[1] = 'ran'
-        except RuntimeError as e:  # model went away between the check and the call
-            arm_status[1] = 'absent'
-            print(f"[harness] arm 1 (bare Qwen) skipped: {e}")
+        for arm in (1, 2):
+            try:
+                scores_by_arm[arm] = score_run(run_arm(arm, spine, cases, bundle=bundle))
+                arm_status[arm] = 'ran'
+            except (RuntimeError, ValueError) as e:  # model/bundle gap at call time
+                arm_status[arm] = 'absent'
+                print(f"[harness] arm {arm} ({report.ARM_LABELS.get(arm, arm)}) skipped: {e}")
     else:
-        arm_status[1] = 'absent'
-        print("[harness] arm 1 (bare Qwen) pending: no model "
-              "(set KYRO_QWEN_GGUF + install llama-cpp-python to run it).")
+        for arm in (1, 2):
+            arm_status[arm] = 'absent'
+        print("[harness] arms 1 (bare Qwen) + 2 (+graph) pending: no model "
+              "(set KYRO_QWEN_GGUF + install llama-cpp-python to run them).")
 
     report.render(scores_by_arm, out_dir)
 
