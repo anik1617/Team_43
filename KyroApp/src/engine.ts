@@ -55,6 +55,13 @@ export async function runDecision(seed: Env): Promise<KyroDecision> {
   let t = 0; const clock = () => ++t;
   const journal = new InMemoryJournal();
   journal.append({ t: 'started', ts: clock(), encounterId: 'ENC', lang: 'en' });
+  // Seed the journal with the gathered evidence so the SBAR handoff reflects the REAL case.
+  // runDecision drives execute() on a COMPLETE seed with a no-ask host, so journalingHost never
+  // fires — without this the handoff brief renders empty (GCS NaN, ?mm). buildHandoff re-derives
+  // the rest (gcs_total, fixed_pupil_side, herniation_signs…) from these raw fields.
+  for (const [field, value] of Object.entries(seed)) {
+    journal.append({ t: 'evidence', ts: clock(), field, value, node: null });
+  }
   const noAsk: GatherHost = { async ask(f) { throw new Error(`unexpected ask for ${f}`); } };
   const host = journalingHost(noAsk, journal, clock);
 
