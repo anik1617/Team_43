@@ -16,7 +16,7 @@
     "demo:model": "node --experimental-sqlite --import tsx demo/runEncounter.ts ../cloud/bundles/edh-core-v0-mock.kyro --model models/Qwen2.5-3B-Instruct-Q4_K_M.gguf",
     "l3:validate": "node --import tsx l3/validateL3.ts",
     "voice:asr": "node --import tsx l3/asrValidate.ts",
-    "speak": "asr/bin/Release/whisper-stream.exe -m asr/ggml-base.en.bin --step 700 --length 5000 -c 0",
+    "speak": "asr\\bin\\Release\\whisper-stream.exe -m asr\\ggml-base.en.bin --step 700 --length 5000 -c 0",
     "converse": "node --import tsx e6/converse.ts",
     "test:integration": "node --experimental-sqlite --import tsx tests/integration.ts",
     "parity": "node --experimental-sqlite --experimental-strip-types e1/parity.ts ../cloud/bundles/edh-core-v0-mock.kyro",
