@@ -184,30 +184,39 @@ _PROMPT = (
 )
 
 
+_LLM = None
+
+
+def _get_llm():
+    """Lazily load + cache the Qwen GGUF once. A fresh Llama() per case would reload the
+    ~2 GB model ten times over a harness run. Guarded import — only reached when
+    model_available() is True."""
+    global _LLM
+    if _LLM is None:
+        from llama_cpp import Llama  # heavy, opt-in import
+        # n_threads=1 for REPRODUCIBILITY: multi-threaded float-reduction order makes llama.cpp
+        # non-deterministic even at temp=0, which would wobble the benchmark run-to-run. Arm 1 is
+        # only 10 short generations, so single-thread is an acceptable cost for a citable number.
+        _LLM = Llama(model_path=os.environ.get(_QWEN_ENV), n_ctx=1024,
+                     n_threads=1, seed=0, verbose=False)
+    return _LLM
+
+
 def bare_qwen_action(prose: str) -> str:
     """Run stock Qwen2.5-3B-Q4 (the on-device model class) once on the case prose and
     return one of the 4 actions via parse_action.
 
-    Single-turn, deterministic (temp=0), low n_ctx — this is arm 1, the unaided model.
-    Only call when model_available() is True; loads the GGUF from KYRO_QWEN_GGUF via
-    llama-cpp-python (the opt-in heavy dep)."""
-    from llama_cpp import Llama  # heavy, opt-in import — guarded by model_available()
-
-    gguf = os.environ.get(_QWEN_ENV)
-    llm = Llama(
-        model_path=gguf,
-        n_ctx=1024,
-        n_threads=os.cpu_count() or 4,
-        verbose=False,
-    )
-    prompt = _PROMPT.format(prose=prose)
-    out = llm.create_completion(
-        prompt=prompt,
+    Single-turn, deterministic (temp=0). Uses create_chat_completion so the model's INSTRUCT
+    chat template is applied: a raw create_completion makes an instruct model *continue* the
+    prompt text instead of answering it, which collapses the baseline to noise (0/10). With
+    the chat template the unaided model gives real (mostly over-cautious 'transfer') answers.
+    Only call when model_available() is True; the GGUF (KYRO_QWEN_GGUF) is loaded once + cached."""
+    out = _get_llm().create_chat_completion(
+        messages=[{'role': 'user', 'content': _PROMPT.format(prose=prose)}],
         max_tokens=16,
         temperature=0.0,
         top_p=1.0,
         seed=0,
-        stop=['\n'],
     )
-    text = out['choices'][0]['text']
+    text = out['choices'][0]['message']['content']
     return parse_action(text)
