@@ -1,0 +1,26 @@
+# Root Blueprint for the Kyro Cloud Service (C7 contribution portal + E8 escalate relay).
+# Render auto-detects a render.yaml at the REPO ROOT, so this enables one-click deploy:
+#   Render dashboard → New + → Blueprint → pick this repo → Apply.
+# You get a free public URL like https://kyro-cloud.onrender.com — NO custom domain needed.
+#
+# (The clinical engine stays ON-DEVICE; this service is only knowledge-intake + the human handoff.
+#  The build pipeline under cloud/kyro_bundle is NOT deployed — that minimal footprint is the point.)
+services:
+  - type: web
+    name: kyro-cloud
+    runtime: python
+    rootDir: cloud                 # build + start run from cloud/
+    plan: free                     # free tier: spins down after ~15 min idle (~30s cold start); ephemeral disk
+    buildCommand: pip install -r service/requirements.txt
+    startCommand: uvicorn service.app:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: KYRO_DB
+        value: /tmp/kyro_service.db   # ephemeral on free tier — fine, gaps re-seed on boot
+      # --- Set these in the Render dashboard (mark as Secret) to enable REAL WhatsApp escalation.
+      #     Without them, /escalate still returns a ticket and reports channel:"staged" (demo-safe).
+      # - key: TWILIO_ACCOUNT_SID
+      # - key: TWILIO_AUTH_TOKEN
+      # - key: TWILIO_WHATSAPP_FROM        # e.g. whatsapp:+14155238886
+      # - key: KYRO_ONCALL_WHATSAPP_TO     # e.g. whatsapp:+92XXXXXXXXXX
+      # --- Optional: lock the escalate relay on a public deploy (X-Kyro-Token header required when set).
+      # - key: KYRO_ESCALATE_TOKEN
