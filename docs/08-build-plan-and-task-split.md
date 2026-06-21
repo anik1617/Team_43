@@ -4,7 +4,7 @@
 
 > **Ownership note:** Gowrish now owns the **whole repo**. The cloud/edge split below is kept as a *work-decomposition* device (two planes, one seam) so the build can still be parallelized, but there is a single owner. Where "Aniket" / "Gowrish" appear they denote the two work-streams, not separate repos.
 
-**Timeline posture:** built to be hammered out in a tight 2-day sprint, fully parallel; extends gracefully over a few weeks for the hardening passes (benchmark numbers, portal polish, escalation). **English only** in v1.
+**Timeline posture:** built to be hammered out in a tight 2-day sprint, fully parallel; extends gracefully over a few weeks for the hardening passes (benchmark numbers, portal polish, escalation hardening). **Multilingual in v1:** English + Urdu + Hindi for text/UI/recommendations (schema is i18n-native — `cgt_strings.lang`; knowledge stays English, translate only at the edges); **English voice primary, Urdu/Hindi voice best-effort** (Whisper small-model quality is the risk). **Real WhatsApp escalation (Twilio) is in v1** — the one online moment.
 
 ---
 
@@ -138,8 +138,9 @@ This spine is the highest-leverage component in the project. Everything else exi
 | E3 | **Spine executor + L3 I/O** | **code-driven CGT traversal** (L1b) calling **Qwen-4B-Q4 via `llama.rn`** only for the four narrow I/O jobs | the model **fills the tree, it does not reason the tree**: (1) clean ASR text, (2) classify the operator's answer at the current node, (3) phrase the next question, (4) synthesize the final **cited** recommendation from the reached leaf via `response_format: json_schema`. Use **MedRAG discriminability (1/degree-centrality)** to order questions with **no LLM call**. |
 | E4 | **Abstention gate** → 🟢/🟡/🔴 | **deterministic rules, NOT model confidence** | gate fires on: (a) the tree reaching a guideline-sanctioned leaf, (b) **hard out-of-bounds rules** (missing required inputs, contradictory vitals, out-of-protocol values, any out-of-tree input), (c) **"cannot terminate while critical evidence is missing."** Model confidence is a **weak secondary flag only** (AUROC ~0.5 — see §5). |
 | E5 | **Procedure state machine** + handoff brief | the L1c working-memory object, updated from the input stream | the core innovation ("continuity, not knowledge"); a dropped call loses nothing; reconnect auto-generates a pre-briefed handoff |
-| E6 | Voice: ASR in / TTS out | `whisper.cpp`/`whisper.rn` + Piper / OS TTS | hands-free; **read-back confirmation of every critical field** before it enters the tree (anti-sycophancy: "I heard left pupil fixed, correct?"). English only. |
-| E7 | Demo UX (HM EDH flow, WiFi-off, gap → abstain → handoff) | React Native | Urdu toggle is **roadmap**, not v1 |
+| E6 | Voice: ASR in / TTS out | `whisper.cpp`/`whisper.rn` + Piper / OS TTS | hands-free; **read-back confirmation of every critical field** before it enters the tree (anti-sycophancy: "I heard left pupil fixed, correct?"). **English voice primary; Urdu/Hindi via Whisper best-effort**; all prompts/output multilingual (EN/UR/HI). |
+| E7 | Demo UX (HM EDH flow, WiFi-off, gap → abstain → handoff) | React Native | **language toggle (EN/UR/HI) is in v1** — flips `cgt_strings.lang` + the output language |
+| E8 | **WhatsApp escalation** (trigger → cloud relay → on-call expert) | edge trigger + a small **cloud `/escalate`** endpoint → **Twilio WhatsApp** | the one online moment; sends the PHI-minimized pre-briefed handoff state when a signal exists; degrades to on-screen / SMS offline. **Cloud endpoint = Aniket; trigger/UX = Gowrish.** |
 
 **On-device retrieval (E2, GraphRAG local-search style):**
 1. `q = bge_m3.embed(query)` (llama.rn embedding context)
@@ -191,7 +192,7 @@ Build on proven work; do not reinvent the spine or the harness.
 **Block 3 — Wow + polish + hardening**
 - Voice (E6) with read-back confirmation; the **WiFi-off** moment; the **gap → abstain → handoff-brief** demo; portal live for a judge to upload and watch it reach the device.
 - Run the validation benchmark (§5) — especially the **spine-ablation collapse chart**.
-- Escalation: simulated by default; real masked-WhatsApp (Twilio) only if time remains — **roadmap**.
+- Escalation: **real WhatsApp handoff (Twilio) is in v1** (E8) — sends the PHI-minimized pre-briefed state to the on-call expert when a signal exists, degrades to on-screen / SMS offline. (Full masked-routing hardening is the stretch.)
 
 ---
 
@@ -266,6 +267,6 @@ The payoff: a **live URL where a neurosurgeon uploads a protocol and watches it 
 - **Test phone RAM** → confirms Qwen-4B-Q4 vs a smaller model and Q4 vs Q5 (resolved at E0).
 - ~~PhysioNet / CITI credentialing~~ — **DONE**: Gowrish already holds it; the MIMIC-IV Tier-C slice runs on his creds + supercomputer.
 - **Cloud platform** — Supabase recommended for all-in-one speed.
-- How aggressively to attempt real masked-WhatsApp escalation vs. simulate it in v1 (escalation is roadmap).
+- ~~How aggressively to attempt real masked-WhatsApp escalation~~ — **DECIDED: real WhatsApp handoff (Twilio) is in v1** (E8); PHI-minimized brief; full masked-routing is the stretch.
 - Delta sync vs. full-bundle download (full first; delta is post-MVP).
 - Open-source KB lever — lean **hybrid** (open the Tier-0 canonical core; keep the contribution platform + provenance + gap-log as the moat); tied to the business model.
