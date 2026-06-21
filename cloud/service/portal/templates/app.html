@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+{% block body %}
+<style>
+ /* ---- app showcase (scoped) ---- */
+ .app-hero{max-width:720px}
+ .app-dl-card{margin-top:30px;display:flex;align-items:center;justify-content:space-between;gap:36px;flex-wrap:wrap;
+   padding:28px 30px;border-radius:16px;background:linear-gradient(120deg,#0C1B30,#13243B);color:#EAF2FC;
+   box-shadow:0 22px 54px rgba(8,18,34,.28)}
+ .app-dl-copy{flex:1;min-width:280px}
+ .app-dl-copy .k{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#7CC4FF}
+ .app-dl-copy h2{margin:9px 0 0;font-family:var(--serif);font-size:25px;font-weight:500;color:#fff}
+ .app-dl-copy .meta{margin:12px 0 0;display:flex;gap:10px;flex-wrap:wrap}
+ .app-dl-copy .meta span{font-family:var(--mono);font-size:11px;color:#9FB6D2;background:rgba(124,196,255,.1);
+   border:1px solid rgba(124,196,255,.16);padding:4px 10px;border-radius:6px}
+ .app-dl-btn{margin-top:20px;display:inline-flex;align-items:center;gap:9px;padding:14px 22px;border-radius:10px;
+   background:var(--acc);color:#fff;font-family:var(--sans);font-size:14px;font-weight:600;
+   box-shadow:0 6px 20px rgba(45,127,249,.4);transition:.15s}
+ .app-dl-btn:hover{background:var(--acc-hover);transform:translateY(-1px)}
+ .app-dl-note{margin:11px 0 0;font-size:11.5px;color:#7E94B1}
+ .app-qr{flex:none;text-align:center}
+ .app-qr img{width:144px;height:144px;border-radius:12px;background:#fff;padding:9px;display:block}
+ .app-qr .cap{margin-top:9px;font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:#8FA6C2}
+
+ .app-sec-head{margin-top:54px}
+ .grid{margin-top:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+ .feat{padding:22px;border-radius:13px;background:var(--card);border:1px solid var(--line);box-shadow:0 4px 16px rgba(19,36,59,.05)}
+ .feat .ic{width:38px;height:38px;border-radius:9px;background:#EAF2FE;display:flex;align-items:center;justify-content:center;color:var(--acc-hover)}
+ .feat h3{margin:14px 0 0;font-family:var(--serif);font-size:18px;font-weight:600;color:var(--ink-deep)}
+ .feat p{margin:8px 0 0;font-size:13px;line-height:1.6;color:var(--mut)}
+
+ .kb-grid{margin-top:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+ .kb-col{padding:20px 22px;border-radius:13px;background:var(--card);border:1px solid var(--line);box-shadow:0 4px 16px rgba(19,36,59,.05)}
+ .kb-col h3{margin:0 0 6px;font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--acc)}
+ .kb-col ul{margin:0;padding:0;list-style:none}
+ .kb-col li{font-size:12.5px;line-height:1.5;color:var(--ink);padding:8px 0;border-top:1px solid var(--line-3)}
+ .kb-col li span{color:var(--mut-2)}
+
+ .badges{margin-top:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+ .badge-card{padding:20px;border-radius:13px;background:var(--panel);border:1px solid var(--line-2)}
+ .badge-card .b{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--ink-deep)}
+ .badge-card p{margin:10px 0 0;font-size:12.5px;line-height:1.6;color:var(--mut)}
+
+ .stats-grid{margin-top:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+ .stat-card{padding:22px;border-radius:13px;background:var(--card);border:1px solid var(--line);box-shadow:0 4px 16px rgba(19,36,59,.05)}
+ .stat-card .num{font-family:var(--mono);font-size:33px;font-weight:500;line-height:1;letter-spacing:-.01em;color:var(--acc)}
+ .stat-card .num.ok{color:var(--ok)}
+ .stat-card .lbl{margin-top:13px;font-family:var(--serif);font-size:15px;font-weight:600;color:var(--ink-deep)}
+ .stat-card .sub{margin-top:6px;font-size:12px;line-height:1.55;color:var(--mut)}
+ .stats-note{margin-top:16px;font-size:12px;line-height:1.6;color:var(--mut-2);max-width:760px}
+
+ .app-foot{margin-top:30px;padding:20px 22px;border-radius:12px;background:var(--ok-bg-2);border:1px solid var(--ok-line)}
+ .app-foot p{margin:0;font-size:13px;line-height:1.62;color:#3A4F6A}
+ .app-foot b{color:var(--ok)}
+ @media (max-width:820px){ .grid,.badges{grid-template-columns:1fr} }
+</style>
+
+{# ---- hero ---- #}
+<div class="app-hero">
+  <div class="eyebrow">The Kyro app</div>
+  <h1 class="title lg">Emergency brain-injury care, <span class="em">offline.</span></h1>
+  <p class="lede">Kyro is an on-device co-pilot for acute traumatic brain injury in low-resource settings. It guides a
+    general medical officer through a structured assessment and a guideline-backed decision, with every recommendation
+    tied to a named source. It runs on an ordinary Android phone, with no internet and no scanner.</p>
+</div>
+
+{# ---- download ---- #}
+<section class="app-dl-card">
+  <div class="app-dl-copy">
+    <div class="k">Android · free</div>
+    <h2>Install Kyro on a phone</h2>
+    <div class="meta"><span>Android 7+</span><span>Works fully offline</span><span>Runs on older phones</span></div>
+    <a class="app-dl-btn" href="{{ APK_URL }}" target="_blank" rel="noopener">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M5 21h14"/></svg>
+      Download the APK
+    </a>
+    <p class="app-dl-note">Opens Google Drive. Tap download there, then open the file to install.</p>
+  </div>
+  <div class="app-qr">
+    <img src="/static/kyro-apk-qr.png" alt="QR code to download the Kyro app">
+    <div class="cap">Scan to install on a phone</div>
+  </div>
+</section>
+
+{# ---- what it does ---- #}
+<div class="app-sec-head">
+  <div class="eyebrow">What it does</div>
+  <h2 class="section" style="margin-top:8px;font-size:24px">Built for the room with no neurosurgeon</h2>
+</div>
+<div class="grid">
+  <div class="feat">
+    <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8.8a16 16 0 0 1 20 0"/><path d="M5 12.3a11 11 0 0 1 14 0"/><path d="M8.5 15.8a6 6 0 0 1 7 0"/><line x1="12" y1="19.5" x2="12" y2="19.5"/></svg></div>
+    <h3>Works with no signal</h3>
+    <p>The whole decision runs on the device. No internet, no cloud, no continuous power. It is designed to run on phones that are eight to ten years old.</p>
+  </div>
+  <div class="feat">
+    <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"/><path d="M19 10a7 7 0 0 1-14 0"/><line x1="12" y1="17" x2="12" y2="22"/></svg></div>
+    <h3>Structured assessment</h3>
+    <p>It drives a disciplined work-up: GCS, pupils, blood pressure, lucid interval, mechanism, and time since injury. You can answer hands-free by voice.</p>
+  </div>
+  <div class="feat">
+    <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M9 7h6M9 11h6M9 15h3"/></svg></div>
+    <h3>Guideline-backed decisions</h3>
+    <p>It follows a clinical decision tree to a recommendation on stabilization, preventing secondary injury, and the operate-versus-transfer call.</p>
+  </div>
+  <div class="feat">
+    <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V5a2 2 0 0 1 2-2h12a1 1 0 0 1 1 1v15"/><path d="M6 17h13"/><path d="M9 7h7M9 10h7"/></svg></div>
+    <h3>Every claim is cited</h3>
+    <p>Each recommendation shows the source it came from, such as the Brain Trauma Foundation guidelines or the Peshawar Recommendations, and flags when it is inferring.</p>
+  </div>
+  <div class="feat">
+    <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z"/><path d="M9 12l2 2 4-4"/></svg></div>
+    <h3>Honest about its limits</h3>
+    <p>Help is badged green, amber, or red. On the steps that need imaging or a specialist, Kyro stops and connects a live human expert instead of guessing.</p>
+  </div>
+  <div class="feat">
+    <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-3 2a12 12 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/><line x1="15" y1="3" x2="21" y2="9"/><line x1="21" y1="3" x2="15" y2="9"/></svg></div>
+    <h3>A dropped call loses nothing</h3>
+    <p>Kyro holds the full state of the encounter. If a teleconsult drops mid-emergency, reconnecting rebuilds a pre-briefed handoff so the expert is caught up at once.</p>
+  </div>
+</div>
+
+{# ---- knowledge base / sources ---- #}
+<div class="app-sec-head">
+  <div class="eyebrow">Knowledge base</div>
+  <h2 class="section" style="margin-top:8px;font-size:24px">10,172 nodes, pre-loaded and offline</h2>
+  <p class="lede" style="margin-top:12px">Kyro ships pre-configured with a signed knowledge base of 10,172
+    nodes, built from the guidelines and references below. It sits on the phone before the app ever sees a signal, so
+    a recommendation never waits on a network. Knowledge from the field syncs in when a connection exists, and the
+    pre-loaded core is always enough on its own.</p>
+</div>
+<div class="kb-grid">
+  <div class="kb-col">
+    <h3>Clinical guidelines</h3>
+    <ul>
+      <li>WFNS Peshawar Recommendations <span>2019</span></li>
+      <li>Brain Trauma Foundation, Surgical Management of TBI</li>
+      <li>Brain Trauma Foundation, Severe TBI Guidelines, 4th ed. <span>2017</span></li>
+      <li>WSES, Severe TBI without neurosurgical capability <span>2023</span></li>
+      <li>Emergency Neurological Life Support, TBI Protocol</li>
+      <li>Primary Trauma Care Manual</li>
+      <li>WFSA, Management of the Head-Injured Patient</li>
+    </ul>
+  </div>
+  <div class="kb-col">
+    <h3>Reference texts</h3>
+    <ul>
+      <li>Greenberg, Handbook of Neurosurgery</li>
+      <li>Youmans &amp; Winn, Neurological Surgery</li>
+      <li>Schmidek &amp; Sweet, Operative Neurosurgical Techniques</li>
+      <li>Bullock et al., Surgical Management of Acute EDH <span>2006</span></li>
+      <li>StatPearls, Epidural Hematoma</li>
+    </ul>
+  </div>
+  <div class="kb-col">
+    <h3>Peer-reviewed literature</h3>
+    <ul>
+      <li>Khellaf et al., Recent Advances in TBI <span>2019</span></li>
+      <li>Zarmer et al., Advances in TBI Diagnosis and Treatment <span>2025</span></li>
+      <li>Wilson et al., Emergency Burr Holes: How to do it</li>
+      <li>Post-Traumatic Seizure Prophylaxis CPG</li>
+    </ul>
+  </div>
+</div>
+
+{# ---- how it decides ---- #}
+<div class="app-sec-head">
+  <div class="eyebrow">How it decides</div>
+  <h2 class="section" style="margin-top:8px;font-size:24px">Most help the evidence supports, badged honestly</h2>
+</div>
+<div class="badges">
+  <div class="badge-card">
+    <div class="b">🟢 Protocol</div>
+    <p>The decision tree reached a guideline-backed answer and the knowledge base covers it. Kyro acts, with citations.</p>
+  </div>
+  <div class="badge-card">
+    <div class="b">🟡 Grounded guidance</div>
+    <p>The exact case is not in the tree, so Kyro gives the best guidance its cited knowledge supports, clearly labeled as extrapolated rather than validated.</p>
+  </div>
+  <div class="badge-card">
+    <div class="b">🔴 Stop</div>
+    <p>For steps that need imaging, like where to place a burr hole, or for contradictory input, Kyro stops and connects a live expert.</p>
+  </div>
+</div>
+
+{# ---- validation / benchmarks ---- #}
+<div class="app-sec-head">
+  <div class="eyebrow">Validation</div>
+  <h2 class="section" style="margin-top:8px;font-size:24px">Measured, not promised</h2>
+  <p class="lede" style="margin-top:12px">We tested the reasoning engine the way a medical device should be tested:
+    at scale, against a mentor-signed answer key, and for byte-identical behaviour across devices.</p>
+</div>
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="num ok">0</div>
+    <div class="lbl">Unsafe operative calls</div>
+    <div class="sub">Across 103,680 simulated presentations. The deterministic spine never operated when it should not.</div>
+  </div>
+  <div class="stat-card">
+    <div class="num ok">100%</div>
+    <div class="lbl">Cloud-to-device agreement</div>
+    <div class="sub">Every recommendation identical across 60,686 cases. This is the number-one deployment risk, and it is closed.</div>
+  </div>
+  <div class="stat-card">
+    <div class="num ok">100%</div>
+    <div class="lbl">Gold-standard accuracy</div>
+    <div class="sub">On the mentor-signed case set, with zero harmful actions (N=10).</div>
+  </div>
+  <div class="stat-card">
+    <div class="num">0.63 ms</div>
+    <div class="lbl">Median decision time</div>
+    <div class="sub">On a plain CPU with no GPU. The reasoning layer is trivial on any phone.</div>
+  </div>
+  <div class="stat-card">
+    <div class="num ok">0</div>
+    <div class="lbl">Order-dependent results</div>
+    <div class="sub">Across 240,000 permutation checks. The same facts in give the same decision out.</div>
+  </div>
+  <div class="stat-card">
+    <div class="num">100%</div>
+    <div class="lbl">Reaches a decision on-device</div>
+    <div class="sub">No internet and no cloud call needed. The phone decides; it only reaches out to hand off to an expert.</div>
+  </div>
+</div>
+<p class="stats-note">Every number is measured and reproducible from the KyroBench suite, not estimated. The gold
+  standard is mentor-signed and small (N=10); the safety, parity, and determinism results are at the case counts
+  shown, with 95% confidence bounds in the full report.</p>
+
+{# ---- footer note ---- #}
+<div class="app-foot">
+  <p><b>Patient data never leaves the phone.</b> Kyro is offline for the decision and only reaches out, when a signal
+    exists, to hand a pre-briefed summary to a remote specialist. The interface and the final recommendation are
+    available in English, Urdu, and Hindi.</p>
+</div>
+{% endblock %}

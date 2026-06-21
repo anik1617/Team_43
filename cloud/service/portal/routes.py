@@ -11,12 +11,20 @@ from sqlmodel import Session, select
 
 from ..db import get_session
 from ..experts.routes import current_expert
-from ..models import Contribution, ContribStatus, Gap, GapStatus, now_iso
+from ..models import APK_URL, Contribution, ContribStatus, Gap, GapStatus, now_iso
 from .export import MAX_UPLOAD_BYTES, safe_ext, stage_attachment, stage_contribution
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 templates = Jinja2Templates(directory=os.path.join(_HERE, "templates"))
+templates.env.globals["APK_URL"] = APK_URL      # available to the shared base.html on every page
 router = APIRouter(tags=["portal"])
+
+
+@router.get("/app", response_class=HTMLResponse)
+def app_showcase(request: Request, session: Session = Depends(get_session)):
+    """Public product page: what Kyro does + the Android app download. No auth required."""
+    entries = len(session.exec(select(Contribution)).all())
+    return templates.TemplateResponse(request, "app.html", {"entries": entries})
 
 
 def _flash(path: str, msg: str) -> str:

@@ -144,7 +144,7 @@
       <div class="t">Everything Kyro knows, growing with every contribution</div>
     </div>
     <div style="text-align:right">
-      <div id="kyro-count" class="num">1,500</div>
+      <div id="kyro-count" class="num">10,172</div>
       <div class="num-cap"><span class="d"></span>knowledge entries</div>
     </div>
   </div>
@@ -256,7 +256,7 @@
     var W = el.clientWidth || 900, H = el.clientHeight || 500;
     var scene = new THREE.Scene();
     var camera = new THREE.PerspectiveCamera(46, W/H, 0.1, 300);
-    camera.position.set(0,0,46);
+    camera.position.set(0,0,60);
     var renderer = new THREE.WebGLRenderer({antialias:true});
     renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
     renderer.setSize(W,H);
@@ -279,9 +279,9 @@
       x.fillStyle=grd; x.fillRect(0,0,128,128); return new THREE.CanvasTexture(c); };
 
     // ---- clustered node cloud (the knowledge base) ----
-    var BASE=1500, GROW=260, CAP=BASE+GROW, R=17;
+    var BASE=10172, GROW=300, CAP=BASE+GROW, R=27;
     var clusters=[];
-    for(var i=0;i<16;i++){ var u=Math.random(),vv=Math.random(); var th=u*Math.PI*2, ph=Math.acos(2*vv-1); var rr=R*(0.32+0.62*Math.random());
+    for(var i=0;i<24;i++){ var u=Math.random(),vv=Math.random(); var th=u*Math.PI*2, ph=Math.acos(2*vv-1); var rr=R*(0.32+0.62*Math.random());
       clusters.push(new THREE.Vector3(rr*Math.sin(ph)*Math.cos(th), rr*Math.sin(ph)*Math.sin(th)*0.82, rr*Math.cos(ph))); }
     var gauss=function(){ var s=0; for(var i=0;i<3;i++) s+=Math.random(); return (s/3-0.5)*2; };
 
@@ -291,7 +291,7 @@
     var cBlue=new THREE.Color(0x2d7ff9), cSky=new THREE.Color(0x7cc4ff), cDim=new THREE.Color(0x1c4f8c), cNew=new THREE.Color(0xb4e2ff);
     for(var i=0;i<BASE;i++){
       var c=clusters[(Math.random()*clusters.length)|0];
-      var spread=2.4+Math.random()*2.4;
+      var spread=3.0+Math.random()*3.0;
       var px=c.x+gauss()*spread, py=c.y+gauss()*spread, pz=c.z+gauss()*spread;
       positions[i*3]=px; positions[i*3+1]=py; positions[i*3+2]=pz;
       var r=Math.random(); var col=r>0.92?cSky:(r<0.4?cDim:cBlue); var b=0.6+Math.random()*0.55;
@@ -303,11 +303,11 @@
     pgeo.setAttribute('position',new THREE.BufferAttribute(positions,3));
     pgeo.setAttribute('color',new THREE.BufferAttribute(colors,3));
     pgeo.setDrawRange(0,used);
-    var pmat=new THREE.PointsMaterial({size:0.62,map:dotTex,vertexColors:true,transparent:true,opacity:0.92,depthWrite:false,blending:THREE.AdditiveBlending,sizeAttenuation:true});
+    var pmat=new THREE.PointsMaterial({size:0.5,map:dotTex,vertexColors:true,transparent:true,opacity:0.82,depthWrite:false,blending:THREE.AdditiveBlending,sizeAttenuation:true});
     var points=new THREE.Points(pgeo,pmat); scene.add(points);
 
     // ---- web of edges (nearest neighbours) ----
-    var ESEG=4600;
+    var ESEG=13000;
     var epos=new Float32Array(ESEG*2*3);
     var eused=0;
     var addEdge=function(a,b){ if(eused>=ESEG) return -1; var o=eused*6; epos[o]=a.x;epos[o+1]=a.y;epos[o+2]=a.z; epos[o+3]=b.x;epos[o+4]=b.y;epos[o+5]=b.z; eused++; return eused-1; };
@@ -320,12 +320,12 @@
     var egeo=new THREE.BufferGeometry();
     egeo.setAttribute('position',new THREE.BufferAttribute(epos,3));
     egeo.setDrawRange(0,eused*2);
-    var emat=new THREE.LineBasicMaterial({color:0x2f6fc4,transparent:true,opacity:0.12,blending:THREE.AdditiveBlending,depthWrite:false});
+    var emat=new THREE.LineBasicMaterial({color:0x2f6fc4,transparent:true,opacity:0.09,blending:THREE.AdditiveBlending,depthWrite:false});
     var edgesObj=new THREE.LineSegments(egeo,emat); scene.add(edgesObj);
 
     var controls=new THREE.OrbitControls(camera,renderer.domElement);
     controls.enableDamping=true; controls.dampingFactor=0.08; controls.enablePan=false;
-    controls.minDistance=22; controls.maxDistance=88; controls.autoRotate=true; controls.autoRotateSpeed=0.5;
+    controls.minDistance=28; controls.maxDistance=120; controls.autoRotate=true; controls.autoRotateSpeed=0.5;
     controls.target.set(0,0,0);
 
     new ResizeObserver(function(){ var w=el.clientWidth,h=el.clientHeight; if(w&&h){ camera.aspect=w/h; camera.updateProjectionMatrix(); renderer.setSize(w,h); } }).observe(el);

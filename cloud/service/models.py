@@ -72,6 +72,10 @@ CONSENT_TEXT = (
     "I can withdraw consent at any time from my profile (or by replying STOP)."
 )
 
+# Public download link for the Android app (APK). Surfaced in the nav download button and the
+# /app showcase page. Set as a Jinja global so the shared base.html has it on every render.
+APK_URL = "https://drive.google.com/file/d/1MJ5MeLwDF_o7T4wJOxFgb8LJJh5d5HJj/view?usp=sharing"
+
 
 class Expert(SQLModel, table=True):
     """A registered specialist who has OPTED IN to be reached for emergency teleconsults.

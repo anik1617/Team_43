@@ -16,12 +16,13 @@ from sqlmodel import Session, select
 
 from ..auth import hash_password, verify_password
 from ..db import get_session
-from ..models import CONSENT_TEXT, CONSENT_VERSION, Expert, now_iso
+from ..models import APK_URL, CONSENT_TEXT, CONSENT_VERSION, Expert, now_iso
 from .oauth import get_google, google_enabled
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 # reuse the portal's templates dir so expert pages extend the same base.html / design system
 templates = Jinja2Templates(directory=os.path.join(_HERE, "..", "portal", "templates"))
+templates.env.globals["APK_URL"] = APK_URL      # shared base.html download button
 router = APIRouter(tags=["experts"])
 
 SPECIALTIES = ["Neurosurgery", "Neurology", "General surgery", "Emergency medicine",

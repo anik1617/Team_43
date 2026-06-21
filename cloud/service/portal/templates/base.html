@@ -40,6 +40,10 @@
  .nav-right{margin-left:auto;display:flex;align-items:center;gap:18px}
  .status-pill{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--mut-2);font-family:var(--mono)}
  .status-pill .live{width:6px;height:6px;border-radius:50%;background:#23A06B}
+ .nav-dl{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:8px;background:var(--acc);color:#fff;
+   font-family:var(--sans);font-size:12.5px;font-weight:600;letter-spacing:.01em;box-shadow:0 2px 8px rgba(45,127,249,.28);transition:.14s}
+ .nav-dl:hover{background:var(--acc-hover);transform:translateY(-1px)}
+ .nav-dl svg{margin-top:-1px}
 
  /* ---- flash toast ---- */
  .flash-wrap{max-width:1160px;margin:18px auto 0;padding:0 32px}
@@ -122,11 +126,16 @@
     </span>
   </a>
   <div class="tabs">
+    <a class="tab {{ 'active' if p == '/app' }}" href="/app">The app</a>
     <a class="tab {{ 'active' if p == '/portal' }}" href="/portal">Gap inbox</a>
     <a class="tab {{ 'active' if p.startswith('/portal/contributions') }}" href="/portal/contributions">Provenance log</a>
     <a class="tab {{ 'active' if p.startswith('/experts') }}" href="/experts/profile">Expert account</a>
   </div>
   <div class="nav-right">
+    <a class="nav-dl" href="{{ APK_URL }}" target="_blank" rel="noopener">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0-12 0 12m0 0-4-4m4 4 4-4"/><path d="M5 21h14"/></svg>
+      Download app
+    </a>
     <div class="status-pill"><span class="live"></span>Knowledge base v2.4.1</div>
   </div>
 </nav>

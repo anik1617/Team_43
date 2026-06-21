@@ -72,7 +72,7 @@ def healthz():
 
 @app.get("/")
 def root():
-    return RedirectResponse("/portal")
+    return RedirectResponse("/app")
 
 
 app.include_router(portal_router)
