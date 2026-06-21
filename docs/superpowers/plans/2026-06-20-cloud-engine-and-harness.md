@@ -12,8 +12,6 @@
 
 **Test-harness setup (do FIRST — blocker fix):** tests run from **inside `cloud/`** and `tests/` is **NOT** a package (do not create `cloud/tests/__init__.py`). Run all tests: `cd cloud && .venv/Scripts/python -m pytest tests -v`. This is the one combination that resolves BOTH `import kyro_engine`/`kyro_harness` AND the flat `from test_derive import HM` cross-test imports (verified). Every `Run:` command below is relative to `cloud/`.
 
-**Execution — model selection (per Aniket):** dispatch the **implementer** subagents for all 13 tasks on **Haiku** (the tasks are well-specified, mechanical TDD — cheap + fast to validate the whole pipeline end-to-end). Run the **spec + code-quality reviewer** subagents on **Sonnet** (judgment). **Once the full suite is green on Haiku-built code, do a confirming Sonnet pass**; the SHOULD real-GraphRAG **index build also runs on Claude Sonnet** (`GRAPHRAG_MODEL=claude-sonnet-4-6`).
-
 ---
 
 ## Chunk 1: `kyro_engine` core (the deterministic executor)
@@ -474,4 +472,4 @@ def test_deterministic_arm_zero_harm():
 `cd cloud && .venv/Scripts/python -m pytest tests -v` green; `python -m kyro_harness` renders `collapse.png` showing arms 1/3/4 (or 3/4 + an explicit "arm 1 pending model" note); deterministic arm = 0 harm + full must-abstain recall; three-way parity test green. Every output stamped **provisional — answer key not mentor-signed**.
 
 ## Out of scope (SHOULD / later plans)
-Real `edh-core-v1.kyro` (GraphRAG+Claude build), L2 retrieval (`retrieval.py`) for 🟡 coverage, the "ask"/incremental-field protocol (metric 2), the LLM-as-generalist arm (metric 5), multi-turn dialogue sim, E8 escalate, C7 portal.
+Real `edh-core-v1.kyro` (GraphRAG+Claude build — **GraphRAG extraction API calls: run the FIRST index with a Haiku model for cheap pipeline validation (`GRAPHRAG_MODEL=claude-haiku-4-5-20251001`), then switch `GRAPHRAG_MODEL` to `claude-sonnet-4-6` for the real, quality build**), L2 retrieval (`retrieval.py`) for 🟡 coverage, the "ask"/incremental-field protocol (metric 2), the LLM-as-generalist arm (metric 5), multi-turn dialogue sim, E8 escalate, C7 portal.
