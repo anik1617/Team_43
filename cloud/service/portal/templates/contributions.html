@@ -42,10 +42,11 @@
 
 <div class="prov-hero">
   <div style="flex:1;min-width:320px">
-    <div class="eyebrow">Auditable feed</div>
+    <div class="eyebrow">Audit trail</div>
     <h1 class="title">Provenance log</h1>
-    <p class="lede">Every contribution staged to the corpus — contributor, trust tier, citation, any attached file, and
-      the gap it addresses (or a custom upload). <span class="strong">Auditability is the moat.</span></p>
+    <p class="lede">Every contribution added to Kyro's knowledge base, with its contributor, trust tier, citation,
+      any attached file, and the gap it addresses. <span class="strong">Every entry traces back to a named
+      clinician and a cited source.</span></p>
   </div>
   <div class="stats">
     <div class="stat"><div class="n ok">{{ ns.total }}</div><div class="l">Contributed</div></div>
@@ -71,7 +72,7 @@
           </div>
           <div class="event-sub">
             {% if c.gap_id in gaps %}addresses <b>{{ gaps[c.gap_id].summary }}</b>{% else %}<b>custom contribution</b>{% endif %} ·
-            by <span class="who">{{ c.contributor }}</span> · cite <span class="cite">{{ c.citation or '—' }}</span></div>
+            by <span class="who">{{ c.contributor }}</span>{% if c.citation %} · cite <span class="cite">{{ c.citation }}</span>{% endif %}</div>
         </div>
         <div class="event-ts">{{ ui.ts(c.created_at) }}</div>
       </div>
@@ -84,7 +85,7 @@
       </div>
       {% else %}
       <div class="rejected-box">
-        <div class="row1">✕ rejected — not staged</div>
+        <div class="row1">✕ rejected · not added</div>
         {% if c.review_note %}<div class="row2">note: <span class="note">{{ c.review_note }}</span></div>{% endif %}
       </div>
       {% endif %}

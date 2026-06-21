@@ -11,7 +11,7 @@ from .models import Gap
 SEED_GAPS = [
     ("Pediatric EDH evacuation thresholds",
      "Kyro abstained: the acute-EDH spine has no pediatric branch. A GMO asked about a 6-year-old "
-     "with a temporal EDH — volume/GCS thresholds differ from adults.", "abstention"),
+     "with a temporal EDH. Volume and GCS thresholds differ from adults.", "abstention"),
     ("Posterior fossa EDH",
      "Must-abstain vignette: posterior-fossa location falls outside the supratentorial EDH tree; "
      "spine correctly stopped. Needs a posterior-fossa pathway.", "must_abstain_vignette"),

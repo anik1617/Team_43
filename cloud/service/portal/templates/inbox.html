@@ -9,18 +9,18 @@
     <span class="e">Contribute knowledge</span>
     <span class="dot">·</span>
     {% if gap_id %}<span class="ad">addresses <b>{{ addresses }}</b></span>
-    {% else %}<span class="ad">a custom upload — not tied to a request</span>{% endif %}
+    {% else %}<span class="ad">a custom upload, not tied to a gap</span>{% endif %}
   </div>
   {% if gap_id %}<input type="hidden" name="gap_id" value="{{ gap_id }}">{% endif %}
   <div class="grid2">
     <label class="full">
       <span class="lbl">Title</span>
-      <input class="inp" name="title" required maxlength="200" placeholder="Short name for this knowledge">
+      <input class="inp" name="title" required maxlength="200" placeholder="A short name for this entry">
     </label>
     <label class="full">
-      <span class="lbl-rich"><span class="a">Knowledge</span><span class="b">prose for the graph — optional if you attach a file</span></span>
+      <span class="lbl-rich"><span class="a">Knowledge</span><span class="b">in plain text, optional if you attach a file</span></span>
       <textarea class="ta" name="body" rows="4" maxlength="8000"
-        placeholder="State the clinical knowledge precisely — thresholds, sequence, the hard stop."></textarea>
+        placeholder="State the clinical knowledge precisely. Include thresholds, sequence, and any hard stop."></textarea>
     </label>
     <label class="full">
       <span class="lbl-rich"><span class="a">Attach a file</span><span class="b">PDF, image, or text · optional · up to 15 MB</span></span>
@@ -34,14 +34,14 @@
       <span class="lbl">Contributing as <span class="soft">(from your verified account)</span></span>
       <div class="note" style="padding:10px 13px;font-size:12.5px;color:var(--ink)">
         {{ expert.name or expert.email }}{% if expert.specialty %} · {{ expert.specialty }}{% endif %}
-        — trust tier {{ 1 if expert.verified else 2 }}{% if expert.verified %} · verified{% endif %}
+        · trust tier {{ 1 if expert.verified else 2 }}{% if expert.verified %} · verified{% endif %}
       </div>
     </label>
   </div>
   <div class="form-actions">
-    <button class="btn btn-primary" type="submit">Contribute → corpus</button>
+    <button class="btn btn-primary" type="submit">Add to knowledge base</button>
     <button class="btn btn-ghost" type="button" data-toggle="{{ toggle_id }}">Cancel</button>
-    <span class="hint">→ staged to the corpus for the next signed build</span>
+    <span class="hint">Ships in Kyro's next signed update</span>
   </div>
 </form>
 {% endmacro %}
@@ -125,10 +125,11 @@
 {# ---- hero ---- #}
 <div class="hero">
   <div class="copy">
-    <div class="eyebrow">Community knowledge flywheel</div>
-    <h1>What the field told us<br>is <span class="em">missing.</span></h1>
-    <p class="lede">Kyro abstained, hit a stop, or couldn't resolve a field. Contribute the knowledge that closes a
-      gap — prose or an uploaded source file — staged straight into the corpus for the next signed build.</p>
+    <div class="eyebrow">Expert contributions</div>
+    <h1>Knowledge Kyro is<br><span class="em">missing.</span></h1>
+    <p class="lede">Each item below is a point where Kyro stopped, abstained, or could not resolve a case in the
+      field. Add the cited clinical knowledge that closes it, as text or a source file. It is added to Kyro's
+      knowledge base and ships in the next signed update to every device.</p>
   </div>
   <button class="pending-btn" type="button" data-toggle="custom-card">
     <span class="n">+</span> Contribute knowledge →
@@ -140,16 +141,16 @@
   <div class="graph-head">
     <div>
       <div class="k">Global knowledge base · live</div>
-      <div class="t">Every nugget Kyro knows — and growing</div>
+      <div class="t">Everything Kyro knows, growing with every contribution</div>
     </div>
     <div style="text-align:right">
       <div id="kyro-count" class="num">1,500</div>
-      <div class="num-cap"><span class="d"></span>knowledge nuggets</div>
+      <div class="num-cap"><span class="d"></span>knowledge entries</div>
     </div>
   </div>
   <div id="kyro-graph-3d"></div>
   <div class="graph-foot">
-    <span id="kyro-ticker">syncing contributions from the field…</span>
+    <span id="kyro-ticker">Loading the live knowledge graph…</span>
     <span>drag to orbit · scroll to zoom</span>
   </div>
 </section>
@@ -160,13 +161,13 @@
     <div>
       <div class="eyebrow">Contribute directly</div>
       <h2>Have knowledge that isn't listed?</h2>
-      <p>Upload a guideline, a textbook excerpt, an image, or your own note — with or without a matching
-        request below. It's staged straight into the corpus for the next build.{% if contributed %}
+      <p>Upload a guideline, a textbook excerpt, an image, or a clinical note, whether or not it matches a
+        gap below. It is added to Kyro's knowledge base and ships in the next signed update.{% if contributed %}
         <b style="color:var(--acc-deep)">{{ contributed }}</b> contributed so far.{% endif %}</p>
     </div>
     {% if expert %}
     <button class="gap-action" type="button" data-toggle="custom-card">
-      <span class="lbl-closed">Contribute custom →</span><span class="lbl-open" style="display:none">Close ×</span>
+      <span class="lbl-closed">Contribute →</span><span class="lbl-open" style="display:none">Close ×</span>
     </button>
     {% else %}
     <a class="gap-action" href="/experts/login">Sign in to contribute →</a>
@@ -352,7 +353,7 @@
       var place=PLACES[(Math.random()*PLACES.length)|0];
       var cap=document.createElement('div');
       cap.style.cssText="position:absolute;transform:translate(-50%,-150%);font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.04em;color:#cdeaff;background:rgba(8,18,34,.78);border:1px solid rgba(124,196,255,.3);padding:4px 9px;border-radius:6px;white-space:nowrap;opacity:0;transition:opacity .3s;box-shadow:0 4px 14px rgba(0,0,0,.4)";
-      cap.textContent=place+' · contribution linked';
+      cap.textContent=place+' · new contribution';
       capLayer.appendChild(cap);
       spawns.push({spr:spr,from:from,target:target,conns:conns,cap:cap,place:place,t:0,dur:2.6,added:false});
       setTimeout(spawn, 9000+Math.random()*7000);
@@ -383,7 +384,7 @@
           used++;
           pgeo.attributes.position.needsUpdate=true; pgeo.attributes.color.needsUpdate=true; pgeo.setDrawRange(0,Math.min(used,CAP));
           if(countEl) countEl.textContent=used.toLocaleString();
-          if(tickerEl) tickerEl.textContent='+1 · '+sp.place+' → linked into the web';
+          if(tickerEl) tickerEl.textContent='+1 · '+sp.place+' → added to the graph';
         }
         if(p>=1){ scene.remove(sp.spr); var cc=sp.cap; cc.style.opacity='0'; setTimeout(function(){ if(cc.parentNode) cc.parentNode.removeChild(cc); },350); spawns.splice(i,1); }
       }

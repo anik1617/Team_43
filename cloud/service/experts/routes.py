@@ -68,7 +68,7 @@ def register_post(request: Request, email: str = Form(...), password: str = Form
     if opted and not phone.strip():
         errors.append("A phone number is required to opt in to emergency contact.")
     if not errors and session.exec(select(Expert).where(Expert.email == email)).first():
-        errors.append("An account with that email already exists — try signing in.")
+        errors.append("An account with that email already exists. Try signing in.")
     if errors:
         return templates.TemplateResponse(
             request, "experts_register.html", _ctx(request, form=form, error=" ".join(errors)))
@@ -84,7 +84,7 @@ def register_post(request: Request, email: str = Form(...), password: str = Form
     session.refresh(e)
     request.session["expert_id"] = e.id
     return RedirectResponse(
-        _flash("/experts/profile", "Account created ✓ — review your contact settings below."), 303)
+        _flash("/experts/profile", "Account created ✓. Review your contact settings below."), 303)
 
 
 # ---- login / logout -----------------------------------------------------------------------
@@ -148,7 +148,7 @@ def profile_post(request: Request, name: str = Form(""), specialty: str = Form("
     e.contact_opt_in = opted                            # opting out keeps the record but stops matching
     session.add(e)
     session.commit()
-    msg = "Profile saved ✓" + ("" if opted else " — you are opted OUT and won't be contacted.")
+    msg = "Profile saved ✓" + ("" if opted else ". You are opted out and won't be contacted.")
     return RedirectResponse(_flash("/experts/profile", msg), 303)
 
 
@@ -159,7 +159,7 @@ async def auth_google(request: Request):
     google = get_google()
     if not google:
         return RedirectResponse(
-            _flash("/experts/login", "Google sign-in isn't configured yet — use email/password."), 303)
+            _flash("/experts/login", "Google sign-in isn't configured yet. Use email and password."), 303)
     # Pin the callback from KYRO_OAUTH_REDIRECT when set — it MUST byte-match a Google "Authorized
     # redirect URI". Deriving from request.url_for is fragile behind a TLS proxy (builds http:// if
     # --proxy-headers isn't active → redirect_uri_mismatch). Authlib reuses this same value for the
@@ -192,7 +192,7 @@ async def auth_google_callback(request: Request, session: Session = Depends(get_
             # A password account already owns this email — do NOT silently link Google to it
             # (pre-registration account-takeover). Make them prove the password first.
             return RedirectResponse(_flash("/experts/login",
-                "An account with this email already exists — sign in with your password."), 303)
+                "An account with this email already exists. Sign in with your password."), 303)
         if existing:                                    # OAuth-only row (no password) → safe to attach
             existing.oauth_provider, existing.oauth_sub = "google", sub
             e = existing
@@ -204,4 +204,4 @@ async def auth_google_callback(request: Request, session: Session = Depends(get_
     request.session["expert_id"] = e.id
     return RedirectResponse(
         _flash("/experts/profile",
-               "Signed in with Google ✓ — add your specialty, phone & opt-in to be reachable."), 303)
+               "Signed in with Google ✓. Add your specialty, phone, and opt-in to be reachable."), 303)

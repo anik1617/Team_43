@@ -72,7 +72,7 @@ async def contribute(
         data = await attachment.read()
         if len(data) > MAX_UPLOAD_BYTES:
             return RedirectResponse(
-                _flash("/portal", "Attachment is larger than 15 MB — please upload a smaller file."),
+                _flash("/portal", "Attachment is larger than 15 MB. Please upload a smaller file."),
                 status_code=303)
 
     body = body.strip()
@@ -108,7 +108,7 @@ async def contribute(
     session.add(c)
     session.commit()
     return RedirectResponse(
-        _flash("/portal/contributions", "Knowledge contributed and staged to the corpus ✓"),
+        _flash("/portal/contributions", "Knowledge added to Kyro's knowledge base ✓"),
         status_code=303)
 
 

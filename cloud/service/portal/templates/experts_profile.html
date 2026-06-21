@@ -6,7 +6,7 @@
 <h1 class="title">Your profile</h1>
 <p class="lede">{{ expert.name or expert.email }} ·
   {% if reachable %}<span class="pill pill-addressed"><span class="d"></span>Reachable now</span>
-  {% else %}<span class="pill pill-rejected"><span class="d"></span>Not reachable — opted out</span>{% endif %}
+  {% else %}<span class="pill pill-rejected"><span class="d"></span>Not reachable</span>{% endif %}
   {% if expert.on_call %}<span class="pill pill-open" style="margin-left:6px"><span class="d"></span>On call</span>{% endif %}
 </p>
 

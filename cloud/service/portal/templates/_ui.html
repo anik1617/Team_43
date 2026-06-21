@@ -23,5 +23,5 @@
 
 {# Trim an ISO timestamp (2026-06-20T18:03:21+00:00) to the design's "2026-06-20 18:03 UTC". #}
 {% macro ts(iso) %}
-{%- if iso -%}{{ iso[:16].replace('T', ' ') }} UTC{%- else -%}—{%- endif -%}
+{%- if iso -%}{{ iso[:16].replace('T', ' ') }} UTC{%- else -%}n/a{%- endif -%}
 {% endmacro %}
