@@ -17,7 +17,12 @@ Produce, by end of sprint, **evidence a skeptical-MD panel will believe**:
 
 **Definition of done (MUST):** `kyro_engine` traverses the real bundle; the harness scores the 38 vignettes on the deterministic arms (metrics 1–4 + coverage) and renders the ablation collapse chart for arms 3–4. SHOULD/STRETCH in §9.
 
-**The honest framing baked into the design** (this *is* the win condition): the deterministic arm scoring well is **by construction** — the spine encodes the guideline, so a faithful evidence-encoding *must* reach the sanctioned leaf. The persuasive result is therefore **the delta**: the LLM-only arms collapse (lower action-accuracy, non-zero harm) when the L1 spine is removed. We claim *"structure guarantees safety,"* never *"our model reasons well."*
+**What the harness actually measures — three distinct things, kept separate (read first):**
+1. **Executor-correctness / encoding fidelity** — does `kyro_engine` reach the leaf the spine implies for each vignette's evidence? Deterministic, ≈perfect *by construction*; this validates the **engine + the encoding**, not the medicine.
+2. **Clinical correctness** — is that leaf the *right* action? Rests **entirely on mentor sign-off** of the spine + vignettes, **not** on the harness. *Every number here is provisional until that sign-off — `docs/21` is explicit the 38 vignettes + TA seeds are constructed teaching cases pending neurosurgeon review; the slide must say so.*
+3. **The thesis (does the L1 spine add value)** — the **delta** between the spine arm and a **bare-LLM arm**, which collapses (lower action-accuracy, non-zero harm) without the spine. This delta is the persuasive result, so **at least one real LLM arm must exist** (arm 1 is in MUST, §9 — not GPU-deferred).
+
+We claim *"structure guarantees safety,"* never *"our model reasons well."*
 
 ---
 
@@ -52,19 +57,19 @@ kyro_engine/
   result.py      KyroResult{leaf_id, action, mode, citations, trajectory, asked, abstained}
 ```
 
-**Traversal semantics** (transcribed from `docs/20-edh-cgt-spine.md` + the spine SQL header — *not invented*): starting at `cgt_meta.root_id` (N00), at each node:
+**Traversal semantics** (derived from the `kind` / `required` / edge-`condition` fields in `spine/edh-cgt.sql`, consistent with the advance/act/ask framing in `docs/08`): starting at `cgt_meta.root_id` (N00), at each node:
 - **ask** — node `kind='gather'` and a `required` field is absent from evidence → emit the node's `cgt_strings.prompt`; halt awaiting that field.
 - **advance** — evidence satisfies the node → follow the `cgt_edge` whose `condition` matches the classified value.
 - **act** — node `kind='leaf'` → emit `action` (`GUIDE|OBSERVE|STABILIZE_TRANSFER|ABSTAIN_STOP`) + `cgt_strings.recommendation` + citations.
 
 **Safety meta-rules `safety.py` (S1–S6)** — enforced as code, can override a leaf:
-S1 completeness gate (cannot terminate while a `required` critical field is missing) · S2 contradiction guard (incl. cross-time pupil/GCS reversal) · S3 out-of-tree guard (any out-of-protocol/out-of-range input → ABSTAIN) · S4 monotonic escalation (never downgrade severity mid-encounter) · S5 unmeasured ≠ excluded (e.g. mannitol withheld if extracranial causes not excluded) · S6 pediatric scope gate (age < 15 → L98 abstain, adult thresholds void).
+S1 completeness gate (cannot terminate while a `required` critical field is missing) · S2 contradiction guard (incl. cross-time pupil/GCS reversal) · S3 out-of-tree guard (any out-of-protocol/out-of-range input → ABSTAIN) · S4 monotonic escalation (never downgrade severity mid-encounter) · S5 unmeasured ≠ excluded (e.g. mannitol withheld if extracranial causes not excluded) · S6 pediatric scope gate (age < 15 → **N98/L98 `STABILIZE_TRANSFER`**, adult thresholds void — graduated-assistance peds stabilization per spine v4 / VF-GRAD-1; the *operative/localization* step still funnels to N40 `ABSTAIN_STOP`). **The answer key reads the structured `action` column from the SQL as ground truth — NOT doc 20's prose, which still says pediatric `ABSTAIN_STOP` and is stale vs spine v4.**
 
 **Graduated-assistance mode badge (🟢/🟡/🔴)** — computed from **structure + coverage, never model confidence**:
 - 🟢 reached a guideline-sanctioned leaf AND retrieval covers it;
 - 🟡 exact leaf not reached / partly out-of-tree BUT related cited knowledge exists → grounded principles, labeled extrapolated;
 - 🔴 only the two irreducible cases: where-to-cut/localization (needs imaging) or invalid/contradictory input.
-Badge confidence = `retrieval_match × source_trust_tier` (data, not the model).
+Badge confidence = `retrieval_match × source_trust_tier` — **a spec-introduced formula** (not in the ground-truth docs; needs mentor sign-off), data-derived, never model-derived. (The 🟢/🟡/🔴 model itself is per `docs/08` E4 + `docs/21`; `docs/20`'s GREEN/YELLOW/RED is only a citation-strength overlay, a different axis.)
 
 **Narrator plug:** `NullNarrator` returns the raw leaf/citations (used for all deterministic scoring — classification of an operator answer is done by a deterministic value-parser for vignettes, since vignette inputs are already structured). `QwenNarrator` does the four I/O jobs (clean ASR, classify free-text answer, phrase question, synthesize cited recommendation) — used only for I/O-quality scoring + LLM arms.
 
@@ -93,14 +98,14 @@ kyro_harness/
   report.py      render charts (spine-ablation collapse, confusion matrix) + a JSON results dump
 ```
 
-**Case schema** (`vignettes.py`): `{id, prose, evidence{gcs_e/v/m, pupils, sbp, age, mechanism, lucid, …}, expected_action, expected_mode, must_abstain: bool, source_node_path?}`. **Methodological safeguard — blind encoding:** the `evidence` object is transcribed from the vignette's *clinical facts only*, never from its expected answer; the spine then decides. (Prevents the circularity of hand-fitting evidence to the target leaf.)
+**Case schema** (`vignettes.py`): `{id, prose, evidence{gcs_e/v/m, pupils, sbp, age, mechanism, lucid, …}, expected_action, expected_mode, must_abstain: bool, source_node_path?}`. **Methodological safeguard — enforced blind encoding (operational, not just asserted):** `docs/21` ships each vignette *next to its answer-path*, so a single author reading it cannot be trusted to encode blind. Enforce it: (a) encode `evidence` from a **prose-only copy with labels/paths stripped**, and (b) **commit the `evidence` objects BEFORE filling `expected_action`/`expected_mode`** — git history is the audit trail that inputs weren't fitted to targets. This is the control a skeptic will demand.
 
 **Metrics** (`score.py`), each a delta vs a named baseline:
 1. Triage accuracy (operate-vs-transfer) ≥80% exact / ≥90% within-safe-band + **directional confusion matrix** (errors must cluster safe/transfer).
-2. Info-gathering completeness ≥0.90 (MedKGEval history-taking 0–2).
-3. Guideline-concordance + citation-faithfulness ≥90% on critical-path steps.
+2. Info-gathering completeness ≥0.90 (MedKGEval history-taking 0–2) — **data source: an incremental-field protocol** (feed evidence one field at a time; score whether the engine *asks* for each missing `required` field before terminating). Deterministically MUST-producible; full multi-turn dialogue is STRETCH.
+3. Guideline-concordance + citation-faithfulness ≥90% on critical-path steps. **For the deterministic arms (3–4) this is an executor-correctness / encoding-fidelity check, NOT an independent clinical-accuracy measurement** (the leaves are spine-derived — see §1). Independent clinical validity = mentor sign-off; citation-faithfulness needs a real narrator (SHOULD).
 4. **Abstention accuracy + coverage** — ≥95% must-abstain recall **on the irreducible set** (where-to-cut / invalid input) PAIRED with **coverage/helpfulness** = % of cases given grounded 🟢/🟡 vs forwarded empty-handed; + false-abstention rate + AUROC vs the ~0.5 confidence baseline.
-5. vs unaided generalist: +20–25 pts.
+5. vs unaided generalist: +20–25 pts — **data source: an LLM-as-generalist arm** (a bare model prompted as a general medical officer), since no human-generalist transcripts exist in-repo; **SHOULD** (needs the model), not MUST.
 6. vs generic LLM = the ablation ladder.
 
 **Ablation ladder** (`ablation.py`), all on the 38 vignettes:
@@ -155,15 +160,15 @@ vignettes(docs/19,21) ──vignettes.py──▶ Case[ ] ──▶ kyro_harness
 
 ## 9. Scope / cut-lines (2-day commit)
 
-- **MUST (Aniket, GPU-free):** `kyro_engine` + deterministic harness (metrics 1–4 + coverage) + ablation arms 3–4 + real `edh-core-v1.kyro`.
-- **SHOULD:** LLM arms 1–2 (Gowrish GPU / small local Qwen) → completes the ladder + the "vs generic LLM" number + citation-faithfulness with a real narrator.
+- **MUST (Aniket, GPU-free):** `kyro_engine` + deterministic harness (metric 1, metric 3 *as an executor-correctness check*, metric 4 + coverage) running **on the spine alone** — the existing **mock/selftest bundle suffices, since the deterministic action decision needs only `cgt_*`, not real L2** — + ablation arms **3, 4, and arm 1 (bare Qwen, single-turn, ~38 prompts on a small/CPU Qwen — minutes on the laptop)** so the **collapse chart shows the real thesis (spine vs bare-LLM)**, not merely spine-vs-gate.
+- **SHOULD:** the **real `edh-core-v1.kyro`** (GraphRAG + Claude/LiteLLM build) — *deliberately de-risked OUT of MUST because a first-time GraphRAG index run is the schedule wildcard (settings / gateway auth / parquet-schema drift)*; it upgrades citations + 🟡 coverage. Plus arm 2 (+graph), metric 2's incremental-field protocol, metric 5's LLM-as-generalist baseline, citation-faithfulness with a real narrator.
 - **STRETCH:** MedKGEval-style multi-turn dialogue sim (model plays the operator) + Tier-B synthetic generation.
 
 ---
 
 ## 10. Ownership & compute
 
-Aniket owns `kyro_engine`, `kyro_harness`, and the **real** `edh-core-v1.kyro`. Per the agreed split, **Gowrish owns mock-bundle rebuilds** (`edh-core-v0-mock.kyro`) — different filename, no collision. Deterministic arms run on Aniket's laptop; LLM arms hand off to Gowrish's supercomputer (he also runs Tier-C MIMIC). The harness *code* is Aniket's deliverable; the GPU *runs* are Gowrish's.
+Aniket owns `kyro_engine`, `kyro_harness`, and the **real** `edh-core-v1.kyro`. By a **working convention from this session**, Gowrish rebuilds `edh-core-v0-mock.kyro` when he revs the spine (different filename from the real bundle = no collision). **NB: this supersedes `docs/08`, which still assigns *both* bundles to Aniket (steps ②/④); doc 08 needs a one-line reconciliation.** Deterministic arms run on Aniket's laptop; LLM arms hand off to Gowrish's supercomputer (he also runs Tier-C MIMIC). The harness *code* is Aniket's deliverable; the GPU *runs* are Gowrish's.
 
 ---
 
