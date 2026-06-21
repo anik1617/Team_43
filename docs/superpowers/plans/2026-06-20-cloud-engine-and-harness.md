@@ -10,7 +10,7 @@
 
 **Ground truth to mirror (read before coding):** `edge/e3/conformance.py` (executor + `derive()` + `to_py()`), `spine/edh-cgt.sql` (the tree), `cloud/kyro_bundle/signing.py` (verify), `docs/19-test-vignettes.md` + `docs/21-cgt-mentor-pack.md` (the answer key). **Parity rule:** `kyro_engine`'s `conditions.py`/`derive.py` MUST stay byte-equivalent in behavior to `conformance.py` — when his `derive()` changes, ours changes; a CI parity test (Task 11) enforces it.
 
-**Run all tests with the venv:** `cloud/.venv/Scripts/python -m pytest cloud/tests -v`
+**Test-harness setup (do FIRST — blocker fix):** tests run from **inside `cloud/`** and `tests/` is **NOT** a package (do not create `cloud/tests/__init__.py`). Run all tests: `cd cloud && .venv/Scripts/python -m pytest tests -v`. This is the one combination that resolves BOTH `import kyro_engine`/`kyro_harness` AND the flat `from test_derive import HM` cross-test imports (verified). Every `Run:` command below is relative to `cloud/`.
 
 ---
 
@@ -29,7 +29,7 @@
 
 ### Task 1: `conditions.py` — the condition grammar (port + lock)
 
-**Files:** Create `cloud/kyro_engine/__init__.py`, `cloud/kyro_engine/conditions.py`, `cloud/tests/__init__.py`, `cloud/tests/test_conditions.py`
+**Files:** Create `cloud/kyro_engine/__init__.py`, `cloud/kyro_engine/conditions.py`, `cloud/tests/test_conditions.py`  *(do NOT create `cloud/tests/__init__.py` — `tests/` must stay non-packaged, per the setup note above)*
 
 - [ ] **Step 1: Write the failing test**
 
@@ -57,7 +57,7 @@ def test_cond_true_is_sandboxed():
         cond_true("__import__('os')", {})
 ```
 
-- [ ] **Step 2: Run test to verify it fails** — `cloud/.venv/Scripts/python -m pytest cloud/tests/test_conditions.py -v` → FAIL (module not found)
+- [ ] **Step 2: Run test to verify it fails** — `cd cloud && .venv/Scripts/python -m pytest tests/test_conditions.py -v` → FAIL (module not found)
 
 - [ ] **Step 3: Write minimal implementation** (port from `edge/e3/conformance.py` lines 26–42, unchanged behavior)
 
@@ -154,7 +154,7 @@ def test_load_spine_reads_cgt():
     assert sp.root == 'N00'
     assert len(sp.nodes) == 60
     assert sp.nodes['N40']['action'] == 'ABSTAIN_STOP'
-    assert sp.strings['N00'][0] in ('en',) or True   # strings keyed by node
+    assert 'en' in sp.strings['L40']                  # L40 is a leaf that HAS an en string
 
 def test_load_spine_verifies_signature_by_default():
     # tampering is out of scope here; assert it does NOT raise on a genuine bundle
@@ -167,7 +167,21 @@ def test_load_spine_rejects_missing_file():
 
 - [ ] **Step 2: Run → FAIL**
 
-- [ ] **Step 3: Implement** — `load_spine(path, verify=True)` opens the bundle with sqlite-vec, optionally calls `kyro_bundle.signing.verify(signing.manifest_digest(conn), sig, pub)` + `cgt_digest` (reuse the existing functions; raise `BundleError` on failure), and returns a `Spine` dataclass: `nodes` (id→{kind,field,action,source_citation,trust_tier}), `edges` (list of {src,dst,cond}), `root`, `strings` (node_id→{lang:(prompt,recommendation)}). Mirror `conformance.load()` (lines 16–23) for the node/edge/root reads; add `source_citation`/`trust_tier` to the node dict and a `cgt_strings` read.
+- [ ] **Step 3: Implement** — first define the return type, then `load_spine`:
+
+```python
+# cloud/kyro_engine/loader.py (top)
+from dataclasses import dataclass, field
+class BundleError(Exception): ...
+@dataclass
+class Spine:
+    nodes: dict                                   # id -> {kind, field, action, source_citation, trust_tier}
+    edges: list                                   # [{src, dst, cond}]
+    root: str
+    strings: dict = field(default_factory=dict)   # node_id -> {lang: (prompt, recommendation)}; ONLY nodes with rows
+```
+
+`load_spine(path, verify=True)` raises `BundleError` if the file is missing; opens the bundle with sqlite-vec (mirror `cloud/kyro_bundle/build_mock._open` / `bundle_writer.open_bundle`); when `verify=True`, reuses `kyro_bundle.signing` — `verify(manifest_digest(conn), m_sig, pub)` and `verify(cgt_digest(conn), cgt_sig, pub)` — raising `BundleError` on failure. Reads `cgt_nodes` (incl. `source_citation`, `trust_tier`), `cgt_edges`, `root_id`, and `cgt_strings` into the `Spine`. Mirror `conformance.load()` (lines 16–23) for nodes/edges/root. **Consumers MUST use `spine.strings.get(id, {})`** — terminals (N40/N98/N99) have no string row.
 
 - [ ] **Step 4: Run → PASS**
 
@@ -269,7 +283,9 @@ def test_parse_mode_from_recommendation_tag():
 
 - [ ] **Step 2: Run → FAIL**
 
-- [ ] **Step 3: Implement** `parse_mode(recommendation_text)` — regex `\[(GREEN|YELLOW|RED)` → emoji; default 🟡. Then in `executor.run`, on the ACT branch: look up `spine.strings[leaf_id]['en']` recommendation → `mode = parse_mode(rec)`, and collect `citations` by walking `path` and gathering each node's `source_citation` (dedup, drop None). Update the test in `test_executor.py` to assert `run(sp, {**HM,'gcs_e':7}).mode == '🔴'`.
+- [ ] **Step 3: Implement** `parse_mode(text)` — regex `\[\s*(GREEN|YELLOW|RED)` → 🟢/🟡/🔴; **default 🟡** for text without a leading tag or for `None`/empty (never raises, never empty). Then in `executor.run`, on the ACT branch: `rec = spine.strings.get(leaf_id, {}).get('en', ('', ''))[1]` (tolerant — terminals have no string) → `mode = parse_mode(rec)`; collect `citations` by walking `path`, gathering each node's `source_citation` (dedup, drop None).
+
+  **Modes the canonical cases actually yield** (verified against the spine — terminals have no string of their own): INVALID→N99 → **🟡** (graduated default, *not* 🔴); HM→L21c (`[GUIDE - …; RED at the act]`, no *leading* tag) → **🟡**. So assert `run(sp, {**HM,'gcs_e':7}).mode == '🟡'` and `run(sp, HM).mode in ('🟢','🟡','🔴')`. *(Fine-grained 🔴-on-invalid + 🟢-with-coverage is a SHOULD refinement tied to L2 retrieval; the MUST badge is the leaf tag with a 🟡 default.)*
 
 - [ ] **Step 4: Run → PASS** (both test_mode.py and test_executor.py)
 
@@ -281,7 +297,7 @@ def test_parse_mode_from_recommendation_tag():
 
 **Files:** Create `cloud/tests/test_parity.py`
 
-- [ ] **Step 1: Write the test** — load the mock bundle, run `kyro_engine.executor.run` and `edge/e3/conformance.traverse` (import it) over `[HM, PEDS, INVALID]`; assert identical actions. This is the guard that `kyro_engine` never drifts from the edge oracle.
+- [ ] **Step 1: Write the test** — load the mock bundle, run `kyro_engine.executor.run` and `edge/e3/conformance.traverse` (import it) over `[HM, PEDS, INVALID]`; assert identical actions. This is the guard that `kyro_engine` never drifts from the edge oracle. **Keep the parity set to NON-STUCK cases** — all 3 canonical reach genuine action leaves (HM→L21c GUIDE, PEDS→N98 STABILIZE_TRANSFER, INVALID→N99 ABSTAIN_STOP); a stuck case would diverge (engine→`ABSTAIN_STOP` vs oracle→`STUCK@…`), so never add one to this set.
 
 ```python
 # cloud/tests/test_parity.py
@@ -411,7 +427,7 @@ def test_deterministic_arm_zero_harm():
 
 - [ ] **Step 1: Write the failing test** — `run_arm(arm, spine, cases)` returns scored rows. Arm 3 = `executor.run` as-is. Arm 4 = arm 3 + an explicit post-gate that forces ABSTAIN_STOP when `derive()` set `gcs_valid=False`/`any_critical_field_missing` (belt over the spine). Assert arm 4 abstains on the INVALID case and arm 3/4 agree on HM.
 - [ ] **Step 2: Run → FAIL**
-- [ ] **Step 3: Implement** the arm runners; arm 4's gate reads the derived env (expose it from `executor.run` via an optional `return_env` or recompute with `derive`).
+- [ ] **Step 3: Implement** the arm runners. Arm 4 **recomputes** `derive(dict(case.evidence))` inside `ablation.py` (derive is pure/idempotent — it copies via `dict()`) and forces `ABSTAIN_STOP` when `gcs_valid is False` or `any_critical_field_missing` — do NOT add a `return_env` flag to `executor.run` (keep its signature stable for parity).
 - [ ] **Step 4: Run → PASS**
 - [ ] **Step 5: Commit** — `git commit -m "feat(harness): ablation arms 3 (spine) + 4 (spine+gate)"`
 
@@ -437,7 +453,7 @@ def test_deterministic_arm_zero_harm():
 
 - [ ] **Step 1: Write the test** — `render(scores_by_arm, out_dir)` writes `collapse.png` + `confusion.png` + `results.json`; assert the files exist and `results.json` records which arms ran (so a deferred arm 1 is **explicitly** marked absent, never silently). Use `matplotlib` Agg backend.
 - [ ] **Step 2: Run → FAIL**
-- [ ] **Step 3: Implement** a grouped bar chart (action-accuracy + harm-rate per arm 1/3/4) + the directional confusion matrix heatmap + a JSON dump; print a one-line provenance note ("arms run: …; provisional — answer key not mentor-signed").
+- [ ] **Step 3: Implement** a grouped bar chart (action-accuracy + harm-rate per arm 1/3/4) + the directional confusion matrix heatmap + a JSON dump; print a one-line provenance note ("arms run: …; provisional — answer key not mentor-signed; blind-encoding git-history proves inputs-before-targets ordering, not that the encoder never saw the answer-path").
 - [ ] **Step 4: Run → PASS**
 - [ ] **Step 5: Commit** — `git commit -m "feat(harness): collapse chart + confusion matrix + results.json"`
 
@@ -453,7 +469,7 @@ def test_deterministic_arm_zero_harm():
 
 ## Definition of done (MUST)
 
-`cloud/.venv/Scripts/python -m pytest cloud/tests -v` green; `python -m kyro_harness` renders `collapse.png` showing arms 1/3/4 (or 3/4 + an explicit "arm 1 pending model" note); deterministic arm = 0 harm + full must-abstain recall; three-way parity test green. Every output stamped **provisional — answer key not mentor-signed**.
+`cd cloud && .venv/Scripts/python -m pytest tests -v` green; `python -m kyro_harness` renders `collapse.png` showing arms 1/3/4 (or 3/4 + an explicit "arm 1 pending model" note); deterministic arm = 0 harm + full must-abstain recall; three-way parity test green. Every output stamped **provisional — answer key not mentor-signed**.
 
 ## Out of scope (SHOULD / later plans)
 Real `edh-core-v1.kyro` (GraphRAG+Claude build), L2 retrieval (`retrieval.py`) for 🟡 coverage, the "ask"/incremental-field protocol (metric 2), the LLM-as-generalist arm (metric 5), multi-turn dialogue sim, E8 escalate, C7 portal.
