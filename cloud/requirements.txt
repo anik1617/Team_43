@@ -1,19 +1,28 @@
-# Kyro cloud / knowledge-bundle pipeline
-# Core (mock bundle + the C5 compiler's GraphRAG-parquet mapping + selftest):
+# Kyro cloud stream — bundle pipeline + kyro_engine + kyro_harness
+# SHARED with Gowrish (his edge/e3/conformance.py reconciles into kyro_engine). Edit freely.
+# `pip install -r requirements.txt` installs only the CORE block (fast, all wheels).
+# The heavy/optional blocks are commented with their own install line — opt in when needed.
+
+# --- CORE (MUST: bundle build, engine traversal, deterministic harness, charts) ---
 numpy>=1.26
 sqlite-vec>=0.1.6        # vec0 virtual tables; pin the SAME version on-device (manifest guard)
-cryptography>=42.0       # ed25519 bundle signing
-pandas>=2.0              # read GraphRAG output parquet
+cryptography>=42.0       # ed25519 bundle signing (kyro-canon-v1 row-walk digest)
+pandas>=2.0              # GraphRAG parquet + harness results frames
 pyarrow>=14.0            # parquet engine
+matplotlib>=3.8          # spine-ablation collapse chart + directional confusion matrix
+pytest>=8.0             # engine unit tests (S1–S6) + conformance/parity tests
 
-# --- step ③ (real index + BGE-M3 embeddings) — install when running the real pipeline ---
-# FlagEmbedding>=1.2       # BAAI/bge-m3, dim=1024 (must match on-device embedder byte-for-byte)
-# graphrag>=2.0            # Microsoft GraphRAG (extraction only; embeddings discarded — see graphrag/README)
+# --- ABLATION ARM 1 (MUST: bare-Qwen baseline, single-turn, CPU) ---
+# Heavy; on Windows prefer a prebuilt wheel. Install when wiring arm 1:
+#   pip install llama-cpp-python
+# llama-cpp-python>=0.2.90     # runs Qwen-4B-Q4 GGUF on CPU (same model class as llama.rn)
 
-# --- later (C1/C4/C7 cloud services) ---
-# fastapi
-# uvicorn
-# pymupdf
-# presidio-analyzer
-# presidio-anonymizer
-# supabase
+# --- RETRIEVAL + REAL BUNDLE (SHOULD: BGE-M3 embeddings, GraphRAG, Claude gateway) ---
+# Pulls torch (large). Install when building edh-core-v1.kyro / arm 2 / 🟡 retrieval:
+#   pip install FlagEmbedding graphrag litellm
+# FlagEmbedding>=1.2          # BAAI/bge-m3 dim=1024 (must be byte-identical to llama.rn on-device)
+# graphrag>=2.0              # Microsoft GraphRAG (extraction only; embeddings discarded — see graphrag/README)
+# litellm>=1.40             # OpenAI-compatible gateway → Claude (point GraphRAG api_base at it)
+
+# --- LATER (cloud services C1/C4/C7, E8 escalate) ---
+# fastapi, uvicorn, pymupdf, presidio-analyzer, presidio-anonymizer, supabase, twilio
