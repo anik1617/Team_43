@@ -8,6 +8,13 @@ from .result import KyroResult
 
 
 def run(spine, raw_evidence: dict, max_steps: int = 60) -> KyroResult:
+    """Traverse the deterministic CGT to a leaf action.
+
+    Derives the working env from raw_evidence, then walks edges from spine.root: at each
+    node, ACT if it carries an action, else ADVANCE along the first edge whose condition is
+    true. Returns KyroResult(action, leaf_id, trajectory). Fails SAFE: if no edge fires or
+    the walk exceeds max_steps (a cycle), returns ABSTAIN_STOP with stuck=True and leaf_id =
+    the last node actually visited (always == trajectory[-1])."""
     env = derive(dict(raw_evidence))
     cur, path = spine.root, []
     for _ in range(max_steps):
@@ -19,4 +26,6 @@ def run(spine, raw_evidence: dict, max_steps: int = 60) -> KyroResult:
         if nxt is None:                                      # STUCK (no edge fired)
             return KyroResult(action='ABSTAIN_STOP', leaf_id=cur, trajectory=path, stuck=True)
         cur = nxt                                            # ADVANCE
-    return KyroResult(action='ABSTAIN_STOP', leaf_id=cur, trajectory=path, stuck=True)
+    # loop exhausted (cycle): leaf_id = last VISITED node == path[-1], NOT the un-visited cur
+    return KyroResult(action='ABSTAIN_STOP', leaf_id=(path[-1] if path else spine.root),
+                      trajectory=path, stuck=True)

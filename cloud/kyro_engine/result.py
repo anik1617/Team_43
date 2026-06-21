@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 class KyroResult:
     action: str
     leaf_id: str
-    mode: str = ""            # 🟢/🟡/🔴 — set in Task 5
+    mode: str = ""            # GREEN/YELLOW/RED badge — set in Task 5
     citations: list = field(default_factory=list)
     trajectory: list = field(default_factory=list)
     stuck: bool = False
