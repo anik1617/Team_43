@@ -34,3 +34,12 @@ def test_derive_second_sbp_band_and_branches():
     assert derive({**HM, 'gcs_trend': 'stable'})['gcs_trend'] == 'stable'
     # bilateral_fixed when both pupils fixed
     assert derive({**HM, 'pupil_react_r': 'fixed'})['bilateral_fixed'] is True
+
+def test_derive_order_independence_pupils_optional():
+    # re-synced to the order-independent oracle (edge ac1c6a1): pupils read via .get(), so missing
+    # pupil evidence does NOT KeyError -- they resolve to none/False until gathered.
+    partial = {k: v for k, v in HM.items() if k not in ('pupil_react_l', 'pupil_react_r')}
+    e = derive(partial)
+    assert e['bilateral_fixed'] is False
+    assert e['fixed_pupil_side'] == 'none'
+    assert e['gcs_total'] == 7          # GCS present -> still computed

@@ -2,17 +2,26 @@
 """Derivation layer: derived clinical fields from raw evidence. Behavioral mirror of
 edge/e3/conformance.py derive(). PARITY-CRITICAL: keep byte-equivalent in behavior —
 when the edge derive() changes, this changes too (the Task 6 parity test enforces it).
-Do NOT 'improve' the [VERIFY-MENTOR] clinical formulas; they are counter-signed as-is."""
+Do NOT 'improve' the [VERIFY-MENTOR] clinical formulas; they are counter-signed as-is.
+
+Re-synced 2026-06-20 to the order-independent oracle (edge commit ac1c6a1): GCS-derived
+fields are gated on gcs_known and pupils read via .get(), so an incremental field-gather
+yields the same env as full evidence. For FULL-evidence inputs the result is identical to
+the prior version."""
 
 
 # [VERIFY-MENTOR] the clinical formulas (herniation_signs, hypoglycaemia threshold,
 # gcs_trend source) are encoded here to match the spine's intent — counter-sign at validation.
 def derive(e: dict) -> dict:
-    e['gcs_total'] = e['gcs_e'] + e['gcs_v'] + e['gcs_m']
-    lf, rf = e['pupil_react_l'] == 'fixed', e['pupil_react_r'] == 'fixed'
+    # ORDER-INDEPENDENCE (mirror of spineExecutor.ts): never lock a derived value off evidence not
+    # yet gathered. gcs_known gates the two GCS-dependent derivations so incremental gather == full env.
+    gcs_known = all(k in e for k in ('gcs_e', 'gcs_v', 'gcs_m'))
+    e['gcs_total'] = (e['gcs_e'] + e['gcs_v'] + e['gcs_m']) if gcs_known else float('nan')
+    lf, rf = e.get('pupil_react_l') == 'fixed', e.get('pupil_react_r') == 'fixed'
     e['bilateral_fixed'] = lf and rf
     e['fixed_pupil_side'] = 'left' if (lf and not rf) else 'right' if (rf and not lf) else 'none'
-    e.setdefault('gcs_trend', 'declining' if e['gcs_total'] < e.get('patient_baseline', 15) else 'stable')
+    if 'gcs_trend' not in e and gcs_known:
+        e['gcs_trend'] = 'declining' if e['gcs_total'] < e.get('patient_baseline', 15) else 'stable'
     e['hypoxic'] = (e['spo2_available'] == 'yes' and e['spo2_pct'] < 94)
     e['spo2_unknown'] = (e['spo2_available'] == 'no')
     e['hypoglycemic'] = (e['glucose_available'] == 'yes' and e['blood_glucose'] < 60)  # [VERIFY-MENTOR] threshold
@@ -32,7 +41,8 @@ def derive(e: dict) -> dict:
                     teleconsult_available='no', transfer_feasible_within_window='no')
     for k, v in defaults.items():
         e.setdefault(k, v)
-    # validation override: out-of-range GCS components flip gcs_valid off (drives the S3 abstain)
-    if not (1 <= e['gcs_e'] <= 4 and 1 <= e['gcs_v'] <= 5 and 1 <= e['gcs_m'] <= 6):
+    # validation override: out-of-range GCS components flip gcs_valid off (drives the S3 abstain).
+    # Only when GCS is present, else a pre-gather derive() would falsely invalidate it.
+    if gcs_known and not (1 <= e['gcs_e'] <= 4 and 1 <= e['gcs_v'] <= 5 and 1 <= e['gcs_m'] <= 6):
         e['gcs_valid'] = False; e['all_critical_fields_present'] = False; e['any_critical_field_missing'] = True
     return e
