@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 180" width="720" height="180" role="img" aria-label="Kyro logo">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2563EB"/>
+      <stop offset="1" stop-color="#38BDF8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ICON -->
+  <g transform="translate(24,30)">
+    <rect x="0" y="0" width="120" height="120" rx="28" fill="url(#bg)"/>
+    <g fill="none" stroke="#FFFFFF" stroke-width="5.5" stroke-linecap="round">
+      <path d="M34 68 L29 95"/>
+      <path d="M43 70 L45 95"/>
+      <path d="M58 70 L56 95"/>
+      <path d="M67 68 L72 95"/>
+    </g>
+    <g fill="#FFFFFF">
+      <path d="M27 56 C16 56 9 68 13 86 C15 78 19 67 27 62 C29 60 30 58 30 57 Z"/>
+      <path d="M23 53 C30 49 41 53 47 54 C54 55 58 51 64 51 C70 52 72 59 69 66 C60 72 39 72 31 70 C24 68 19 60 23 53 Z"/>
+      <path d="M59 59 C53 50 54 39 60 32 C63 28 71 29 72 36 C73 46 69 54 66 60 Z"/>
+      <circle cx="66" cy="24" r="6"/>
+      <rect x="63.5" y="28" width="5" height="7" rx="2.5"/>
+    </g>
+    <g fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round">
+      <path d="M67 34 C78 33 88 33 96 34"/>
+      <path d="M64 36 C66 37 65 38 66 38"/>
+    </g>
+    <path d="M96 16 Q108 34 96 52" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity="0.92"/>
+    <path d="M96 16 L66 38 L96 52" fill="none" stroke="#FFFFFF" stroke-width="1.6" opacity="0.92"/>
+    <line x1="64" y1="37" x2="104" y2="35" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round"/>
+    <polygon points="103,31 111,35 103,39" fill="#FFFFFF"/>
+  </g>
+
+  <!-- WORDMARK -->
+  <text x="172" y="100" font-family="'Montserrat','Segoe UI',Arial,sans-serif"
+        font-size="68" font-weight="800" letter-spacing="2" fill="#2563EB">KYRO</text>
+  <text x="174" y="132" font-family="'Montserrat','Segoe UI',Arial,sans-serif"
+        font-size="16.5" font-weight="600" letter-spacing="1.4" fill="#2563EB" opacity="0.78">THE GUIDE THAT NEVER DROPS THE CALL</text>
+</svg>
