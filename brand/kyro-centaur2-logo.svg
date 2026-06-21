@@ -10,14 +10,20 @@
   <g transform="translate(24,30)">
     <rect x="0" y="0" width="120" height="120" rx="28" fill="url(#bg)"/>
     <g fill="none" stroke="#FFFFFF" stroke-width="5.5" stroke-linecap="round">
-      <path d="M34 68 L29 95"/>
-      <path d="M43 70 L45 95"/>
-      <path d="M58 70 L56 95"/>
-      <path d="M67 68 L72 95"/>
+      <path d="M35 68 L30 93"/>
+      <path d="M44 70 L47 93"/>
+      <path d="M58 70 L54 93"/>
+      <path d="M67 68 L73 92"/>
     </g>
     <g fill="#FFFFFF">
-      <path d="M27 56 C16 56 9 68 13 86 C15 78 19 67 27 62 C29 60 30 58 30 57 Z"/>
-      <path d="M23 53 C30 49 41 53 47 54 C54 55 58 51 64 51 C70 52 72 59 69 66 C60 72 39 72 31 70 C24 68 19 60 23 53 Z"/>
+      <ellipse cx="30" cy="94" rx="3.6" ry="2.1"/>
+      <ellipse cx="47" cy="94" rx="3.6" ry="2.1"/>
+      <ellipse cx="54" cy="94" rx="3.6" ry="2.1"/>
+      <ellipse cx="73" cy="93" rx="3.6" ry="2.1"/>
+    </g>
+    <g fill="#FFFFFF">
+      <path d="M27 55 C15 55 8 68 12 88 C14 79 18 67 26 62 C29 60 30 57 30 56 Z"/>
+      <path d="M22 53 C29 47 40 52 47 53 C54 54 58 49 64 49 C71 50 74 58 70 66 C61 72 38 72 30 70 C22 68 16 60 22 53 Z"/>
       <path d="M59 59 C53 50 54 39 60 32 C63 28 71 29 72 36 C73 46 69 54 66 60 Z"/>
       <circle cx="66" cy="24" r="6"/>
       <rect x="63.5" y="28" width="5" height="7" rx="2.5"/>
