@@ -18,6 +18,7 @@
 
 import { DatabaseSync } from 'node:sqlite';
 import { createHash } from 'node:crypto';
+import { readFileSync, existsSync } from 'node:fs';
 
 import { loadSpine, execute, type GatherHost, type L3, type ExecResult, type Spine } from '../e3/spineExecutor.ts';
 import type { Env } from '../e3/conditions.ts';
@@ -122,14 +123,23 @@ export async function runEncounter(opts: DemoOpts): Promise<DemoResult> {
 
   const ndb = new DatabaseSync(dbPath);
   const opShim = { executeSync: (sql: string) => ({ rows: { _array: ndb.prepare(sql).all() } }) };
-  // Prefer a REVIEWED translation shipped in the bundle (cgt_strings.lang) — knowledge stays English,
-  // but UR/HI clinical strings are translated + reviewed at BUILD time, not by the on-device model.
-  // Falls back to English if the target-language row isn't in the bundle yet.
+
+  // BUILD-TIME translation drafts (NLLB, pending clinical review). In production these become
+  // REVIEWED rows in the signed bundle (cgt_strings.lang); here they're a side overlay so the demo
+  // renders the real translate-then-review pipeline without re-signing the bundle.
+  const draftPath = new URL('../l3/translations.draft.json', import.meta.url);
+  const drafts: Record<string, any> = existsSync(draftPath) ? JSON.parse(readFileSync(draftPath, 'utf-8')) : {};
+  const draftRec = (id: string, lang: string): string | null => drafts[id]?.[lang]?.recommendation ?? null;
+
+  // Prefer a REVIEWED bundle string (cgt_strings.lang); then a NLLB draft; else English. Knowledge
+  // stays English — UR/HI clinical strings are translated + reviewed at BUILD time, never on-device.
   const readLeafText = (id: string, lang = 'en') =>
     (ndb.prepare('SELECT recommendation FROM cgt_strings WHERE node_id=? AND lang=?').get(id, lang) as { recommendation?: string } | undefined)?.recommendation
+    ?? draftRec(id, lang)
     ?? (ndb.prepare("SELECT recommendation FROM cgt_strings WHERE node_id=? AND lang='en'").get(id) as { recommendation?: string } | undefined)?.recommendation ?? null;
   const hasBundleLang = (id: string, lang: string) =>
     !!(ndb.prepare('SELECT 1 FROM cgt_strings WHERE node_id=? AND lang=?').get(id, lang));
+  const hasDraft = (id: string, lang: string) => !!draftRec(id, lang);
 
   // L3 (language I/O only). Default = deterministic stub (fast, reproducible): synthesizeLeaf reads
   // the leaf's authored recommendation. With --model, the REAL Qwen-3B-Q4 rewords it (never invents).
@@ -246,15 +256,20 @@ export async function runEncounter(opts: DemoOpts): Promise<DemoResult> {
   //    The deterministic decision is identical across languages; only the phrasing changes.
   if (langs.length > 1) {
     say('━━━ MULTILINGUAL RECOMMENDATION (one decision, localized phrasing — EN/UR/HI) ━━━');
+    const id = resumed.leaf.id;
     for (const lang of langs) {
-      const reviewed = lang === 'en' || hasBundleLang(resumed.leaf.id, lang);  // is this a reviewed bundle string?
-      const text = lang === langs[0] ? recommendation : await l3.synthesizeLeaf(resumed.leaf, citations, lang);
-      say(`  ▸ [${LANG_NAMES[lang] ?? lang}]${reviewed ? '' : '  ⚠ UNREVIEWED MACHINE TRANSLATION (not clinical-grade — see note)'}`);
+      // source of the localized text, best→worst: reviewed bundle string → NLLB draft → live model.
+      let text: string, tag: string;
+      if (lang === 'en') { text = recommendation; tag = ''; }
+      else if (hasBundleLang(id, lang)) { text = readLeafText(id, lang)!; tag = '  ✓ reviewed (bundle)'; }
+      else if (hasDraft(id, lang)) { text = draftRec(id, lang)!; tag = '  ◔ DRAFT (NLLB, pending clinical review)'; }
+      else { text = await l3.synthesizeLeaf(resumed.leaf, citations, lang); tag = '  ⚠ UNREVIEWED live MT (not clinical-grade)'; }
+      say(`  ▸ [${LANG_NAMES[lang] ?? lang}]${tag}`);
       say(`    ${trimCitations(text)}`);
     }
-    if (langs.some((l) => l !== 'en' && !hasBundleLang(resumed.leaf.id, l)))
-      say('  ⚠ UR/HI shown here are LIVE on-device machine translation — DEMO ONLY. Clinical-grade UR/HI must\n'
-        + '    ship as REVIEWED strings in the bundle (cgt_strings.lang), translated + checked at build time.');
+    if (langs.some((l) => l !== 'en' && !hasBundleLang(id, l)))
+      say('  note: UR/HI are NLLB build-time DRAFTS pending native clinician review → then shipped as\n'
+        + '        reviewed strings in the signed bundle (cgt_strings.lang). Never live-translated on-device.');
     say('');
   }
 

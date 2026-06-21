@@ -227,3 +227,7 @@ package-lock.json
 # Local model weights — GGUF, multi-GB, never committed (each dev pulls their own)
 edge/models/
 *.gguf
+
+# Generated test audio (regenerate via Windows-TTS) + whisper.cpp source tree
+edge/l3/_audio/
+edge/**/whisper.cpp/
