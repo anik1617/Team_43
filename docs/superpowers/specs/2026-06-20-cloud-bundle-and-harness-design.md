@@ -10,12 +10,12 @@
 
 Produce, by end of sprint, **evidence a skeptical-MD panel will believe**:
 
-1. A **real, signed `edh-core-v1.kyro`** built from the in-repo corpus via GraphRAG (Claude extraction) + BGE-M3 — not the mock.
+1. **(SHOULD — upgrade target, §9)** A **real, signed `edh-core-v1.kyro`** built from the in-repo corpus via GraphRAG (Claude extraction) + BGE-M3 — enriches citations + 🟡 coverage over the mock; the MUST harness runs on the mock/selftest bundle.
 2. A **harness** that emits Kyro's six headline numbers + the new **coverage/helpfulness** metric + the **spine-ablation collapse chart**, where:
    - the **deterministic arms run GPU-free** (no supercomputer, not blocked on Gowrish), and
    - the LLM-baseline arms are a clean hand-off to a GPU (Gowrish or a small local Qwen).
 
-**Definition of done (MUST):** `kyro_engine` traverses the real bundle; the harness scores the 38 vignettes on the deterministic arms (metrics 1–4 + coverage) and renders the ablation collapse chart for arms 3–4. SHOULD/STRETCH in §9.
+**Definition of done (MUST):** `kyro_engine` traverses the **mock/selftest bundle** (the deterministic action decision needs only `cgt_*`; the real `edh-core-v1.kyro` is **SHOULD**, §9); the harness scores the 38 vignettes on the deterministic arms (metric 1, metric 3 as an executor-correctness check, metric 4 + coverage) and renders the ablation collapse chart for **arms 1, 3, and 4** (incl. the bare-Qwen baseline, so the chart shows the real spine-vs-LLM thesis). SHOULD/STRETCH in §9.
 
 **What the harness actually measures — three distinct things, kept separate (read first):**
 1. **Executor-correctness / encoding fidelity** — does `kyro_engine` reach the leaf the spine implies for each vignette's evidence? Deterministic, ≈perfect *by construction*; this validates the **engine + the encoding**, not the medicine.
@@ -57,7 +57,9 @@ kyro_engine/
   result.py      KyroResult{leaf_id, action, mode, citations, trajectory, asked, abstained}
 ```
 
-**Traversal semantics** (derived from the `kind` / `required` / edge-`condition` fields in `spine/edh-cgt.sql`, consistent with the advance/act/ask framing in `docs/08`): starting at `cgt_meta.root_id` (N00), at each node:
+**Build-on, don't duplicate (post-design update, 2026-06-20):** Gowrish already shipped `edge/e3/spineExecutor.ts` (the RN executor) + **`edge/e3/conformance.py`** — a *Python* deterministic oracle that loads `cgt_*`, traverses advance/act/ask, translates the `cgt_edges` condition grammar (`to_py`), applies a `derive()` layer (herniation_signs, gcs_trend, hypoglycaemia threshold — `[VERIFY-MENTOR]`), and already passes HM→GUIDE / peds→STABILIZE_TRANSFER / invalid→ABSTAIN_STOP. So **`kyro_engine`'s `executor.py` + `safety.py` ADOPT and refactor `conformance.py`'s validated semantics rather than reinvent them**; I add the layers it lacks (loader/verify, retrieval, narrator, the 38-vignette harness, ablation, metrics). Parity becomes **three-way** (his TS ↔ his `conformance.py` ↔ `kyro_engine`) and near-free — but the `derive()` logic and the condition grammar are now **shared seam surface**: my engine must match his `to_py`/`derive` exactly or the planes diverge silently. **Reconcile these before coding.**
+
+**Traversal semantics** (derived from the `kind` / `required` / edge-`condition` fields in `spine/edh-cgt.sql` — and from `edge/e3/conformance.py`'s already-validated implementation — consistent with the advance/act/ask framing in `docs/08`): starting at `cgt_meta.root_id` (N00), at each node:
 - **ask** — node `kind='gather'` and a `required` field is absent from evidence → emit the node's `cgt_strings.prompt`; halt awaiting that field.
 - **advance** — evidence satisfies the node → follow the `cgt_edge` whose `condition` matches the classified value.
 - **act** — node `kind='leaf'` → emit `action` (`GUIDE|OBSERVE|STABILIZE_TRANSFER|ABSTAIN_STOP`) + `cgt_strings.recommendation` + citations.
