@@ -47,15 +47,15 @@ The true differentiator is the **dropped-call procedure state machine**: Kyro ca
 
 Full engineering detail: **`docs/05-architecture.md`** (design), **`docs/06-tech-stack.md`** (stack), **`docs/08-build-plan-and-task-split.md`** (build), **`docs/09-prior-art-and-feasibility.md`** (feasibility/evaluation). The seam: the signed bundle `edh-core-v{N}.kyro` (manifest + chunks + chunk_vec + nodes + node_vec + edges); **BGE-M3 1024-d embeddings pinned byte-identical on both the build and device planes** (a mismatch here is the #1 project-killer).
 
-### Safety model — abstention is NOT gated on model confidence (the inversion)
+### Safety model — graduated assistance, gated on structure not confidence (the inversion)
 
-Kyro abstains based on the **deterministic structure**, not on the model's self-reported confidence:
+Kyro's default is to **give the most help the evidence supports, badged by confidence** — *not* to abstain first (a product that just forwards to a neurosurgeon is useless exactly in HM's case, where none is reachable). The badge is computed from **deterministic structure + data coverage**, never from the model's self-reported confidence:
 
-- (a) The deterministic tree must reach a **guideline-sanctioned leaf**.
-- (b) **Hard out-of-bounds rules** fire on missing required inputs, contradictory vitals, out-of-protocol values, or **any out-of-tree input**.
-- (c) **Cannot terminate while critical evidence is missing.**
+- 🟢 **Protocol** — the deterministic tree reached a **guideline-sanctioned leaf** and retrieval covers it → act, cited.
+- 🟡 **Principles (the default workhorse, not a failure state)** — exact leaf not reached, or the case is partly outside the tree, **but related cited knowledge exists** → give the best **grounded** guidance, labeled *"extrapolated from related guidance, not validated for this exact case."* The "extrapolation" is **over the cited knowledge graph** (traceable, the L2 retrieval reasons) — **not** the model reasoning freely. The inversion holds.
+- 🔴 **Stop** — reserved for only two things: **(a) where-to-cut / drill-site localization** (needs imaging — the irreducible step) and **(b) invalid/contradictory input** (out-of-range or self-contradicting values it must not guess through). Everything else degrades to grounded 🟡 — **never a dead end.**
 
-Model confidence is **near-random** at predicting correctness (AUROC ~0.5 — we cite the UQ survey *against ourselves*); it is a weak **secondary** flag only. Every critical field gets **read-back confirmation** before it enters the tree (anti-sycophancy: "I heard left pupil fixed, correct?").
+A critical input still gets **read-back confirmation** before it enters the tree, the tree **cannot terminate while critical evidence is missing**, and an irreversible call (operate) requires 🟢. Model confidence stays a weak secondary flag only — near-random at predicting correctness (AUROC ~0.5 — we cite the UQ survey *against ourselves*).
 
 **Hard rule:** **no multi-agent, no MCTS, no self-consistency on the critical path** (multi-round latency is ~70s/question on a *server* GPU = minutes/case on a phone). Reserve N=2-3 sampling for the **single operate-vs-transfer checkpoint** only.
 
@@ -74,7 +74,7 @@ Six headline numbers:
 1. **Triage accuracy** (operate-vs-transfer) ≥80% exact / ≥90% within-safe-band, plus a **directional confusion matrix** (errors must cluster on the safe / transfer side).
 2. **Info-gathering completeness** ≥0.90 (MedKGEval history-taking 0-2 metric).
 3. **Guideline-concordance AND citation-faithfulness** ≥90% on critical-path steps.
-4. **Abstention accuracy** ≥95% must-abstain recall (**the** safety number) + honest false-abstention rate + AUROC vs the ~0.5 baseline.
+4. **Abstention accuracy + coverage** — ≥95% must-abstain recall **on the irreducible set** (where-to-cut / invalid input) = **the** safety number, *paired with* a **coverage/helpfulness** rate (% of cases given grounded 🟢/🟡 guidance vs. forwarded empty-handed) so "safe" can't hide "useless" + honest false-abstention rate + AUROC vs the ~0.5 baseline.
 5. **vs unaided generalist:** +20 to +25 points.
 6. **vs generic LLM:** the **ablation ladder** (bare Qwen → +graph → +spine → +gate).
 

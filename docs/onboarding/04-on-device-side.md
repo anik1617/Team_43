@@ -134,16 +134,16 @@ When the tree needs sourced context for a leaf: embed the query with **BGE-M3 vi
 ### E3 — Spine executor + L3 I/O
 The runtime loop from §3: code-driven traversal of `cgt_*`, with the model doing its four jobs. Use a constrained/JSON output format so the model's classifications and write-ups are parseable, never free-form on the critical path.
 
-### E4 — The abstention gate (🟢 / 🟡 / 🔴)
-Decide, **deterministically**, how much to trust the current state — **never** by asking the model how confident it feels (recall AUROC ≈ 0.5):
+### E4 — The graduated-assistance gate (🟢 / 🟡 / 🔴)
+Decide, **deterministically**, how much help to give and how to badge it — **never** by asking the model how confident it feels (recall AUROC ≈ 0.5). **Default to helping, not abstaining:**
 
 | Mode | Fires when | Behavior |
 |---|---|---|
 | 🟢 **Protocol** | tree reached a guideline-sanctioned leaf + retrieval covers it | act on the cited recommendation |
-| 🟡 **Principles** | partial / incomplete match | general stabilization, *labeled* "not validated for your case" |
-| 🔴 **Stop** | out-of-tree input, contradictory vitals, or missing critical fact | "STOP, stabilize, escalate" |
+| 🟡 **Principles** *(the default)* | exact leaf not reached / partly outside the tree, but related cited knowledge exists | grounded guidance from the nearest cited nodes, *labeled* "extrapolated, not validated for your exact case" |
+| 🔴 **Stop** | **only** where-to-cut (needs imaging) or invalid/contradictory input | "STOP, here's grounded stabilization + escalate" |
 
-A high-stakes action (operate) requires 🟢 — never a weak match. The tree's own structure (S1–S6 safety rules: completeness gate, contradiction guard, pediatric scope-out, the mannitol guard, etc.) is baked into `cgt_edges`, so much of this gate is *already encoded in the bundle you load.*
+Compute the badge from **retrieval match × source trust-tier** (data coverage), not model confidence. A high-stakes action (operate) requires 🟢 — never a weak match; everything else degrades to 🟡, **never a dead end.** The tree's own structure (S1–S6 safety rules: completeness gate, contradiction guard, pediatric scope-out, the mannitol guard, etc.) is baked into `cgt_edges`, so much of this gate is *already encoded in the bundle you load.* **Heads-up:** the spine has 3 pending `[VERIFY-MENTOR]` graduated tweaks (N98/N22/N99) in `spine/edh-cgt.sql` — build against current behavior; they go live only after mentor sign-off.
 
 ### E5 — Procedure state machine + handoff brief
 Keep the working-memory object updated from the input stream. On reconnect (even 30 s of 2G), **auto-generate the pre-briefed handoff** so an expert resumes mid-case in ~10 seconds (see `01 §4`).
@@ -160,7 +160,7 @@ The live flow: HM's case → voice evidence-gathering → walk the cited tree �
 
 1. **The model never reasons on the critical path.** It cleans, classifies, phrases, and writes up. Code + the tree decide everything else.
 2. **No multi-agent, no MCTS, no self-consistency** on the critical path — they cost minutes per case on a phone. (Allowed exception: 2–3 samples on the *single* operate-vs-transfer checkpoint.)
-3. **Abstain on structure, not confidence.** Missing/contradictory/out-of-tree input → stop. Never gate on the model's self-reported certainty.
+3. **Badge on structure, not confidence.** Default to grounded 🟡 help; hard-stop (🔴) only on where-to-cut or invalid/contradictory input. Never gate on the model's self-reported certainty.
 4. **Read back every critical field** before it enters the tree.
 5. **Reject any bundle that fails verification or whose embedder doesn't match.** Mirror `verify.py` precisely.
 

@@ -259,3 +259,47 @@ INSERT INTO cgt_strings (node_id, lang, prompt, recommendation) VALUES
 -- ============================================================
 INSERT INTO cgt_meta (root_id, version, signature) VALUES
 ('N00', 3, 'UNSIGNED-pending-ed25519-at-bundle-compile');
+
+-- ============================================================
+-- [VERIFY-MENTOR] PROPOSED GRADUATED-ASSISTANCE CHANGES (v4 candidate) — UNSIGNED, NOT ACTIVE
+-- ------------------------------------------------------------
+-- Status: DRAFT for mentor sign-off. The ACTIVE tree above is UNCHANGED (the
+--   doc-19 benchmark answer key stays stable). Everything below is intentionally
+--   commented out: NOTHING here is live until the mentor approves and we
+--   uncomment + bump cgt_meta.version + re-sign.
+-- Why: "abstain-and-forward" is useless where no neurosurgeon is reachable (HM's
+--   case). Re-badge grounded help from RED-abstain to YELLOW-grounded, and close
+--   the one real dead-end (N22 has no "transfer infeasible" branch). Where-to-cut
+--   (N40) STAYS a hard ABSTAIN_STOP — the imaging wall is real and non-negotiable.
+-- Tracking: docs/21 mentor pack §PART 1 (VF-GRAD-1/2/3) + §PART 4.
+-- ============================================================
+--
+-- ---- P1 [VERIFY-MENTOR] N98 pediatric: ABSTAIN_STOP -> grounded STABILIZE_TRANSFER ----
+--   L98 already lists grounded peds stabilization; today it is badged as a refusal.
+--   Re-badge to graduated grounded help; adult thresholds still NOT applied; any
+--   operative step still funnels to N40 ABSTAIN. (REPLACES active N98/L98 + L98 string.)
+-- ('N98','terminal','age_yr',1,'STABILIZE_TRANSFER','[VERIFY-MENTOR] Pediatric (age<15): adult BTF SBP bands + adult GCS do NOT apply; give LABELED peds stabilization instead of abstaining; operative step still N40 ABSTAIN; peds SBP ~70+2*age = labeled principle',2),
+-- ('L98','leaf',NULL,0,'STABILIZE_TRANSFER','[VERIFY-MENTOR] grounded peds stabilization + transfer + tele-consult; no adult thresholds applied',2),
+-- ('L98','en',NULL,'[YELLOW / STABILIZE_TRANSFER] Patient age < 15. Adult thresholds do NOT apply (a hypotensive child must not be read as normotensive), so Kyro does not give adult-protocol numbers - but it does NOT stop helping. Grounded pediatric stabilization: secure the airway; keep age-based minimum SBP approx 70 + 2 x age mmHg (labeled principle); ensure oxygenation; head-up; treat hypoglycaemia; transfer + tele-consult a neurosurgeon now. (Full pediatric pathway = roadmap, not yet encoded.)'),
+--
+-- ---- P2 [VERIFY-MENTOR] N22: close the "transfer infeasible" dead-end ----
+--   Today N22 -> L22 unconditionally says "transfer", even where transfer is impossible
+--   (HM). Make N22 capture transfer feasibility and branch to grounded maximal-medical
+--   when transfer is NOT reachable. Non-herniation route => no local-operate decision.
+--   (REPLACES active N22 node + ('N22','L22','true'); ADDS L22m node/edges/string.)
+-- ('N22','decision','transfer_feasible_within_window',1,NULL,'[VERIFY-MENTOR] discuss/transfer-regardless triggers (NICE 1.4.16/1.8.1 [VERIFY-NICE]); branch on transfer feasibility so a no-transfer setting still gets grounded maximal medical, never a dead end',1),
+-- ('L22m','leaf',NULL,0,'STABILIZE_TRANSFER','[VERIFY-MENTOR] transfer NOT feasible -> grounded maximal medical + keep attempting transfer/tele-consult; non-operative (no herniation cluster)',1),
+--   edges:
+-- ('N22','L22','transfer_feasible_within_window = ''yes'''),
+-- ('N22','L22m','transfer_feasible_within_window IN [''no'',''unknown'']'),
+-- ('L22m','N40','true'),
+-- ('N22','en','Is transfer to a neurosurgery-capable facility feasible within the window?',NULL),
+-- ('L22m','en',NULL,'[YELLOW / maximal medical] Severe or progressing injury without a complete herniation cluster, and transfer is NOT reachable in the window. This is NOT a local-operation case (no operate indication on these signs). Give grounded maximal medical therapy: airway/intubate if GCS<=8, normotension, oxygenation, head-up, mannitol-per-criteria, coagulopathy correction, seizure cover; keep attempting transfer + tele-consult; run the deterioration monitor. Re-enter the herniation gate if a concordant cluster develops.'),
+--
+-- ---- P3 [VERIFY-MENTOR] N99: keep RED for INVALID input, but lead with grounded help ----
+--   N99 fires only on impossible/contradictory values (GCS/SBP out of range) -> abstaining
+--   on the SPECIFIC out-of-range value is correct (cannot extrapolate from a typo). But the
+--   safe default should read as grounded YELLOW help, not a bare refusal. Scope note: N99 is
+--   for UNPARSEABLE/contradictory input ONLY; a plausible-but-uncovered presentation must
+--   route to YELLOW grounded principles elsewhere, never here. (Logic unchanged; framing only.)
+-- ('L99','en',NULL,'[YELLOW grounded default + RED on the specific value] An entry is out of range or self-contradictory, so Kyro will not guess that specific field - but it still helps: give grounded stabilization (airway, normotension, oxygenation, head-up), transfer to a neurosurgery-capable facility, tele-consult. Re-enter the tree once the field is valid.'),

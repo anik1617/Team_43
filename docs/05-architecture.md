@@ -151,18 +151,18 @@ The whole edge behavior depends on detecting the gap — which is also the #1 cr
 
 *(Honest caveat: we lean on deterministic boundaries precisely because calibration on small on-device models is genuinely hard and self-reported confidence is near-random. The MVP demonstrates the gating mechanism on a few hand-picked gap scenarios, not robust model calibration.)*
 
-### 2. The graceful-degradation ladder (a traffic light)
-The system runs in modes, gated by **whether the deterministic tree reached a sanctioned leaf**, and **shows the user which mode it's in**:
+### 2. The graceful-degradation ladder (graduated assistance, badged honestly)
+**Default posture: give the most help the evidence supports — not abstain first.** A tool that meets every hard case with "transfer to a neurosurgeon" is useless precisely in HM's situation (none reachable). So the system always offers the best **grounded** guidance it can, and is honest about how much to trust it. The mode is gated by **whether the deterministic tree reached a sanctioned leaf + how well retrieval covers the case**, and is **shown to the user**:
 
 | Mode | When | What it does | Trust |
 |---|---|---|---|
 | 🟢 **Protocol** | Tree reached a guideline-sanctioned leaf, retrieval covers it | Step-by-step, **cited**, guideline-concordant | High — act on it |
-| 🟡 **Principles** | Tree branch incomplete / partial match | General stabilization, labeled "general guidance, not a validated protocol for your case"; conservative | Low — informs, doesn't direct surgery |
-| 🔴 **Stop** | Boundary hit / out-of-tree / missing critical evidence | "STOP. Stabilize per below. Here's your escalation path." | Stabilize + escalate only |
+| 🟡 **Principles** *(the default workhorse, not a failure state)* | Exact leaf not reached, or the case is partly outside the tree, **but related cited knowledge exists** | Best **grounded** guidance, labeled *"extrapolated from related guidance, not validated for your exact case"*; conservative, reversible stabilization | Moderate — act on the reversible steps; informs the irreversible ones |
+| 🔴 **Stop** | **Only:** where-to-cut / localization (needs imaging) **or** invalid/contradictory input | "STOP. Here's the grounded stabilization + your escalation path." | Stabilize + escalate only |
 
-**The rule that keeps it safe:** an irreversible, high-stakes call (operate) requires 🟢 Protocol — a tree leaf with cited content — **never** a weak match and **never** model improvisation. Low-risk, reversible actions (elevate head, secure airway, avoid hypotension, *don't* give drug X) are safe in 🟡 Principles because they are broadly correct guideline-grade stabilization and hard to make worse.
+**The rule that keeps it safe:** an irreversible, high-stakes call (operate) requires 🟢 Protocol — a tree leaf with cited content — **never** a weak match and **never** model improvisation. Low-risk, reversible actions (elevate head, secure airway, avoid hypotension, *don't* give drug X) are safe and *expected* in 🟡 Principles because they are broadly correct guideline-grade stabilization and hard to make worse. **🟡 is where Kyro earns its keep** — it is the loud default, not a footnote.
 
-The 🟡 principles layer is itself guideline-grounded — the established "prevent secondary injury + stabilize + transfer within the golden window" standard (Peshawar, Khellaf), shipped as cited nodes, not generated freehand. **Design directive:** the cold-start core must ship the *general* frameworks (trauma ABCs, raised-ICP management, the stabilize-vs-transfer decision tree), not only specific procedures — that general layer is what catches the long tail.
+The 🟡 principles layer is itself guideline-grounded — the established "prevent secondary injury + stabilize + transfer within the golden window" standard (Peshawar, Khellaf), shipped as cited nodes, not generated freehand. **What "extrapolation" means here:** the *graph* extrapolates, not the model — when the tree hits a branch it doesn't fully cover, retrieval walks to the **nearest cited knowledge** (related conditions, general stabilization, secondary-injury prevention) and surfaces it with a confidence badge derived from **retrieval match × source trust-tier**, while the model still only phrases it. So Kyro is *useful and honest* without the model ever reasoning on the critical path. **Design directive:** the cold-start core must ship the *general* frameworks (trauma ABCs, raised-ICP management, the stabilize-vs-transfer decision tree), not only specific procedures — that general layer is what catches the long tail and keeps 🟡 from ever becoming a dead end.
 
 ### 3. The self-healing flywheel — gaps become the moat
 A gap isn't just handled, it's harvested. Modeled on **open-source issues + pull requests, for clinical knowledge** (gaps = issues with a count = priority; contributions = PRs; the canonical core = `main`). *(Storyboarded for the pitch; the full portal is post-v1.)*

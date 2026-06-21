@@ -98,10 +98,10 @@ flowchart TD
     end
     subgraph DOESNT["🛑 What Kyro REFUSES to do"]
         N1["Tell you where/how to drill<br/>(needs a CT scan — impossible)"]
-        N2["Guess when it's outside its checklist"]
+        N2["Free-guess past its sources<br/>(gives grounded, labeled help instead)"]
         N3["Replace the surgeon's judgment"]
     end
-    DOESNT --> H["On those, it ABSTAINS and<br/>connects a live human expert"]
+    DOESNT --> H["On where-to-cut it ABSTAINS + connects a human;<br/>everywhere else it KEEPS HELPING,<br/>badged by confidence"]
 ```
 
 > **Say it like this:** Kyro is a **"Verifiable Workflow Automator + Grounded Synthesizer."** In plain words: it **runs a trustworthy checklist and explains the answer with its sources** — it does **not** "think like a surgeon." (Why we're so careful about wording: our judges are mostly medical doctors and neurosurgeons who are *skeptical of AI*. The fastest way to lose them is to claim an AI reasons like a surgeon.)
@@ -146,7 +146,7 @@ Kyro does exactly these five things, and nothing more:
 1. **Drives structured evidence-gathering.** It *insists* on collecting the right facts in the right order: GCS, pupils, blood pressure, lucid interval, weakness on one side, how the injury happened, time since injury. (In an emergency, asking the right questions *is* the intervention.)
 2. **Walks a guideline decision tree.** A fixed, doctor-authored checklist where **every step cites a real medical guideline** (the *Peshawar Recommendations*, the *Brain Trauma Foundation*). No guessing.
 3. **Recommends stabilization + the operate-vs-transfer decision — with sources.** It tells the GMO how to keep the patient alive and whether to operate locally or send the patient onward, and shows *why* (the citation).
-4. **Abstains and connects a human when it hits its limit.** On anything outside the checklist — especially the surgical step — it **stops, says so, and routes to a live expert.** Knowing when *not* to act is its headline safety feature.
+4. **Graduated help — and abstains only on the irreducible step.** Outside a perfect guideline match it keeps helping with **grounded, clearly-labeled** guidance (not a free guess). It hard-stops and routes to a live expert on only two things: **where to cut** (needs a scan) and **invalid input**. It's a co-pilot for the *whole* encounter — it never just forwards you and stops.
 5. **Captures the encounter by voice.** The GMO's hands are busy/sterile, so it's **voice-driven** — and every encounter quietly builds a knowledge base for the future.
 
 ---
@@ -195,10 +195,10 @@ Kyro is always honest about how much to trust it right now:
 | Mode | When | What it gives you | Trust |
 |---|---|---|---|
 | 🟢 **Protocol** | Checklist reached a proper guideline endpoint, sources cover the case | Step-by-step, cited, guideline-concordant | **High — act on it** |
-| 🟡 **Principles** | Partial / incomplete match | General stabilization advice, *labeled* "general guidance, not validated for your case" | Low — informs, doesn't direct |
-| 🔴 **Stop** | Outside the checklist / missing critical facts | "STOP. Stabilize. Here's your escalation path." | Stabilize + escalate only |
+| 🟡 **Principles** *(the everyday default, not a failure)* | Exact endpoint not reached, or the case is partly outside the checklist, but related guidelines apply | Best **grounded** guidance, *labeled* "extrapolated from related guidance, not validated for your exact case" | Moderate — act on the reversible steps |
+| 🔴 **Stop** | **Only** where-to-cut (needs a scan) or invalid/contradictory input | "STOP. Here's the grounded stabilization + your escalation path." | Stabilize + escalate only |
 
-**Hard rule:** an irreversible call like *operate* requires 🟢 — never a weak guess.
+**Hard rule:** an irreversible call like *operate* requires 🟢 — never a weak guess. But Kyro is **not** timid: outside a 🟢 its default is to keep helping at 🟡 (grounded, labeled) — it **never** just forwards you and stops.
 
 ---
 

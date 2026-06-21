@@ -157,18 +157,18 @@ Notice what the model is **never** allowed to do: decide whether to operate, dec
 - **Currency.** Guidelines change. We update Kyro by shipping a **new data file** — not by retraining an AI. Knowledge is *data*, never baked into the model.
 - **Safety.** A small 4-billion model is *not* a reliable medical reasoner (a fine-tuned *8*-billion model scored only ~42% on a US medical exam). So we **forbid it from reasoning** on the critical path. The train stays on the rails.
 
-### How the system *abstains* — and why it's NOT based on the model "feeling unsure"
+### How the system decides *how much to trust itself* — graduated assistance
 
-The headline safety feature is knowing when **not** to act. A naïve design would ask the model "how confident are you?" and stop when it's unsure. **Kyro deliberately does NOT do this**, because of a brutal research finding:
+Kyro's default is **not** to abstain — it's to give the **most help the evidence supports, badged by confidence.** (A tool that meets every hard case with "go to a neurosurgeon" is useless exactly when none is reachable — which is the whole case.) The badge comes from **hard structure + how well the data covers the case**, *never* from the model "feeling confident," because of a brutal research finding:
 
 > A small model's self-reported confidence is **near-useless** at predicting whether it's actually right — about as good as a coin flip (a measure called **AUROC ≈ 0.5**). We *cite this against ourselves.*
 
-So instead of trusting a feeling, Kyro abstains on **hard, deterministic structure**:
-- **(a)** the tree must actually reach a proper, guideline-sanctioned endpoint — no endpoint, no recommendation;
-- **(b)** **out-of-bounds rules** fire on any missing required fact, contradictory vital signs, out-of-range value, or **any input the tree doesn't recognize**;
-- **(c)** it **cannot finish** while a critical fact (GCS, pupils, etc.) is still missing.
+So Kyro grades itself deterministically into three badges:
+- 🟢 **Protocol** — the tree reached a guideline-sanctioned endpoint **and** retrieval covers the case → act, cited.
+- 🟡 **Principles** *(the everyday default, not a failure)* — no exact endpoint, or the case is partly outside the tree, **but related cited knowledge exists** → give the best **grounded** guidance, labeled *"extrapolated from related guidance, not validated for your exact case."* Crucially, that extrapolation is done by **retrieval over the cited graph** (idea #6) — *not* by the model inventing — so it stays a glass box.
+- 🔴 **Stop** — reserved for only two things: **where to cut** (needs imaging) and **invalid/contradictory input** it must not guess through. Everything else degrades to 🟡 — **never a dead end.**
 
-And before any critical fact even enters the tree, the app **reads it back** to the human for confirmation — *"I heard left pupil fixed, correct?"* — so a mis-heard word can't silently corrupt a life-or-death branch.
+Two hard guards still hold: Kyro **cannot finish** while a critical fact (GCS, pupils, etc.) is still missing, and before any critical fact enters the tree the app **reads it back** for confirmation — *"I heard left pupil fixed, correct?"* — so a mis-heard word can't silently corrupt a life-or-death branch.
 
 ### The speed rule (why Kyro feels instant, not sluggish)
 
@@ -269,7 +269,10 @@ That's why the bundle **stamps** its embedder name and dimension into a manifest
 | **CGT (Clinical Guidance Tree)** | Kyro's hand-authored, doctor-signed decision flowchart — the **L1 spine**, the "brain." |
 | **MedDM "IEET"** | The format the tree follows: **I**nformation → **E**valuation → **E**scalation → **T**reatment. |
 | **The inversion** | Kyro's core choice: the deterministic tree reasons; the model only does language I/O. |
-| **Abstain** | Refuse to recommend and escalate to a human — gated on *structure*, not model confidence. |
+| **Abstain (🔴 Stop)** | Hard-stop + escalate — used only on the *irreducible* step (where-to-cut) or invalid input. Everywhere else Kyro gives grounded 🟡 help, not silence. |
+| **Graduated assistance** | Kyro's default posture: give the most help the evidence supports, badged 🟢/🟡/🔴 — not "abstain first." |
+| **Confidence badge** | The 🟢/🟡/🔴 label, computed from retrieval match × source trust-tier (data coverage), *not* model confidence. |
+| **Grounded extrapolation** | Filling a gap with the *nearest cited knowledge* (retrieval over the graph), clearly labeled — never the model free-guessing. |
 | **AUROC ≈ 0.5** | A score showing model self-confidence is no better than a coin flip at knowing if it's right. |
 | **Read-back confirmation** | The app repeats a critical fact for the human to confirm before using it. |
 | **SQLite** | A whole database that lives in a single ordinary file — perfect for shipping to a phone. |

@@ -22,7 +22,7 @@
 ## Kyro in four sentences
 
 1. **Kyro is an offline phone app** that helps a *general* doctor (not a neurosurgeon) handle an acute brain-bleed emergency where there's **no internet, no scan, and no specialist** — anchored to a real case (patient "HM" in rural Pakistan).
-2. It **drives disciplined evidence-gathering, walks a doctor-authored decision tree with cited sources, recommends operate-vs-transfer, and abstains + connects a human** when it hits its limits.
+2. It **drives disciplined evidence-gathering, walks a doctor-authored decision tree with cited sources, recommends operate-vs-transfer, gives graduated grounded help (badged by confidence), and connects a human** on the one step it can't own (where to cut).
 3. Its hero feature is **continuity, not knowledge**: it's a "flight recorder" so a **dropped call loses nothing** and any reconnection **auto-writes a pre-briefed expert handoff**.
 4. Technically it's **neuro-symbolic** — a *deterministic decision tree* does the reasoning (auditable, guideline-cited), and a small AI model only does the *talking* (the "inversion"); knowledge ships as a **signed data file**, never a retrained AI.
 
@@ -120,7 +120,7 @@ cgt_meta(root_id, version, signature)        -- the tree's own ed25519 seal (re-
 | **L2 knowledge** | the memory | GraphRAG bundle of cited facts | no — supplies *sources* |
 | **L3 language** | the mouth | Qwen-4B-Q4 + speech in/out | **no** — only listens & talks (4 narrow jobs) |
 
-**The inversion:** code/the tree reasons; the model only does language I/O. **Abstention** is gated on deterministic structure (missing/contradictory/out-of-tree input), **not** on the model's confidence (which is ≈ a coin flip at knowing if it's right).
+**The inversion:** code/the tree reasons; the model only does language I/O. **Graduated assistance:** Kyro gives the most help the evidence supports, badged 🟢/🟡/🔴 by structure + data coverage (*not* model confidence, which is ≈ a coin flip); it hard-stops only on where-to-cut + invalid input — **never a dead end.**
 
 ---
 

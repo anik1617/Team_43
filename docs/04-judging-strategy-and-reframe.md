@@ -33,7 +33,7 @@ What this fixes:
 - **No "intuition" claim.** Intelligence = a deterministic tree (retrieval, sequencing, checklist enforcement) plus auditable citations — not invented judgment. Defensible, not threatening.
 - **Proof burden collapses** from "did you replicate surgical judgment?" (impossible) to "did you faithfully encode the established guideline?" (a mentor neurosurgeon verifies the tree node-by-node, in the room).
 - **The imaging wall is respected, not papered over.** We do **not** claim to guide the drilling — without a CT you cannot know where to drill, and software cannot supply imaging. Kyro decides *operate-vs-transfer*, stabilizes, and prevents secondary injury; the localization/surgical step is exactly where it abstains to a human.
-- **Provenance + a guideline-boundary abstain gate become the safety story:** every recommendation shows its source (the cited graph), and when the tree cannot reach a guideline-sanctioned leaf — or an input is out of bounds — the tool says *"STOP and transfer / get an expert"* instead of guessing. The headline is *"the AI that knows when NOT to act."* Neurosurgeons love a junior who knows when to call for help.
+- **Provenance + graduated assistance become the safety story:** every recommendation shows its source (the cited graph) **and a confidence badge** — 🟢 cited protocol, or 🟡 grounded principles (*"extrapolated from related guidance, not validated for your exact case"*). Kyro gives the **most help the evidence supports** and hard-stops only on the two irreducible things: **where to cut** (needs imaging) and **invalid/contradictory input**. The headline is *"the most help the evidence supports — honest about the one step it can't own."* Neurosurgeons love a junior who helps with everything they can *and* knows the one moment to call for help. (It is **not** timid: a tool that only forwards is useless exactly when no one is reachable — HM's case.)
 - **The ultimate fallback is a human, not the AI:** on a critical case it can't safely cover, the system abstains and routes to the best *available* expert, handing them the pre-briefed state (the case's dropped call, fixed). To this panel, *"the AI's job is to summon one of you for the hardest cases"* is the strongest trust signal you can send — and it makes the experts the heroes. See [05-architecture.md](05-architecture.md).
 
 ## The one-line positioning (say this verbatim)
@@ -47,7 +47,7 @@ This places us in the lowest-clinical-risk corner of the field taxonomy and expl
 | ❌ Loses the room | ✅ Wins the room |
 |---|---|
 | "replicates a surgeon's intuition/reasoning" | "task-sharing decision support" |
-| "the AI reasons / extrapolates / decides" | "a deterministic, guideline-cited decision tree decides; the model only does voice I/O" |
+| "the **model** reasons / decides" | "the **deterministic tree** decides; the **graph** extrapolates to related cited guidance (traceable, badged); the model only does voice I/O" |
 | "AI neurosurgeon" / "perfect surgeon" | "Verifiable Workflow Automator + Grounded Synthesizer" |
 | "guides the burr-hole / where to drill" | "drives evidence-gathering and the operate-vs-transfer decision; abstains on the surgical step" |
 | "autonomous" / "replaces" | "expert-in-the-loop," "knows when to abstain" |
@@ -63,7 +63,8 @@ We can't run a clinical trial, but we can **"win with science"** (the mentor's w
 | **Triage accuracy** | Operate-vs-transfer ≥80% exact / ≥90% within-safe-band, with a **directional confusion matrix** (errors cluster on the safe/transfer side) | "It's right, and when wrong it errs safe" |
 | **Info-gathering completeness** | ≥0.90 (MedKGEval history-taking 0–2 metric) — proves the *discipline*, our real edge | "It asks what we'd ask" |
 | **Guideline concordance + citation faithfulness** | ≥90% on critical-path steps; mentor neurosurgeon signs the tree node-by-node | "It says what we say, and shows its source" |
-| **Abstention accuracy (THE safety number)** | ≥95% must-abstain recall, plus an honest false-abstention rate, plus AUROC vs the ~0.5 model-confidence baseline | "It fails safe — the thing they fear most, measured" |
+| **Coverage / helpfulness** | % of cases given actionable **grounded** guidance (🟢 or 🟡) rather than forwarded empty-handed — report alongside the safety number so "safe" can't hide "useless" | "It's actually useful, not just cautious" |
+| **Abstention accuracy (THE safety number)** | ≥95% must-abstain recall **on the irreducible set** (where-to-cut / out-of-bounds), plus an honest false-abstention rate, plus AUROC vs the ~0.5 model-confidence baseline | "It fails safe on the one step it can't own — measured" |
 | **vs. unaided generalist** | +20 to +25 points | A number, on their turf |
 | **vs. generic LLM (the ablation ladder)** | bare Qwen → +graph → +spine → +gate | "The credibility comes from the structure, not the model" |
 
@@ -74,7 +75,10 @@ Eval tiers (name them as distinct distributions, never blended): **A** = 30–50
 ## The Q&A answer to rehearse cold
 
 > **"How does it know when it's wrong?"**
-> "We don't trust the model's confidence — research shows a small model's confidence is near-random at predicting its own correctness (AUROC ~0.5; we cite that survey *against ourselves*). So we don't gate on confidence. We gate on the **guideline**: the deterministic tree either reaches a guideline-sanctioned leaf or it doesn't. If a required input is missing, if vitals contradict, if a value is out of protocol, or if any input falls outside the tree, it abstains and escalates to a human. The model never overrides that."
+> "We don't trust the model's confidence — research shows a small model's confidence is near-random at predicting its own correctness (AUROC ~0.5; we cite that survey *against ourselves*). So we don't gate on confidence — we gate on **structure + coverage**: tree reaches a guideline-sanctioned leaf and retrieval covers it → 🟢 cited protocol; partly outside the tree but related cited knowledge exists → 🟡 grounded principles, *labeled as extrapolated*; and it hard-stops (🔴) only where the step is irreducible — **where to cut** (needs imaging) or **invalid/contradictory input** it must not guess through. The model never overrides that."
+
+> **"Isn't it useless if it just forwards to a neurosurgeon?"**
+> "That's exactly the failure we designed against — in our case there *is* no reachable neurosurgeon. Kyro's default is **graduated assistance**: it gives the most help the evidence supports, badged by confidence — cited protocol where it has one, grounded principles (clearly labeled as extrapolated from related guidance) everywhere else. It keeps managing the patient — airway, blood pressure, oxygenation, raised-pressure measures, the operate-vs-transfer call — and hard-stops on only two things: **where to cut** (which needs a CT) and **invalid input**. It's a co-pilot for the whole encounter, not a switchboard — and we measure that directly with a **coverage/helpfulness** number next to the safety number."
 
 ## The three paths (whole-team decision)
 
