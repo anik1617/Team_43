@@ -26,7 +26,7 @@ import { retrieve, type Knn, type Embed } from '../e2/retrieval.ts';
 import { InMemoryJournal, journalingHost, resumeSeed, finalize, reduce, type Event } from '../e5/stateMachine.ts';
 import { buildHandoff, type HandoffBrief } from '../e5/handoff.ts';
 import { manifestDigest, cgtDigest, type Query, type Cell } from '../e1/canonicalDigest.ts';
-import { createQwenL3 } from '../l3/qwenL3.ts';
+import { createQwenL3, LANG_NAMES } from '../l3/qwenL3.ts';
 
 // ---- scripted vignettes (turn-by-turn operator answers) ----
 // HM = the dramatic herniating EDH → GUIDE + drill-abstain + expert handoff.
@@ -111,10 +111,10 @@ export interface DemoResult {
   handoff: HandoffBrief;
 }
 
-export interface DemoOpts { dbPath: string; drop?: boolean; narrate?: boolean; modelPath?: string; caseKey?: string; }
+export interface DemoOpts { dbPath: string; drop?: boolean; narrate?: boolean; modelPath?: string; caseKey?: string; langs?: string[]; }
 
 export async function runEncounter(opts: DemoOpts): Promise<DemoResult> {
-  const { dbPath, drop = true, narrate = false, modelPath, caseKey = 'hm' } = opts;
+  const { dbPath, drop = true, narrate = false, modelPath, caseKey = 'hm', langs = ['en'] } = opts;
   const vignette = CASES[caseKey] ?? CASES.hm;
   const CASE = vignette.env;
   const say = (s = '') => { if (narrate) console.log(s); };
@@ -122,8 +122,14 @@ export async function runEncounter(opts: DemoOpts): Promise<DemoResult> {
 
   const ndb = new DatabaseSync(dbPath);
   const opShim = { executeSync: (sql: string) => ({ rows: { _array: ndb.prepare(sql).all() } }) };
-  const readLeafText = (id: string) =>
-    (ndb.prepare("SELECT recommendation FROM cgt_strings WHERE node_id=? AND lang='en'").get(id) as { recommendation?: string } | undefined)?.recommendation ?? null;
+  // Prefer a REVIEWED translation shipped in the bundle (cgt_strings.lang) — knowledge stays English,
+  // but UR/HI clinical strings are translated + reviewed at BUILD time, not by the on-device model.
+  // Falls back to English if the target-language row isn't in the bundle yet.
+  const readLeafText = (id: string, lang = 'en') =>
+    (ndb.prepare('SELECT recommendation FROM cgt_strings WHERE node_id=? AND lang=?').get(id, lang) as { recommendation?: string } | undefined)?.recommendation
+    ?? (ndb.prepare("SELECT recommendation FROM cgt_strings WHERE node_id=? AND lang='en'").get(id) as { recommendation?: string } | undefined)?.recommendation ?? null;
+  const hasBundleLang = (id: string, lang: string) =>
+    !!(ndb.prepare('SELECT 1 FROM cgt_strings WHERE node_id=? AND lang=?').get(id, lang));
 
   // L3 (language I/O only). Default = deterministic stub (fast, reproducible): synthesizeLeaf reads
   // the leaf's authored recommendation. With --model, the REAL Qwen-3B-Q4 rewords it (never invents).
@@ -218,7 +224,8 @@ export async function runEncounter(opts: DemoOpts): Promise<DemoResult> {
   //    gate doesn't require a handoff (e.g. 🟢 OBSERVE), or the PRE-BRIEFED EXPERT HANDOFF otherwise.
   finalize(journal, resumed, gated, clock);
   const handoff = buildHandoff(reduce(journal.load()), gated, clock());
-  const recommendation = await l3.synthesizeLeaf(resumed.leaf, resumed.citation ? [resumed.citation] : [], 'en');
+  const citations = resumed.citation ? [resumed.citation] : [];
+  const recommendation = await l3.synthesizeLeaf(resumed.leaf, citations, langs[0]);
   if (!gated.requiresExpertHandoff && gated.badge !== 'RED') {
     say('━━━ SCENE ④ · DIRECT RECOMMENDATION (Kyro handles this itself — no escalation needed) ━━━');
     say(`  ${badgeEmoji(gated.badge)} ${gated.action} — answered on-device, offline.`);
@@ -230,10 +237,26 @@ export async function runEncounter(opts: DemoOpts): Promise<DemoResult> {
     say(`  S: ${handoff.sbar.situation}`);
     say(`  B: ${handoff.sbar.background}`);
     say(`  A: ${handoff.sbar.assessment}`);
-    say(`  R: ${trimCitations(handoff.sbar.recommendation)}`);
+    say(`  R: ${trimCitations(recommendation)}`);
     say(`  active concerns: ${handoff.hypotheses.join('; ')}`);
   }
   say('');
+
+  // ── MULTILINGUAL — the same cited recommendation, localized at the edge (knowledge stays English).
+  //    The deterministic decision is identical across languages; only the phrasing changes.
+  if (langs.length > 1) {
+    say('━━━ MULTILINGUAL RECOMMENDATION (one decision, localized phrasing — EN/UR/HI) ━━━');
+    for (const lang of langs) {
+      const reviewed = lang === 'en' || hasBundleLang(resumed.leaf.id, lang);  // is this a reviewed bundle string?
+      const text = lang === langs[0] ? recommendation : await l3.synthesizeLeaf(resumed.leaf, citations, lang);
+      say(`  ▸ [${LANG_NAMES[lang] ?? lang}]${reviewed ? '' : '  ⚠ UNREVIEWED MACHINE TRANSLATION (not clinical-grade — see note)'}`);
+      say(`    ${trimCitations(text)}`);
+    }
+    if (langs.some((l) => l !== 'en' && !hasBundleLang(resumed.leaf.id, l)))
+      say('  ⚠ UR/HI shown here are LIVE on-device machine translation — DEMO ONLY. Clinical-grade UR/HI must\n'
+        + '    ship as REVIEWED strings in the bundle (cgt_strings.lang), translated + checked at build time.');
+    say('');
+  }
 
   if (dispose) await dispose();
   ndb.close();
@@ -259,7 +282,10 @@ if (isMain) {
   const modelPath = mi >= 0 ? args[mi + 1] : undefined;
   const ci = args.indexOf('--case');
   const caseKey = ci >= 0 ? args[ci + 1] : 'hm';
-  const result = await runEncounter({ dbPath, drop, narrate: !json, modelPath, caseKey });
+  const li = args.indexOf('--lang');
+  const langArg = li >= 0 ? args[li + 1] : 'en';
+  const langs = langArg === 'all' ? ['en', 'ur', 'hi'] : langArg.split(',');
+  const result = await runEncounter({ dbPath, drop, narrate: !json, modelPath, caseKey, langs });
   if (json) console.log(JSON.stringify(result, null, 2));
   else console.log(`RESULT: ${result.badge} ${result.action}@${result.leafId} · verified=${result.verified} · dropped=${result.dropped} · lossless handoff ✓`);
 }

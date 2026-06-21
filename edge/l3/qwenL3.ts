@@ -48,12 +48,16 @@ const FIELD_VALUE_HINTS: Record<string, string> = {
 
 const SYS_CLASSIFY = 'You are a clinical data-entry assistant. Map the responder\'s words to the single best structured value. Output only the value. Do not explain.';
 
+// v1 languages. Knowledge stays English (sources are English guidelines); we translate ONLY at the
+// edges — the model words the final recommendation / question in the target language (docs: i18n-native).
+export const LANG_NAMES: Record<string, string> = { en: 'English', ur: 'Urdu (اردو)', hi: 'Hindi (हिन्दी)' };
+
 export interface QwenL3 extends L3 { dispose(): Promise<void>; }
 
 /** @param readLeafText optional: returns the leaf's AUTHORED recommendation (from cgt_strings) so
  *  synthesizeLeaf REWORDS guideline text rather than inventing clinical content (the inversion:
  *  the bundle supplies the content, the model only phrases it). On device this reads the open DB. */
-export async function createQwenL3(modelPath: string, readLeafText?: (nodeId: string) => string | null): Promise<QwenL3> {
+export async function createQwenL3(modelPath: string, readLeafText?: (nodeId: string, lang?: string) => string | null): Promise<QwenL3> {
   const llama: Llama = await getLlama();
   const model: LlamaModel = await llama.loadModel({ modelPath });
   const context: LlamaContext = await model.createContext({ contextSize: 2048 });
@@ -64,7 +68,10 @@ export async function createQwenL3(modelPath: string, readLeafText?: (nodeId: st
   const session = new LlamaChatSession({ contextSequence: sequence });
   async function turn(system: string, user: string, grammar?: any): Promise<string> {
     session.setChatHistory([]);
-    return await session.prompt(`${system}\n\n${user}`, grammar ? { grammar, maxTokens: 48 } : { maxTokens: 220, temperature: 0 });
+    // repeatPenalty guards small-model degeneration loops (seen in low-resource-language wording).
+    return await session.prompt(`${system}\n\n${user}`, grammar
+      ? { grammar, maxTokens: 48 }
+      : { maxTokens: 240, temperature: 0, repeatPenalty: { penalty: 1.3, lastTokens: 64 } });
   }
 
   return {
@@ -94,21 +101,26 @@ export async function createQwenL3(modelPath: string, readLeafText?: (nodeId: st
       return (await turn(SYS_CLASSIFY, `Field: ${field}\nResponder said: "${utterance}"`)).trim();
     },
 
-    // 3 · phrase the next question — re-voice the authored prompt naturally, in-language (en here).
-    async phraseQuestion(node: CgtNode, _lang: string): Promise<string> {
+    // 3 · phrase the next question — re-voice the authored prompt naturally, in the target language.
+    async phraseQuestion(node: CgtNode, lang: string): Promise<string> {
       const field = node.field ?? 'the next assessment';
-      return (await turn('You are an emergency triage co-pilot guiding a rural medical officer. Ask for the data clearly and calmly in one sentence. Output only the question.',
+      const langName = LANG_NAMES[lang] ?? 'English';
+      return (await turn(`You are an emergency triage co-pilot guiding a rural medical officer. Ask for the data clearly and calmly in one sentence, IN ${langName}. Output only the question.`,
         `Ask the responder to provide: ${field}.`)).trim();
     },
 
-    // 4 · word the cited recommendation FROM the leaf the tree reached (the tree decided; you phrase).
-    //     Rewords the AUTHORED guideline text — never invents clinical content (REFUSES if absent).
-    async synthesizeLeaf(node: CgtNode, citations: string[], _lang: string): Promise<string> {
+    // 4 · word the cited recommendation FROM the leaf the tree reached, IN the target language.
+    //     Rewords + TRANSLATES the AUTHORED guideline text — never invents clinical content (REFUSES if
+    //     absent). The knowledge stays English; only the phrasing is localized (translate-at-the-edges).
+    async synthesizeLeaf(node: CgtNode, citations: string[], lang: string): Promise<string> {
       const cite = citations.filter(Boolean).join('; ');
-      const authored = readLeafText?.(node.id)?.replace(/^\[[^\]]*\]\s*/, '') ?? null;
+      const langName = LANG_NAMES[lang] ?? 'English';
+      const authored = readLeafText?.(node.id, lang)?.replace(/^\[[^\]]*\]\s*/, '') ?? null;
       if (!authored) return `[no authored guidance for ${node.id}] ${cite}`.trim();  // fail-closed: no source → no content
-      return (await turn('You are an emergency triage co-pilot. Reword the guideline recommendation below plainly for a non-specialist, in 2-3 sentences. Do NOT add, remove, or soften any clinical content — only rephrase. End with the citation.',
-        `Guideline recommendation: ${authored}\nCitation: ${cite || 'none'}`)).trim();
+      const sys = lang === 'en'
+        ? 'You are an emergency triage co-pilot. Reword the guideline recommendation below plainly for a non-specialist, in 2-3 sentences. Do NOT add, remove, or soften any clinical content — only rephrase. End with the citation.'
+        : `You are an emergency triage co-pilot. Translate and reword the guideline recommendation below into ${langName}, plainly, for a non-specialist, in 2-3 sentences. Do NOT add, remove, or soften any clinical content — only translate and rephrase. Keep drug names and the citation in English. End with the citation.`;
+      return (await turn(sys, `Guideline recommendation: ${authored}\nCitation: ${cite || 'none'}`)).trim();
     },
 
     async dispose() { await context.dispose(); await model.dispose(); },
