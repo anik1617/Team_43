@@ -231,3 +231,7 @@ edge/models/
 # Generated test audio (regenerate via Windows-TTS) + whisper.cpp source tree
 edge/l3/_audio/
 edge/**/whisper.cpp/
+
+# Prebuilt whisper.cpp binary + ggml model (dev-local; each dev pulls their own)
+edge/asr/
+*.bin

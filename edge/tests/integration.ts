@@ -14,7 +14,9 @@
 import { DatabaseSync } from 'node:sqlite';
 import { createHash } from 'node:crypto';
 import { readFileSync, existsSync } from 'node:fs';
+import { resolve } from 'node:path';
 
+import { makeWhisperCliAsr, type Asr } from '../e6/asr.ts';
 import { loadSpine, execute, type GatherHost, type Env } from '../e3/spineExecutor.ts';
 import { gate } from '../e4/abstentionGate.ts';
 import { retrieve, type Knn, type Embed } from '../e2/retrieval.ts';
@@ -35,17 +37,12 @@ const HM: Env = {
   sbp_mmhg: 160, age_yr: 31, spo2_pct: 95, spo2_available: 'yes', blood_glucose: 0, glucose_available: 'no',
   lucid_interval: 'yes', focal_weakness_side: 'right', posturing: 'none', seizure_status: 'none',
 };
-// Each critical field is captured by VOICE: a real 16 kHz clip (edge/l3/_audio/<field>.wav, Windows-TTS)
-// holds the spoken phrase; `spoken` is the ASR transcript. On device, whisper.rn (= whisper.cpp)
-// produces this from the clip; whisper.cpp does NOT build on this Windows host (cmake/MSVC), so we
-// inject the transcript and run the REAL L3 clean+classify on it. This proves E6→L3→E3 connect;
-// the audio→text step is the on-device engine, validated there (E0a).
-const VOICE: Record<string, { spoken: string; expect: string }> = {
-  pupil_react_l: { spoken: 'His left pupil is blown and not reacting', expect: 'fixed' },
-  anticoag_antiplatelet: { spoken: 'He takes warfarin for his heart', expect: 'warfarin' },
-  mechanism_class: { spoken: 'He was hit by a car, blunt trauma', expect: 'blunt' },
-};
-const haveAudio = (f: string) => existsSync(`l3/_audio/${f}.wav`);
+// pupil_react_l is captured by REAL VOICE: a 16 kHz clip → whisper.cpp ASR → L3 classify. whisper.cpp
+// here is the SAME engine as whisper.rn on the phone, so this is the on-device path. (The other HM
+// fields are scripted to keep the vignette fixed.) Expected: spoken "blown/fixed" → fixed.
+const VOICE_FIELD = 'pupil_react_l', VOICE_EXPECT = 'fixed';
+const WEXE = ['asr/bin/whisper-cli.exe', 'asr/bin/Release/whisper-cli.exe', 'asr/bin/main.exe', 'asr/bin/Release/main.exe'].map((p) => resolve(p)).find(existsSync);
+const asr: Asr | null = WEXE ? makeWhisperCliAsr({ exe: WEXE, model: resolve('asr/ggml-base.en.bin') }) : null;
 
 const ndb = new DatabaseSync(DB);
 const opShim = { executeSync: (sql: string) => ({ rows: { _array: ndb.prepare(sql).all() } }) };
@@ -69,11 +66,10 @@ let clk = 1; const clock = () => ++clk;
 // host: VOICE fields via whisper→L3; everything else scripted. Proves E6→L3→E3 connect.
 const host: GatherHost = {
   async ask(field, node) {
-    if (field in VOICE) {
-      const { spoken, expect } = VOICE[field];
-      const raw = await l3.cleanAsr(spoken);                 // real L3 ASR-cleanup
-      const value = await l3.classifyAnswer(field, raw, node); // real L3 constrained classify
-      check(`E6→L3 voice "${field}" [audio ${haveAudio(field) ? '✓' : '✗'}]: "${spoken.slice(0, 30)}…" → ${value}`, value === expect, `expected ${expect}`);
+    if (field === VOICE_FIELD && asr) {
+      const transcript = await asr.transcribe(resolve(`l3/_audio/${field}.wav`)); // REAL whisper.cpp
+      const value = await l3.classifyAnswer(field, await l3.cleanAsr(transcript), node);
+      check(`E6 real-whisper "${field}": "${transcript.slice(0, 34)}…" → ${value}`, value === VOICE_EXPECT, `expected ${VOICE_EXPECT}`);
       return value;
     }
     return HM[field];

@@ -15,6 +15,8 @@
     "demo:multilang": "node --experimental-sqlite --import tsx demo/runEncounter.ts ../cloud/bundles/edh-core-v0-mock.kyro --case stable --no-drop --lang all --model models/Qwen2.5-3B-Instruct-Q4_K_M.gguf",
     "demo:model": "node --experimental-sqlite --import tsx demo/runEncounter.ts ../cloud/bundles/edh-core-v0-mock.kyro --model models/Qwen2.5-3B-Instruct-Q4_K_M.gguf",
     "l3:validate": "node --import tsx l3/validateL3.ts",
+    "voice:asr": "node --import tsx l3/asrValidate.ts",
+    "test:integration": "node --experimental-sqlite --import tsx tests/integration.ts",
     "parity": "node --experimental-sqlite --experimental-strip-types e1/parity.ts ../cloud/bundles/edh-core-v0-mock.kyro",
     "oracles:e2": "python e2/conformance.py",
     "oracles:e3": "python e3/conformance.py",
