@@ -3,7 +3,7 @@
 
 {# One contribute form, reused by every gap row and by the custom-upload card.
    Knowledge prose OR a file is enough; the server requires title + (text or file). #}
-{% macro contribute_form(container_class, toggle_id, gap_id=None, addresses='') %}
+{% macro contribute_form(container_class, toggle_id, gap_id=None, addresses='', expert=None) %}
 <form class="cform {{ container_class }}" method="post" action="/portal/contribute" enctype="multipart/form-data">
   <div class="head">
     <span class="e">Contribute knowledge</span>
@@ -30,16 +30,12 @@
       <span class="lbl">Citation / source</span>
       <input class="inp" name="citation" maxlength="300" placeholder="e.g. Youmans &amp; Winn, 7th ed.">
     </label>
-    <label>
-      <span class="lbl">Your name <span class="soft">(provenance)</span></span>
-      <input class="inp" name="contributor" maxlength="120" placeholder="Dr. …">
-    </label>
-    <label class="full" style="max-width:340px">
-      <span class="lbl">Trust tier</span>
-      <select class="sel" name="tier">
-        <option value="2">2 · Community</option>
-        <option value="1">1 · Expert · textbook</option>
-      </select>
+    <label class="full" style="max-width:460px">
+      <span class="lbl">Contributing as <span class="soft">(from your verified account)</span></span>
+      <div class="note" style="padding:10px 13px;font-size:12.5px;color:var(--ink)">
+        {{ expert.name or expert.email }}{% if expert.specialty %} · {{ expert.specialty }}{% endif %}
+        — trust tier {{ 1 if expert.verified else 2 }}{% if expert.verified %} · verified{% endif %}
+      </div>
     </label>
   </div>
   <div class="form-actions">
@@ -168,11 +164,15 @@
         request below. It's staged straight into the corpus for the next build.{% if contributed %}
         <b style="color:var(--acc-deep)">{{ contributed }}</b> contributed so far.{% endif %}</p>
     </div>
+    {% if expert %}
     <button class="gap-action" type="button" data-toggle="custom-card">
       <span class="lbl-closed">Contribute custom →</span><span class="lbl-open" style="display:none">Close ×</span>
     </button>
+    {% else %}
+    <a class="gap-action" href="/experts/login">Sign in to contribute →</a>
+    {% endif %}
   </div>
-  {{ contribute_form('custom-form', 'custom-card') }}
+  {% if expert %}{{ contribute_form('custom-form', 'custom-card', expert=expert) }}{% endif %}
 </section>
 
 {# ---- open gaps registry ---- #}
@@ -204,14 +204,18 @@
           <p class="gap-detail">{{ g.detail }}</p>
         </div>
         {% if open %}
-        <button class="gap-action" type="button" data-toggle="gap-{{ g.id }}">
-          <span class="lbl-closed">Contribute →</span><span class="lbl-open" style="display:none">Close ×</span>
-        </button>
+          {% if expert %}
+          <button class="gap-action" type="button" data-toggle="gap-{{ g.id }}">
+            <span class="lbl-closed">Contribute →</span><span class="lbl-open" style="display:none">Close ×</span>
+          </button>
+          {% else %}
+          <a class="gap-action" href="/experts/login">Sign in to contribute</a>
+          {% endif %}
         {% endif %}
       </div>
 
-      {% if open %}
-      {{ contribute_form('gap-form', 'gap-' ~ g.id, g.id, g.summary) }}
+      {% if open and expert %}
+      {{ contribute_form('gap-form', 'gap-' ~ g.id, g.id, g.summary, expert=expert) }}
       {% endif %}
     </div>
   </div>

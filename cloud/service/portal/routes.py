@@ -10,6 +10,7 @@ from fastapi.templating import Jinja2Templates
 from sqlmodel import Session, select
 
 from ..db import get_session
+from ..experts.routes import current_expert
 from ..models import Contribution, ContribStatus, Gap, GapStatus, now_iso
 from .export import MAX_UPLOAD_BYTES, safe_ext, stage_attachment, stage_contribution
 
@@ -27,8 +28,9 @@ def _flash(path: str, msg: str) -> str:
 def inbox(request: Request, session: Session = Depends(get_session)):
     gaps = session.exec(select(Gap).order_by(Gap.status, Gap.id)).all()
     contributed = len(session.exec(select(Contribution)).all())
+    expert = current_expert(request, session)   # the inbox is browsable open; contributing is gated
     return templates.TemplateResponse(request, "inbox.html",
-                                      {"gaps": gaps, "contributed": contributed})
+                                      {"gaps": gaps, "contributed": contributed, "expert": expert})
 
 
 # keep contributed text bounded — DB hygiene + the staged corpus .txt stays sane
@@ -37,21 +39,26 @@ _MAXLEN = {"title": 200, "citation": 300, "contributor": 120, "body": 8000}
 
 @router.post("/portal/contribute")
 async def contribute(
+        request: Request,
         title: str = Form(...),
         body: str = Form(""),
         citation: str = Form(""),
-        contributor: str = Form(""),
-        tier: int = Form(2),
         gap_id: int | None = Form(None),
         attachment: UploadFile | None = File(None),
         session: Session = Depends(get_session)):
-    """Direct contribution: stage straight into the corpus (ingest/). No curator gate — the
-    signed bundle build is the human-in-the-loop. A contribution may address a gap or stand
-    alone (custom upload), and may carry prose, an uploaded file, or both."""
-    # Trust tier is NOT client-trusted: the open form self-attests community (2) or expert (1).
-    # Tier 0 = canonical/guideline is never client-assignable — else anyone could mint
-    # "guideline-grade" provenance and poison the trust ordering. Clamp it server-side.
-    tier = tier if tier in (1, 2) else 2
+    """Direct contribution: stage straight into the corpus (ingest/). REQUIRES a signed-in expert
+    account — the contributor identity + trust tier come from the AUTHENTICATED account (never free
+    text), so every nugget carries verifiable provenance. No curator gate; the signed bundle build
+    is the human-in-the-loop."""
+    expert = current_expert(request, session)
+    if not expert:
+        return RedirectResponse(
+            _flash("/experts/login", "Sign in as a registered expert to contribute."),
+            status_code=303)
+    # Provenance + trust tier are DERIVED from the account, never client-supplied: a verified expert
+    # contributes at tier 1, otherwise tier 2 (community). Tier 0 stays guideline-only, never minted.
+    contributor = (f"{expert.name} · {expert.specialty}".strip(" ·")) or expert.email
+    tier = 1 if expert.verified else 2
 
     # Read the optional upload first so we can validate before persisting anything.
     data: bytes | None = None
@@ -80,7 +87,7 @@ async def contribute(
         title=title,
         body=body[:_MAXLEN["body"]],
         citation=citation.strip()[:_MAXLEN["citation"]],
-        contributor=contributor.strip()[:_MAXLEN["contributor"]] or "Anonymous contributor",
+        contributor=contributor[:_MAXLEN["contributor"]],
         tier=tier,
         status=ContribStatus.approved,            # direct-contribute: staged on submit
         reviewed_at=now_iso())

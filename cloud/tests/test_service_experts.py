@@ -61,6 +61,23 @@ def test_oauth_gated_when_unconfigured():
         assert "/experts/login" in r.headers["location"]
 
 
+def test_contribute_requires_login():
+    with TestClient(app) as c:
+        # anonymous contribute is rejected → redirect to login, nothing staged
+        r = c.post("/portal/contribute", data={"title": "x", "body": "y"}, follow_redirects=False)
+        assert r.status_code == 303 and "/experts/login" in r.headers["location"]
+        # the (open) inbox shows a sign-in prompt and renders NO contribute form for anonymous users
+        page = c.get("/portal").text
+        assert "Sign in to contribute" in page and 'action="/portal/contribute"' not in page
+        # after registering, the form renders and contributing works (tagged to the account)
+        c.post("/experts/register", data={"email": "contrib@x.com", "password": "longpassword",
+                                          "name": "Dr Contrib", "specialty": "Neurosurgery"})
+        assert 'action="/portal/contribute"' in c.get("/portal").text
+        r2 = c.post("/portal/contribute", data={"title": "Peds thresholds", "body": "knowledge"},
+                    follow_redirects=False)
+        assert r2.status_code == 303 and "/portal/contributions" in r2.headers["location"]
+
+
 def test_briefing_sanitizers_defang_and_single_line():
     # operator-supplied text forwarded to a surgeon's WhatsApp must not carry live links or forge
     # our own header lines.
