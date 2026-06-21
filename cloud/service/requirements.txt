@@ -5,5 +5,9 @@ uvicorn[standard]>=0.30
 sqlmodel>=0.0.21
 jinja2>=3.1
 python-multipart>=0.0.9
+itsdangerous>=2.1          # signed session cookies (Starlette SessionMiddleware)
+python-dotenv>=1.0         # load cloud/.env for local dev (no-ops on Render where env is set in the dashboard)
+authlib>=1.3               # Google OAuth (OIDC) — never hand-roll token exchange / id-token verification
+httpx>=0.27               # authlib's async HTTP backend
 # optional — only needed to actually send WhatsApp escalations:
 twilio>=9.0

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% from "_ui.html" import ts %}
+{% block body %}
+{% set reachable = expert.contact_opt_in and expert.phone_e164 %}
+<div class="eyebrow">Expert network</div>
+<h1 class="title">Your profile</h1>
+<p class="lede">{{ expert.name or expert.email }} ·
+  {% if reachable %}<span class="pill pill-addressed"><span class="d"></span>Reachable now</span>
+  {% else %}<span class="pill pill-rejected"><span class="d"></span>Not reachable — opted out</span>{% endif %}
+  {% if expert.on_call %}<span class="pill pill-open" style="margin-left:6px"><span class="d"></span>On call</span>{% endif %}
+</p>
+
+{% if error %}
+<div class="note" style="margin-top:18px;border-color:var(--bad-line);background:var(--bad-bg-2);color:var(--bad)">{{ error }}</div>
+{% endif %}
+
+<div class="card" style="margin-top:22px;max-width:700px;padding:24px">
+  <form method="post" action="/experts/profile">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div><label class="lbl">Full name</label><input class="inp" name="name" value="{{ expert.name }}"></div>
+      <div><label class="lbl">Specialty</label>
+        <select class="sel" name="specialty">
+          {% for s in specialties %}<option {{ 'selected' if expert.specialty == s }}>{{ s }}</option>{% endfor %}
+        </select></div>
+      <div><label class="lbl">Role</label><input class="inp" name="role" value="{{ expert.role }}"></div>
+      <div><label class="lbl">Institution</label><input class="inp" name="institution" value="{{ expert.institution }}"></div>
+      <div><label class="lbl">Region</label><input class="inp" name="region" value="{{ expert.region }}"></div>
+      <div><label class="lbl">Phone <span class="soft">(WhatsApp, +countrycode)</span></label><input class="inp" name="phone" value="{{ expert.phone_e164 }}"></div>
+    </div>
+
+    <div class="note" style="margin-top:18px;display:flex;gap:22px;flex-wrap:wrap">
+      <label style="display:flex;gap:9px;align-items:center;cursor:pointer;font-size:13px;color:var(--ink)">
+        <input type="checkbox" name="on_call" value="1" {{ 'checked' if expert.on_call }}> I am <strong>on call</strong> (prioritise me)</label>
+      <label style="display:flex;gap:9px;align-items:center;cursor:pointer;font-size:13px;color:var(--ink)">
+        <input type="checkbox" name="opt_in" value="1" {{ 'checked' if expert.contact_opt_in }}> Opted in to emergency WhatsApp contact</label>
+    </div>
+    {% if expert.contact_opt_in and expert.consent_at %}
+    <p class="count-label" style="margin-top:10px">Consent {{ expert.consent_version }} recorded {{ ts(expert.consent_at) }}. Uncheck "Opted in" and save to withdraw.</p>
+    {% endif %}
+
+    <button class="btn btn-primary" type="submit" style="margin-top:18px">Save profile</button>
+    <a class="btn btn-ghost" href="/experts/logout" style="margin-left:8px">Sign out</a>
+  </form>
+</div>
+{% endblock %}
