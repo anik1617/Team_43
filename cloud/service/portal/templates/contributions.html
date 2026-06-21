@@ -1,15 +1,95 @@
-{% extends "base.html" %}{% block body %}
-<h1>Provenance log</h1>
-<p class="mut">Every contribution and its decision — the auditable moat. Approved nuggets are staged as cited corpus files for the next build.</p>
-{% for c in items %}
-<div class="card">
- <div class="row"><h2 class="col">{{ c.title }}</h2><span class="tag {{ c.status.value }}">{{ c.status.value }}</span></div>
- <p class="mut">by <b>{{ c.contributor }}</b> · tier {{ c.tier }} · {{ c.citation }} · gap: {{ gaps[c.gap_id].summary if c.gap_id in gaps else '—' }}</p>
- <p>{{ c.body }}</p>
- {% if c.status.value == 'approved' %}<p class="mut">✓ staged → <code>{{ c.staged_path }}</code> · reviewed by {{ c.reviewer }} · {{ c.reviewed_at }}</p>{% endif %}
- {% if c.status.value == 'rejected' %}<p class="mut">✗ rejected by {{ c.reviewer }} · {{ c.reviewed_at }}{% if c.review_note %} · {{ c.review_note }}{% endif %}</p>{% endif %}
+{% extends "base.html" %}
+{% import "_ui.html" as ui %}
+{% block body %}
+<style>
+ .prov-hero{display:flex;align-items:flex-end;gap:28px;flex-wrap:wrap}
+ .stats{flex:none;display:flex;gap:10px}
+ .stat{text-align:center;padding:14px 20px;border-radius:10px;background:#fff;border:1px solid var(--line)}
+ .stat .n{font-size:24px;font-weight:700;font-family:var(--mono)}
+ .stat .n.ok{color:var(--ok)} .stat .n.pend{color:var(--acc)}
+ .stat .l{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut-2);margin-top:4px}
+ .timeline{margin-top:28px;position:relative;padding-left:26px}
+ .timeline .spine{position:absolute;left:6px;top:6px;bottom:6px;width:2px;background:linear-gradient(#E6ECF3,#EEF2F8)}
+ .feed{display:flex;flex-direction:column;gap:14px}
+ .event{position:relative;border-radius:11px;background:#fff;border:1px solid var(--line);box-shadow:0 1px 3px rgba(19,36,59,.04);padding:18px 22px}
+ .event .node{position:absolute;left:-24px;top:24px;width:11px;height:11px;border-radius:50%;border:2.5px solid var(--bg)}
+ .event .node.approved{background:#2BB37D;box-shadow:0 0 0 1px #2BB37D}
+ .event .node.rejected{background:#D6453F;box-shadow:0 0 0 1px #D6453F}
+ .event .node.pending{background:#2D7FF9;box-shadow:0 0 0 1px #2D7FF9}
+ .event-top{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap}
+ .event-top h3{margin:0;font-family:var(--serif);font-size:18px;font-weight:600;color:var(--ink-deep)}
+ .event-titlerow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+ .event-sub{margin-top:9px;font-size:12.5px;color:var(--mut);line-height:1.6}
+ .event-sub b{color:var(--acc-deep);font-weight:600}
+ .event-sub .who{color:var(--ink);font-weight:600}
+ .event-sub .cite{color:#3A4F6A}
+ .event-ts{flex:none;font-size:11px;color:var(--mut-3);font-family:var(--mono)}
+ .staged{margin-top:13px;padding:12px 15px;border-radius:8px;background:var(--ok-bg-2);border:1px solid var(--ok-line)}
+ .staged .row1{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;color:var(--ok);word-break:break-all}
+ .staged .row1 .file{color:#11724D}
+ .staged .row2{margin-top:7px;font-size:11.5px;color:#6E8378}
+ .staged .row2 b{color:#3A4F6A;font-weight:600}
+ .staged .row2 .note{color:var(--mut)}
+ .rejected-box{margin-top:13px;padding:12px 15px;border-radius:8px;background:var(--bad-bg-2);border:1px solid var(--bad-line)}
+ .rejected-box .row1{font-family:var(--mono);font-size:12px;color:var(--bad);font-weight:500}
+ .rejected-box .row2{margin-top:7px;font-size:11.5px;color:#9C7177}
+ .rejected-box .row2 b{color:#3A4F6A;font-weight:600}
+ .rejected-box .row2 .note{color:var(--mut)}
+</style>
+
+{% set ns = namespace(approved=0, pending=0) %}
+{% for c in items %}{% if c.status.value == 'approved' %}{% set ns.approved = ns.approved + 1 %}{% elif c.status.value == 'pending' %}{% set ns.pending = ns.pending + 1 %}{% endif %}{% endfor %}
+
+<div class="prov-hero">
+  <div style="flex:1;min-width:320px">
+    <div class="eyebrow">Auditable feed</div>
+    <h1 class="title">Provenance log</h1>
+    <p class="lede">Every contribution and its decision — contributor, trust tier, citation, the gap it addresses, and
+      where approved knowledge was staged. <span class="strong">Auditability is the moat.</span></p>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="n ok">{{ ns.approved }}</div><div class="l">Approved</div></div>
+    <div class="stat"><div class="n pend">{{ ns.pending }}</div><div class="l">Pending</div></div>
+  </div>
 </div>
-{% else %}
-<div class="card mut">No contributions yet. <a href="/portal">← Gap inbox</a></div>
-{% endfor %}
+
+<div class="timeline">
+  <div class="spine"></div>
+  <div class="feed">
+    {% for c in items %}
+    {% set st = c.status.value %}
+    <article class="event">
+      <span class="node {{ st }}"></span>
+      <div class="event-top">
+        <div style="flex:1;min-width:280px">
+          <div class="event-titlerow">
+            <h3>{{ c.title }}</h3>
+            {% if st == 'approved' %}<span class="pill pill-approved"><span class="d"></span>Approved</span>
+            {% elif st == 'rejected' %}<span class="pill pill-rejected"><span class="d"></span>Rejected</span>
+            {% else %}<span class="pill pill-pending"><span class="d"></span>Pending</span>{% endif %}
+            {{ ui.tier_badge(c.tier) }}
+          </div>
+          <div class="event-sub">addresses <b>{{ gaps[c.gap_id].summary if c.gap_id in gaps else '—' }}</b> ·
+            by <span class="who">{{ c.contributor }}</span> · cite <span class="cite">{{ c.citation }}</span></div>
+        </div>
+        <div class="event-ts">{{ ui.ts(c.created_at) }}</div>
+      </div>
+
+      {% if st == 'approved' %}
+      <div class="staged">
+        <div class="row1"><span style="font-weight:500">✓ staged →</span><span class="file">{{ c.staged_path }}</span></div>
+        <div class="row2">reviewer <b>{{ c.reviewer }}</b> · {{ ui.ts(c.reviewed_at) }}{% if c.review_note %} · note: <span class="note">{{ c.review_note }}</span>{% endif %}</div>
+      </div>
+      {% elif st == 'rejected' %}
+      <div class="rejected-box">
+        <div class="row1">✕ rejected — not staged</div>
+        <div class="row2">reviewer <b>{{ c.reviewer }}</b>{% if c.review_note %} · note: <span class="note">{{ c.review_note }}</span>{% endif %}</div>
+      </div>
+      {% endif %}
+    </article>
+    {% else %}
+    <div style="color:var(--mut);font-size:14px;padding:8px 0">No contributions yet. <a href="/portal" style="color:var(--acc)">← Gap inbox</a></div>
+    {% endfor %}
+  </div>
+</div>
 {% endblock %}

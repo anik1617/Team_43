@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import os
+from urllib.parse import urlencode
 
 from fastapi import APIRouter, Depends, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -15,6 +16,11 @@ from .export import stage_contribution
 _HERE = os.path.dirname(os.path.abspath(__file__))
 templates = Jinja2Templates(directory=os.path.join(_HERE, "templates"))
 router = APIRouter(tags=["portal"])
+
+
+def _flash(path: str, msg: str) -> str:
+    """Redirect target carrying a one-line confirmation the templates render as a toast."""
+    return f"{path}?{urlencode({'msg': msg})}"
 
 
 @router.get("/portal", response_class=HTMLResponse)
@@ -46,7 +52,9 @@ def contribute(gap_id: int = Form(...), title: str = Form(...), body: str = Form
                      tier=tier)
     session.add(c)
     session.commit()
-    return RedirectResponse("/portal/curate", status_code=303)
+    return RedirectResponse(
+        _flash("/portal/curate", "Contribution submitted — now pending in Curate ✓"),
+        status_code=303)
 
 
 @router.get("/portal/curate", response_class=HTMLResponse)
@@ -76,11 +84,13 @@ def curate_action(cid: int, action: str = Form(...), reviewer: str = Form("curat
             if g:
                 g.status = GapStatus.addressed
                 session.add(g)
+        msg = f"Approved — staged {c.staged_path} ✓"
     else:
         c.status = ContribStatus.rejected
+        msg = "Contribution rejected — recorded in the provenance log."
     session.add(c)
     session.commit()
-    return RedirectResponse("/portal/contributions", status_code=303)
+    return RedirectResponse(_flash("/portal/contributions", msg), status_code=303)
 
 
 @router.get("/portal/contributions", response_class=HTMLResponse)

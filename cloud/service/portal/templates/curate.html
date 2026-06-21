@@ -1,17 +1,92 @@
-{% extends "base.html" %}{% block body %}
-<h1>Curate · pending contributions</h1>
-<p class="mut">Approve to stage into the corpus (the next bundle build ingests it) or reject. Every decision is provenance-stamped.</p>
-{% if not pending %}<div class="card mut">Nothing pending. <a href="/portal">← Back to gap inbox</a></div>{% endif %}
-{% for c in pending %}
-<div class="card">
- <div class="row"><h2 class="col">{{ c.title }}</h2><span class="tag">tier {{ c.tier }}</span></div>
- <p class="mut">addresses: <b>{{ gaps[c.gap_id].summary if c.gap_id in gaps else '—' }}</b> · by {{ c.contributor }} · {{ c.citation }}</p>
- <p>{{ c.body }}</p>
- <form method="post" action="/portal/curate/{{ c.id }}">
-  <div class="row"><div class="col"><input name="reviewer" placeholder="reviewer name"></div><div class="col"><input name="note" placeholder="review note (optional)"></div></div>
-  <button name="action" value="approve" type="submit">Approve → stage to corpus</button>
-  <button name="action" value="reject" type="submit" class="bad">Reject</button>
- </form>
+{% extends "base.html" %}
+{% import "_ui.html" as ui %}
+{% block body %}
+<style>
+ .empty{margin-top:36px;padding:72px 30px;text-align:center;border-radius:13px;border:1px dashed #CFDBEA;background:#fff}
+ .empty .t{font-family:var(--serif);font-size:22px;font-weight:500;color:var(--ink-deep)}
+ .empty p{margin:8px auto 0;max-width:380px;font-size:13.5px;color:var(--mut);line-height:1.6}
+ .queue{margin-top:28px;display:flex;flex-direction:column;gap:18px}
+ .tbar{height:3px}
+ .tbar-0{background:#2D7FF9} .tbar-1{background:#7CC4FF} .tbar-2{background:#CFDBEA}
+ .pend-body{padding:24px 26px}
+ .pend-top{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap}
+ .pend-top h3{margin:0;font-family:var(--serif);font-size:21px;font-weight:600;color:var(--ink-deep)}
+ .pend-titlerow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+ .pend-sub{margin-top:9px;font-size:12.5px;color:var(--mut)}
+ .pend-sub b{color:var(--acc-deep);font-weight:600}
+ .pend-sub .who{color:var(--ink);font-weight:600}
+ .pend-id{flex:none;text-align:right;font-family:var(--mono)}
+ .pend-id .a{font-size:11px;color:var(--mut-3)}
+ .pend-id .b{font-size:11px;color:#B4C2D4;margin-top:3px}
+ .pend-quote{margin-top:16px;padding:15px 17px;border-radius:9px;background:var(--panel);border:1px solid var(--line-2)}
+ .pend-quote p{margin:0;font-size:14.5px;line-height:1.62;color:#2A3F58;font-family:var(--serif)}
+ .pend-cite{margin-top:10px;font-size:12px;color:var(--mut-2)}
+ .pend-cite span{color:var(--mut)}
+ .pend-grid{margin-top:18px;display:grid;grid-template-columns:1fr 1.6fr;gap:14px}
+ .pend-foot{display:flex;align-items:center;gap:12px;padding:16px 26px;border-top:1px solid #EDF1F7;background:#FAFCFE;flex-wrap:wrap}
+ .pend-foot .preview{margin-left:auto;font-size:11px;color:var(--mut-3);font-family:var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:48%}
+ @media (max-width:640px){ .pend-grid{grid-template-columns:1fr} }
+</style>
+
+<div class="eyebrow">Review queue</div>
+<h1 class="title">Curate</h1>
+<p class="lede">Review pending contributions. Approve to stage a knowledge nugget into the corpus, or reject with a note —
+  every decision is written, in full, to the provenance log.</p>
+
+{% if not pending %}
+<div class="empty">
+  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" style="margin-bottom:16px">
+    <circle cx="12" cy="12" r="9" stroke="#2BB37D" stroke-width="1.5"></circle>
+    <path d="M8 12.5l2.5 2.5L16 9" stroke="#2BB37D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+  </svg>
+  <div class="t">Queue clear</div>
+  <p>No contributions are waiting for review. New submissions from the gap inbox will appear here.</p>
+  <a class="btn btn-ghost" href="/portal" style="margin-top:22px">← Back to gap inbox</a>
 </div>
-{% endfor %}
+{% endif %}
+
+<div class="queue">
+  {% for c in pending %}
+  <article class="card">
+    <div class="tbar tbar-{{ c.tier }}"></div>
+    <div class="pend-body">
+      <div class="pend-top">
+        <div style="flex:1;min-width:280px">
+          <div class="pend-titlerow">
+            <h3>{{ c.title }}</h3>
+            {{ ui.tier_badge(c.tier) }}
+          </div>
+          <div class="pend-sub">addresses <b>{{ gaps[c.gap_id].summary if c.gap_id in gaps else '—' }}</b> ·
+            by <span class="who">{{ c.contributor }}</span></div>
+        </div>
+        <div class="pend-id">
+          <div class="a">#{{ '%04d' % c.id }}</div>
+          <div class="b">{{ ui.ts(c.created_at) }}</div>
+        </div>
+      </div>
+
+      <div class="pend-quote"><p>{{ c.body }}</p></div>
+      <div class="pend-cite">Citation · <span>{{ c.citation }}</span></div>
+
+      <form method="post" action="/portal/curate/{{ c.id }}">
+        <div class="pend-grid">
+          <label>
+            <span class="lbl">Reviewer name</span>
+            <input class="inp" name="reviewer" placeholder="Dr. …">
+          </label>
+          <label>
+            <span class="lbl">Reviewer note <span class="soft">(optional)</span></span>
+            <input class="inp" name="note" placeholder="Rationale for the decision">
+          </label>
+        </div>
+        <div class="pend-foot">
+          <button class="btn btn-primary" name="action" value="approve" type="submit">Approve → stage to corpus</button>
+          <button class="btn btn-danger" name="action" value="reject" type="submit">Reject</button>
+          <span class="preview">ingest/contributions/contrib_####_{{ c.title|lower|replace(' ','_')|replace('/','_') }}.txt</span>
+        </div>
+      </form>
+    </div>
+  </article>
+  {% endfor %}
+</div>
 {% endblock %}
