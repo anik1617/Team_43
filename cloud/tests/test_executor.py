@@ -43,5 +43,19 @@ def test_run_sets_mode_and_citations():
     sp = load_spine(MOCK)
     rH = run(sp, HM)
     assert rH.mode == '🟡'                # L21c leads with [GUIDE ...] (no color tag) -> default 🟡
-    assert isinstance(rH.citations, list)  # citations collected along the path
+    assert len(rH.citations) > 0           # HM's path nodes carry source_citations (30 collected)
     assert run(sp, {**HM, 'gcs_e': 7}).mode == '🟡'   # N99 has no string row -> default 🟡
+
+
+def test_run_badges_green_and_red_leaves():
+    # _result wires parse_mode for non-yellow leaves end-to-end (run -> _result -> parse_mode),
+    # and citations come from the leaf's source_citation. Synthetic single-leaf spines.
+    green = Spine(nodes={'A': {'kind': 'leaf', 'field': None, 'action': 'OBSERVE',
+                               'source_citation': 'BTF-1', 'trust_tier': 0}},
+                  edges=[], root='A', strings={'A': {'en': ('', '[GREEN / OBSERVE] admit and watch')}})
+    rg = run(green, HM)
+    assert rg.mode == '🟢' and rg.action == 'OBSERVE' and rg.citations == ['BTF-1']
+    red = Spine(nodes={'A': {'kind': 'leaf', 'field': None, 'action': 'ABSTAIN_STOP',
+                             'source_citation': None, 'trust_tier': 0}},
+                edges=[], root='A', strings={'A': {'en': ('', '[RED / ABSTAIN_STOP] stop')}})
+    assert run(red, HM).mode == '🔴'
