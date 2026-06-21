@@ -10,6 +10,8 @@
     "demo:json": "node --experimental-sqlite --import tsx demo/runEncounter.ts ../cloud/bundles/edh-core-v0-mock.kyro --json",
     "demo:nodrop": "node --experimental-sqlite --import tsx demo/runEncounter.ts ../cloud/bundles/edh-core-v0-mock.kyro --no-drop",
     "demo:stable": "node --experimental-sqlite --import tsx demo/runEncounter.ts ../cloud/bundles/edh-core-v0-mock.kyro --case stable --no-drop",
+    "demo:patch": "node --experimental-sqlite --import tsx demo/runEncounter.ts ../cloud/bundles/edh-core-v0-mock.kyro --case patch --no-drop",
+    "demo:shock": "node --experimental-sqlite --import tsx demo/runEncounter.ts ../cloud/bundles/edh-core-v0-mock.kyro --case shock --no-drop",
     "demo:model": "node --experimental-sqlite --import tsx demo/runEncounter.ts ../cloud/bundles/edh-core-v0-mock.kyro --model models/Qwen2.5-3B-Instruct-Q4_K_M.gguf",
     "l3:validate": "node --import tsx l3/validateL3.ts",
     "parity": "node --experimental-sqlite --experimental-strip-types e1/parity.ts ../cloud/bundles/edh-core-v0-mock.kyro",
