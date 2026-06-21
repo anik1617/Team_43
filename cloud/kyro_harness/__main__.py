@@ -83,12 +83,18 @@ def main(argv=None) -> int:
     parser.add_argument('--out', default=DEFAULT_OUT,
                         help='output dir for collapse.png/confusion.png/results.json '
                              '(default: %(default)s, relative to repo)')
+    parser.add_argument('--cases', default=None,
+                        help='CSV of cases to score (vignettes.csv schema: id, evidence_json, '
+                             'expected_action, expected_mode, must_abstain). Default: the built-in '
+                             'mentor-signed Tier-A set. Point this at a Tier-C slice to score it, '
+                             'e.g. --cases mimic_slice.csv')
     args = parser.parse_args(argv)
 
     bundle = _resolve_input(args.bundle)
     out_dir = _resolve_output(args.out)
 
-    cases = load_cases()
+    cases_path = _resolve_input(args.cases) if args.cases else None
+    cases = load_cases(cases_path) if cases_path else load_cases()
     spine = load_spine(bundle)
 
     scores_by_arm = {}
@@ -118,7 +124,7 @@ def main(argv=None) -> int:
     report.render(scores_by_arm, out_dir)
 
     # Concise summary: which arms ran, their headline numbers, and where the chart landed.
-    print(f"[harness] cases: {len(cases)}; bundle: {bundle}")
+    print(f"[harness] cases: {len(cases)} ({cases_path or 'built-in Tier-A'}); bundle: {bundle}")
     for arm in sorted(set(arm_status) | set(scores_by_arm)):
         label = report.ARM_LABELS.get(arm, f"arm {arm}")
         if arm in scores_by_arm and arm_status.get(arm) == 'ran':
