@@ -22,6 +22,7 @@ load_dotenv(os.path.join(os.path.dirname(__file__), "..", ".env"))
 
 from fastapi import FastAPI                       # noqa: E402
 from fastapi.responses import RedirectResponse    # noqa: E402
+from fastapi.staticfiles import StaticFiles        # noqa: E402
 from starlette.middleware.sessions import SessionMiddleware  # noqa: E402
 
 from .db import init_db                            # noqa: E402
@@ -56,6 +57,10 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="Kyro Cloud Service", version="0.1.0", lifespan=lifespan)
 app.add_middleware(SessionMiddleware, secret_key=_SESSION_SECRET,
                    https_only=not _INSECURE_COOKIES, same_site="lax")
+
+# Static assets (logo, favicon) — served by the app itself so the portal stays self-contained.
+app.mount("/static", StaticFiles(directory=os.path.join(os.path.dirname(__file__), "static")),
+          name="static")
 
 
 @app.get("/healthz")
