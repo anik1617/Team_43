@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="Kyro icon">
+  <rect x="0" y="0" width="120" height="120" rx="28" fill="#2E9BD6"/>
+  <g fill="none" stroke="#FFFFFF" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+    <!-- stem -->
+    <line x1="43" y1="30" x2="43" y2="90"/>
+    <!-- upper arm -->
+    <line x1="43" y1="62" x2="74" y2="34"/>
+    <!-- lower leg -->
+    <line x1="43" y1="62" x2="78" y2="90"/>
+  </g>
+  <!-- beacon (the guide) -->
+  <circle cx="80" cy="28" r="6" fill="#FFFFFF"/>
+</svg>

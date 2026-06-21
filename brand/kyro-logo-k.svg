@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 180" width="720" height="180" role="img" aria-label="Kyro logo">
+  <!-- ICON -->
+  <g transform="translate(24,30)">
+    <rect x="0" y="0" width="120" height="120" rx="28" fill="#2E9BD6"/>
+    <g fill="none" stroke="#FFFFFF" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="43" y1="30" x2="43" y2="90"/>
+      <line x1="43" y1="62" x2="74" y2="34"/>
+      <line x1="43" y1="62" x2="78" y2="90"/>
+    </g>
+    <circle cx="80" cy="28" r="6" fill="#FFFFFF"/>
+  </g>
+
+  <!-- WORDMARK -->
+  <text x="172" y="100" font-family="'Montserrat','Segoe UI',Arial,sans-serif"
+        font-size="68" font-weight="800" letter-spacing="2" fill="#2E9BD6">KYRO</text>
+  <text x="174" y="132" font-family="'Montserrat','Segoe UI',Arial,sans-serif"
+        font-size="16.5" font-weight="600" letter-spacing="1.4" fill="#2E9BD6" opacity="0.8">THE GUIDE THAT NEVER DROPS THE CALL</text>
+</svg>
