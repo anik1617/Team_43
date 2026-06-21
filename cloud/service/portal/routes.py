@@ -26,12 +26,24 @@ def inbox(request: Request, session: Session = Depends(get_session)):
                                       {"gaps": gaps, "pending": pending})
 
 
+# keep contributed text bounded — DB hygiene + the staged corpus .txt stays sane
+_MAXLEN = {"title": 200, "citation": 300, "contributor": 120, "body": 8000}
+
+
 @router.post("/portal/contribute")
 def contribute(gap_id: int = Form(...), title: str = Form(...), body: str = Form(...),
                citation: str = Form(...), contributor: str = Form(...), tier: int = Form(2),
                session: Session = Depends(get_session)):
-    c = Contribution(gap_id=gap_id, title=title.strip(), body=body.strip(),
-                     citation=citation.strip(), contributor=contributor.strip(), tier=tier)
+    # Trust tier is NOT client-trusted. The open form may only self-attest community (2) or
+    # expert (1); tier 0 = canonical/guideline and is assignable ONLY by a curator during review.
+    # Otherwise anyone could mint "guideline-grade" provenance and poison the trust ordering.
+    tier = tier if tier in (1, 2) else 2
+    c = Contribution(gap_id=gap_id,
+                     title=title.strip()[:_MAXLEN["title"]],
+                     body=body.strip()[:_MAXLEN["body"]],
+                     citation=citation.strip()[:_MAXLEN["citation"]],
+                     contributor=contributor.strip()[:_MAXLEN["contributor"]],
+                     tier=tier)
     session.add(c)
     session.commit()
     return RedirectResponse("/portal/curate", status_code=303)
