@@ -1,0 +1,404 @@
+{
+  "bundle": "edh-core-v1.kyro",
+  "top1_vector_score_dist": {
+    "n": 20,
+    "min": 0.548,
+    "max": 0.8104,
+    "mean": 0.6633,
+    "median": 0.6555,
+    "p25": 0.6158,
+    "p75": 0.7273
+  },
+  "all_vector_score_dist": {
+    "n": 120,
+    "min": 0.4892,
+    "max": 0.8104,
+    "mean": 0.6325,
+    "median": 0.6286,
+    "p25": 0.5872,
+    "p75": 0.6777
+  },
+  "sweep": {
+    "0.25": {
+      "coverage_rate": 1.0,
+      "covered": 20,
+      "total": 20,
+      "per_query": [
+        {
+          "id": "q01_lucid_interval",
+          "covered": true,
+          "score": 0.6483,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q02_blown_pupil",
+          "covered": true,
+          "score": 0.5618,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q03_edh_volume_threshold",
+          "covered": true,
+          "score": 0.7358,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q04_burr_hole",
+          "covered": true,
+          "score": 0.7273,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q05_uncal_herniation",
+          "covered": true,
+          "score": 0.5042,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q06_gcs_drop",
+          "covered": true,
+          "score": 0.3979,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q07_operate_vs_transfer",
+          "covered": true,
+          "score": 0.6158,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q08_manage_without_ct",
+          "covered": true,
+          "score": 0.6091,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q09_secondary_injury",
+          "covered": true,
+          "score": 0.704,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q10_bp_target",
+          "covered": true,
+          "score": 0.723,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q11_ketamine_rsi",
+          "covered": true,
+          "score": 0.6951,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q12_seizure_prophylaxis",
+          "covered": true,
+          "score": 0.7089,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q13_anisocoria",
+          "covered": true,
+          "score": 0.5924,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q14_hyperosmolar",
+          "covered": true,
+          "score": 0.8031,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q15_ct_appearance",
+          "covered": true,
+          "score": 0.548,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q16_decompressive",
+          "covered": true,
+          "score": 0.7519,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q17_task_shifting",
+          "covered": true,
+          "score": 0.5469,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q18_coagulopathy",
+          "covered": true,
+          "score": 0.6078,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q19_golden_window",
+          "covered": true,
+          "score": 0.6153,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q20_pediatric",
+          "covered": true,
+          "score": 0.6297,
+          "top_trust_tier": 0
+        }
+      ]
+    },
+    "0.30": {
+      "coverage_rate": 1.0,
+      "covered": 20,
+      "total": 20,
+      "per_query": [
+        {
+          "id": "q01_lucid_interval",
+          "covered": true,
+          "score": 0.6483,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q02_blown_pupil",
+          "covered": true,
+          "score": 0.5618,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q03_edh_volume_threshold",
+          "covered": true,
+          "score": 0.7358,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q04_burr_hole",
+          "covered": true,
+          "score": 0.7273,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q05_uncal_herniation",
+          "covered": true,
+          "score": 0.5042,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q06_gcs_drop",
+          "covered": true,
+          "score": 0.3979,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q07_operate_vs_transfer",
+          "covered": true,
+          "score": 0.6158,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q08_manage_without_ct",
+          "covered": true,
+          "score": 0.6091,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q09_secondary_injury",
+          "covered": true,
+          "score": 0.704,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q10_bp_target",
+          "covered": true,
+          "score": 0.723,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q11_ketamine_rsi",
+          "covered": true,
+          "score": 0.6951,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q12_seizure_prophylaxis",
+          "covered": true,
+          "score": 0.7089,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q13_anisocoria",
+          "covered": true,
+          "score": 0.5924,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q14_hyperosmolar",
+          "covered": true,
+          "score": 0.8031,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q15_ct_appearance",
+          "covered": true,
+          "score": 0.548,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q16_decompressive",
+          "covered": true,
+          "score": 0.7519,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q17_task_shifting",
+          "covered": true,
+          "score": 0.5469,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q18_coagulopathy",
+          "covered": true,
+          "score": 0.6078,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q19_golden_window",
+          "covered": true,
+          "score": 0.6153,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q20_pediatric",
+          "covered": true,
+          "score": 0.6297,
+          "top_trust_tier": 0
+        }
+      ]
+    },
+    "0.40": {
+      "coverage_rate": 0.95,
+      "covered": 19,
+      "total": 20,
+      "per_query": [
+        {
+          "id": "q01_lucid_interval",
+          "covered": true,
+          "score": 0.6483,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q02_blown_pupil",
+          "covered": true,
+          "score": 0.5618,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q03_edh_volume_threshold",
+          "covered": true,
+          "score": 0.7358,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q04_burr_hole",
+          "covered": true,
+          "score": 0.7273,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q05_uncal_herniation",
+          "covered": true,
+          "score": 0.5042,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q06_gcs_drop",
+          "covered": false,
+          "score": 0.6777,
+          "top_trust_tier": 1
+        },
+        {
+          "id": "q07_operate_vs_transfer",
+          "covered": true,
+          "score": 0.6158,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q08_manage_without_ct",
+          "covered": true,
+          "score": 0.6091,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q09_secondary_injury",
+          "covered": true,
+          "score": 0.704,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q10_bp_target",
+          "covered": true,
+          "score": 0.723,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q11_ketamine_rsi",
+          "covered": true,
+          "score": 0.6951,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q12_seizure_prophylaxis",
+          "covered": true,
+          "score": 0.7089,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q13_anisocoria",
+          "covered": true,
+          "score": 0.5924,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q14_hyperosmolar",
+          "covered": true,
+          "score": 0.8031,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q15_ct_appearance",
+          "covered": true,
+          "score": 0.548,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q16_decompressive",
+          "covered": true,
+          "score": 0.7519,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q17_task_shifting",
+          "covered": true,
+          "score": 0.5469,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q18_coagulopathy",
+          "covered": true,
+          "score": 0.6078,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q19_golden_window",
+          "covered": true,
+          "score": 0.6153,
+          "top_trust_tier": 0
+        },
+        {
+          "id": "q20_pediatric",
+          "covered": true,
+          "score": 0.6297,
+          "top_trust_tier": 0
+        }
+      ]
+    }
+  }
+}

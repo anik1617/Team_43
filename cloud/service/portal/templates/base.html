@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kyro · Contribution Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+ /* ---- Kyro Contribution Portal — design system (ported from claude.ai/design) ---- */
+ :root{
+   --bg:#F5F7FA; --ink:#13243B; --ink-deep:#0C1B30; --mut:#52677F; --mut-2:#8A9CB2; --mut-3:#9AACC2;
+   --acc:#2D7FF9; --acc-hover:#1F6FE8; --acc-deep:#1F4E8C; --acc-deep-2:#2D5C9E;
+   --line:#E6ECF3; --line-2:#EBF0F7; --line-3:#EEF2F8; --field:#D9E2EE;
+   --panel:#F8FAFD; --card:#fff;
+   --ok:#198A5A; --ok-dot:#2BB37D; --ok-bg:#E8F6EF; --ok-bg-2:#F0FAF5; --ok-line:#CFEEDF;
+   --bad:#C23D48; --bad-dot:#D6453F; --bad-bg:#FBEDEE; --bad-bg-2:#FDF1F2; --bad-line:#F6D4D7;
+   --serif:'Newsreader',Georgia,serif; --sans:'Archivo',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
+ }
+ *{box-sizing:border-box}
+ html,body{margin:0;padding:0}
+ body{background:radial-gradient(1200px 560px at 84% -14%,rgba(45,127,249,.06),transparent 58%),var(--bg);
+   font-family:var(--sans);color:var(--ink);-webkit-font-smoothing:antialiased;min-height:100vh}
+ ::selection{background:rgba(45,127,249,.16)}
+ a{color:inherit;text-decoration:none}
+ @keyframes kfade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+ /* ---- top nav ---- */
+ .nav{position:sticky;top:0;z-index:30;display:flex;align-items:stretch;gap:30px;padding:0 32px;height:64px;
+   background:rgba(255,255,255,.84);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+ .brand{display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none}
+ .brand .mark{line-height:1}
+ .brand .name{font-weight:700;font-size:15px;letter-spacing:.06em}
+ .brand .sub{font-size:9px;letter-spacing:.22em;color:var(--mut-2);margin-top:4px;text-transform:uppercase;font-weight:500}
+ .tabs{display:flex;align-items:stretch;margin-left:8px}
+ .tab{display:flex;align-items:center;padding:0 15px;background:none;border:none;border-bottom:2px solid transparent;
+   font-family:var(--sans);font-size:13.5px;font-weight:500;color:#7C8FA6;cursor:pointer;transition:color .12s,border-color .12s}
+ .tab:hover{color:var(--ink)}
+ .tab.active{color:var(--ink-deep);border-bottom-color:var(--acc)}
+ .nav-right{margin-left:auto;display:flex;align-items:center;gap:18px}
+ .status-pill{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--mut-2);font-family:var(--mono)}
+ .status-pill .live{width:6px;height:6px;border-radius:50%;background:#23A06B}
+ .avatar{width:30px;height:30px;border-radius:7px;background:var(--ink-deep);display:flex;align-items:center;justify-content:center;
+   font-size:11px;font-weight:600;color:#9CC6FF;font-family:var(--mono)}
+
+ /* ---- flash toast ---- */
+ .flash-wrap{max-width:1160px;margin:18px auto 0;padding:0 32px}
+ .flash{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:8px;background:var(--ink-deep);color:#DCEBFF;
+   font-size:13px;box-shadow:0 8px 26px rgba(12,27,48,.22);animation:kfade .22s ease}
+ .flash .ping{width:7px;height:7px;border-radius:50%;background:#7CC4FF;box-shadow:0 0 8px #7CC4FF}
+ .flash .close{margin-left:auto;background:none;border:none;color:#6E84A3;cursor:pointer;font-size:17px;line-height:1;text-decoration:none}
+
+ /* ---- layout ---- */
+ .wrap{max-width:1160px;margin:0 auto;padding:40px 32px 96px}
+ .eyebrow{font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--acc);font-family:var(--mono);font-weight:500}
+ h1.title{margin:14px 0 0;font-family:var(--serif);font-size:40px;line-height:1.05;font-weight:500;letter-spacing:-.015em;color:var(--ink-deep)}
+ h1.title.lg{font-size:46px;line-height:1.04}
+ h1.title .em{color:var(--acc)}
+ .lede{margin:14px 0 0;max-width:680px;font-size:15px;line-height:1.6;color:var(--mut)}
+ .lede .strong{color:var(--acc-deep);font-weight:600}
+ h2.section{margin:0;font-family:var(--serif);font-size:21px;font-weight:500;color:var(--ink-deep)}
+ .count-label{font-family:var(--mono);font-size:11px;color:var(--mut-2);letter-spacing:.06em}
+
+ /* ---- badges / pills / chips ---- */
+ .pill{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:5px;font-size:11px;font-weight:600;letter-spacing:.02em}
+ .pill .d{width:5px;height:5px;border-radius:50%;background:currentColor}
+ .pill-open{color:var(--acc-hover);background:#EAF2FE}
+ .pill-addressed,.pill-approved{color:var(--ok);background:var(--ok-bg)}
+ .pill-rejected{color:var(--bad);background:#FBEDEE}
+ .pill-pending{color:var(--acc-hover);background:#EAF2FE}
+ .chip{display:inline-flex;align-items:center;padding:3px 9px;border-radius:5px;font-size:11px;font-weight:500;font-family:var(--mono);letter-spacing:.01em}
+ .src-abstention{color:var(--acc-deep-2);background:#EBF1FB}
+ .src-field{color:#6B7E96;background:#F0F3F8}
+ .src-vignette{color:#A9701B;background:#FBF3E6}
+ .src-manual{color:#6B7E96;background:#F0F3F8}
+ /* trust-tier badge */
+ .tier-badge{display:inline-flex;align-items:center;gap:6px;padding:3px 9px 3px 4px;border-radius:6px;font-size:11px;font-weight:600}
+ .tier-tag{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:4px;
+   font-family:var(--mono);font-size:10px;font-weight:700}
+ .tier-0{color:var(--ink-deep);background:#E5F0FF;border:1px solid var(--acc)} .tier-0 .tier-tag{background:var(--acc);color:#fff}
+ .tier-1{color:var(--acc-deep);background:#EEF4FE;border:1px solid #A9C3E4} .tier-1 .tier-tag{background:#5C95E0;color:#fff}
+ .tier-2{color:#5C7088;background:#F2F5F9;border:1px solid #DCE5F0} .tier-2 .tier-tag{background:#C4D2E4;color:#37506E}
+
+ /* ---- buttons ---- */
+ .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;font-family:var(--sans);cursor:pointer;transition:.14s}
+ .btn-primary{padding:11px 18px;border-radius:8px;background:var(--acc);border:none;color:#fff;font-size:13px;font-weight:600;
+   letter-spacing:.01em;box-shadow:0 2px 8px rgba(45,127,249,.28)}
+ .btn-primary:hover{background:var(--acc-hover);transform:translateY(-1px)}
+ .btn-ghost{padding:10px 16px;border-radius:8px;background:#fff;border:1px solid var(--field);color:var(--acc-deep-2);font-size:13px;font-weight:500}
+ .btn-ghost:hover{background:#F2F7FD;border-color:#9BB7DA}
+ .btn-danger{padding:10px 16px;border-radius:8px;background:#fff;border:1px solid #E8B4B6;color:var(--bad);font-size:13px;font-weight:500}
+ .btn-danger:hover{background:#FCF1F1;border-color:#E2959A}
+
+ /* ---- forms ---- */
+ .lbl{font-size:11.5px;font-weight:600;color:#3A4F6A;margin-bottom:6px;display:block}
+ .lbl .soft{color:var(--mut-3);font-weight:400}
+ .inp,.ta,.sel{width:100%;padding:10px 13px;border-radius:8px;background:#fff;border:1px solid var(--field);color:var(--ink);
+   font-size:13.5px;font-family:var(--sans);transition:border-color .12s,box-shadow .12s}
+ .ta{line-height:1.55;resize:vertical;min-height:96px}
+ .sel{cursor:pointer}
+ .inp:focus,.ta:focus,.sel:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(45,127,249,.14);outline:none}
+
+ /* ---- cards ---- */
+ .card{border-radius:13px;background:var(--card);border:1px solid var(--line);box-shadow:0 4px 16px rgba(19,36,59,.05);overflow:hidden}
+ .note{padding:15px 17px;border-radius:9px;background:var(--panel);border:1px solid var(--line-2)}
+
+ @media (max-width:720px){
+   .nav{gap:14px;padding:0 18px} .tabs{order:3;margin-left:0;width:100%;height:0;overflow:visible}
+   .wrap{padding:28px 18px 72px} h1.title,h1.title.lg{font-size:32px}
+   .status-pill{display:none}
+ }
+</style>
+</head>
+<body>
+{% set p = request.url.path %}
+<nav class="nav">
+  <a class="brand" href="/portal">
+    <span class="mark">
+      <svg width="25" height="25" viewBox="0 0 26 26" fill="none">
+        <circle cx="13" cy="13" r="11" stroke="#2D7FF9" stroke-width="1.4"></circle>
+        <path d="M13 4V22M4 13H22" stroke="#A9C3E4" stroke-width="1.1"></path>
+        <circle cx="13" cy="13" r="2.7" fill="#2D7FF9"></circle>
+      </svg>
+    </span>
+    <span>
+      <span class="name">KYRO</span>
+      <span class="sub">Contribution Portal</span>
+    </span>
+  </a>
+  <div class="tabs">
+    <a class="tab {{ 'active' if p == '/portal' }}" href="/portal">Gap inbox</a>
+    <a class="tab {{ 'active' if p.startswith('/portal/contributions') }}" href="/portal/contributions">Provenance log</a>
+    <a class="tab {{ 'active' if p.startswith('/experts') }}" href="/experts/profile">Expert account</a>
+  </div>
+  <div class="nav-right">
+    <div class="status-pill"><span class="live"></span>on-device · v2.4.1</div>
+    <div class="avatar">CU</div>
+  </div>
+</nav>
+
+{% set msg = request.query_params.get('msg') %}
+{% if msg %}
+<div class="flash-wrap">
+  <div class="flash">
+    <span class="ping"></span>
+    <span>{{ msg }}</span>
+    <a class="close" href="{{ p }}" aria-label="Dismiss">×</a>
+  </div>
+</div>
+{% endif %}
+
+<main class="wrap">{% block body %}{% endblock %}</main>
+</body></html>

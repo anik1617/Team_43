@@ -1,0 +1,27 @@
+{# Shared presentation helpers — keep the design's trust-tier / source vocabulary in one place.
+   Backend stores tier as int 0/1/2 and source as a slug; these map to the design's labels. #}
+
+{% set TIER = {0: ('0', 'Guideline'), 1: ('1', 'Expert · textbook'), 2: ('2', 'Community')} %}
+{% set SOURCE = {
+   'abstention': ('Abstention', 'src-abstention'),
+   'field': ('Field', 'src-field'),
+   'must_abstain_vignette': ('Must-abstain vignette', 'src-vignette'),
+   'manual': ('Manual', 'src-manual')
+} %}
+
+{# Trust-tier badge: number tag + label, colour-coded by tier. #}
+{% macro tier_badge(tier) %}
+{%- set t = tier if tier in TIER else 2 -%}
+<span class="tier-badge tier-{{ t }}"><span class="tier-tag">{{ TIER[t][0] }}</span>{{ TIER[t][1] }}</span>
+{%- endmacro %}
+
+{# Gap source chip (Abstention / Field / Must-abstain vignette …). #}
+{% macro source_chip(source) %}
+{%- set s = SOURCE.get(source, (source, 'src-field')) -%}
+<span class="chip {{ s[1] }}">{{ s[0] }}</span>
+{%- endmacro %}
+
+{# Trim an ISO timestamp (2026-06-20T18:03:21+00:00) to the design's "2026-06-20 18:03 UTC". #}
+{% macro ts(iso) %}
+{%- if iso -%}{{ iso[:16].replace('T', ' ') }} UTC{%- else -%}—{%- endif -%}
+{% endmacro %}

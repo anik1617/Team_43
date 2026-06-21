@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="eyebrow">Expert network</div>
+<h1 class="title">Register as a <span class="em">Kyro expert</span></h1>
+<p class="lede">Volunteer to be reached for emergency neurosurgical teleconsults from clinicians
+using Kyro in low-resource settings. Your phone number stays in the cloud and is shared with a
+requesting clinician <span class="strong">only at the moment of an escalation</span>.</p>
+
+{% if error %}
+<div class="note" style="margin-top:18px;border-color:var(--bad-line);background:var(--bad-bg-2);color:var(--bad)">{{ error }}</div>
+{% endif %}
+
+<div class="card" style="margin-top:22px;max-width:700px;padding:24px">
+  {% if google_enabled %}
+  <a class="btn btn-ghost" href="/auth/google" style="width:100%;justify-content:center">Continue with Google</a>
+  <div style="text-align:center;color:var(--mut-2);font-size:11px;margin:16px 0;font-family:var(--mono)">— or register with email —</div>
+  {% endif %}
+
+  <form method="post" action="/experts/register">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div><label class="lbl">Email</label><input class="inp" type="email" name="email" value="{{ form.email or '' }}" required></div>
+      <div><label class="lbl">Password <span class="soft">(min 8)</span></label><input class="inp" type="password" name="password" minlength="8" required></div>
+      <div><label class="lbl">Full name</label><input class="inp" name="name" value="{{ form.name or '' }}"></div>
+      <div><label class="lbl">Specialty</label>
+        <select class="sel" name="specialty">
+          {% for s in specialties %}<option {{ 'selected' if form.specialty == s }}>{{ s }}</option>{% endfor %}
+        </select></div>
+      <div><label class="lbl">Role <span class="soft">(consultant / registrar…)</span></label><input class="inp" name="role" value="{{ form.role or '' }}"></div>
+      <div><label class="lbl">Institution</label><input class="inp" name="institution" value="{{ form.institution or '' }}"></div>
+      <div><label class="lbl">Region <span class="soft">(for routing)</span></label><input class="inp" name="region" value="{{ form.region or '' }}"></div>
+      <div><label class="lbl">Phone <span class="soft">(WhatsApp, +countrycode)</span></label><input class="inp" name="phone" placeholder="+92…" value="{{ form.phone or '' }}"></div>
+    </div>
+
+    <div class="note" style="margin-top:18px">
+      <label style="display:flex;gap:11px;align-items:flex-start;cursor:pointer">
+        <input type="checkbox" name="opt_in" value="1" {{ 'checked' if form.opt_in }} style="margin-top:3px">
+        <span style="font-size:12.5px;line-height:1.55;color:var(--mut)">{{ consent_text }}</span>
+      </label>
+    </div>
+
+    <button class="btn btn-primary" type="submit" style="margin-top:18px;width:100%">Create expert account</button>
+  </form>
+</div>
+
+<p class="lede" style="font-size:13px">Already registered?
+  <a href="/experts/login" style="color:var(--acc);font-weight:600">Sign in</a></p>
+{% endblock %}

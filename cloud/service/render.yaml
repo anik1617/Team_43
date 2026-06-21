@@ -1,0 +1,21 @@
+# Render blueprint for the Kyro Cloud Service (portal + escalate).
+# Deploy: push the branch to GitHub → Render → "New + Blueprint" → point at this file,
+# OR create a Web Service in the dashboard with the Root Directory / commands below.
+services:
+  - type: web
+    name: kyro-cloud
+    runtime: python
+    rootDir: cloud
+    plan: free
+    buildCommand: pip install -r service/requirements.txt
+    # --proxy-headers: trust Render's TLS terminator so OAuth builds an https redirect_uri.
+    startCommand: uvicorn service.app:app --host 0.0.0.0 --port $PORT --proxy-headers --forwarded-allow-ips=*
+    envVars:
+      - key: KYRO_DB
+        value: /tmp/kyro_service.db        # free tier disk is ephemeral; fine for the demo
+      - key: KYRO_SESSION_SECRET
+        generateValue: true                # strong unique per-deploy secret (signs login sessions)
+      # Set these in the Render dashboard (Secret) to light up Google sign-in + WhatsApp:
+      # - GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET     (Google OAuth)
+      # - TWILIO_ACCOUNT_SID / TWILIO_AUTH_TOKEN / TWILIO_WHATSAPP_FROM   (whatsapp:+1415…)
+      # - KYRO_ESCALATE_TOKEN     REQUIRED to actually send once Twilio is live (relay is fail-closed otherwise)

@@ -15,14 +15,18 @@ pytest>=8.0             # engine unit tests (S1–S6) + conformance/parity tests
 # --- ABLATION ARM 1 (MUST: bare-Qwen baseline, single-turn, CPU) ---
 # Heavy; on Windows prefer a prebuilt wheel. Install when wiring arm 1:
 #   pip install llama-cpp-python
-# llama-cpp-python>=0.2.90     # runs Qwen-4B-Q4 GGUF on CPU (same model class as llama.rn)
+# llama-cpp-python>=0.2.90     # runs Qwen2.5-3B-Q4 GGUF on CPU (same model class as llama.rn)
+
+# --- CORPUS FETCH (build only: ingest/fetch_corpus.py acquires the manifest sources) ---
+# graphrag/input/*.txt are gitignored, so a fresh checkout/pod MUST re-fetch. Install:
+#   pip install pymupdf trafilatura requests pyyaml
 
 # --- RETRIEVAL + REAL BUNDLE (SHOULD: BGE-M3 embeddings, GraphRAG, Claude gateway) ---
 # Pulls torch (large). Install when building edh-core-v1.kyro / arm 2 / 🟡 retrieval:
 #   pip install FlagEmbedding graphrag litellm
-# FlagEmbedding>=1.2          # BAAI/bge-m3 dim=1024 (must be byte-identical to llama.rn on-device)
-# graphrag>=2.0              # Microsoft GraphRAG (extraction only; embeddings discarded — see graphrag/README)
-# litellm>=1.40             # OpenAI-compatible gateway → Claude (point GraphRAG api_base at it)
+# FlagEmbedding>=1.2          # BAAI/bge-m3 dim=1024; build fp32 + match llama.rn on-device (NN-order stable, NOT byte-identical)
+# graphrag>=3.1              # Microsoft GraphRAG (the dry run used 3.1.0; extraction only, embeddings discarded — see graphrag/README)
+# litellm>=1.40             # GraphRAG 3.1 calls Claude natively via litellm (model_provider: anthropic) — no separate gateway
 
 # --- LATER (cloud services C1/C4/C7, E8 escalate) ---
-# fastapi, uvicorn, pymupdf, presidio-analyzer, presidio-anonymizer, supabase, twilio
+# fastapi, uvicorn, presidio-analyzer, presidio-anonymizer, supabase, twilio

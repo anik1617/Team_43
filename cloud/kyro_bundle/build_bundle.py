@@ -125,7 +125,7 @@ def normalize(t: graphrag_io.GraphRAGTables):
 
 
 def compile_bundle(tables, out_path, version, embedder: Embedder, lang="en",
-                   graphrag_version="2.x", cgt_path=DEFAULT_SPINE_SQL):
+                   graphrag_version="3.1.0", cgt_path=DEFAULT_SPINE_SQL):
     chunks, nodes, edges, node_comm = normalize(tables)
 
     priv, pub_hex = bw.load_or_make_keypair(KEYS_DIR)
@@ -140,11 +140,11 @@ def compile_bundle(tables, out_path, version, embedder: Embedder, lang="en",
                   created_at, "", ""))
 
     conn.executemany("INSERT INTO chunks VALUES (?,?,?,?,?,?)", chunks)
-    bw.insert_vectors(conn, "chunk_vec", "chunk_id",
-                      [(ch[0], embedder.embed(ch[2])) for ch in chunks])
+    chunk_vecs = embedder.embed_many([ch[2] for ch in chunks])      # GPU-batched (BgeM3); per-text identical
+    bw.insert_vectors(conn, "chunk_vec", "chunk_id", zip((ch[0] for ch in chunks), chunk_vecs))
     conn.executemany("INSERT INTO nodes VALUES (?,?,?,?,?)", nodes)
-    bw.insert_vectors(conn, "node_vec", "node_id",
-                      [(n[0], embedder.embed(n[3])) for n in nodes])
+    node_vecs = embedder.embed_many([n[3] for n in nodes])
+    bw.insert_vectors(conn, "node_vec", "node_id", zip((n[0] for n in nodes), node_vecs))
     conn.executemany("INSERT INTO edges VALUES (?,?,?,?,?)", edges)
     conn.executemany("INSERT INTO node_community VALUES (?,?,?)", node_comm)
 
