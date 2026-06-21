@@ -19,3 +19,10 @@ __pycache__/
 *.pyc
 .venv/
 venv/
+
+# local model weights (GGUF, multi-GB) — never commit
+models/
+*.gguf
+
+# generated harness artifacts (regenerate via python -m kyro_harness)
+out/
