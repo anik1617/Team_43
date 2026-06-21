@@ -9,6 +9,8 @@
     "demo": "node --experimental-sqlite --import tsx demo/runEncounter.ts ../cloud/bundles/edh-core-v0-mock.kyro",
     "demo:json": "node --experimental-sqlite --import tsx demo/runEncounter.ts ../cloud/bundles/edh-core-v0-mock.kyro --json",
     "demo:nodrop": "node --experimental-sqlite --import tsx demo/runEncounter.ts ../cloud/bundles/edh-core-v0-mock.kyro --no-drop",
+    "demo:model": "node --experimental-sqlite --import tsx demo/runEncounter.ts ../cloud/bundles/edh-core-v0-mock.kyro --model models/Qwen2.5-3B-Instruct-Q4_K_M.gguf",
+    "l3:validate": "node --import tsx l3/validateL3.ts",
     "parity": "node --experimental-sqlite --experimental-strip-types e1/parity.ts ../cloud/bundles/edh-core-v0-mock.kyro",
     "oracles:e2": "python e2/conformance.py",
     "oracles:e3": "python e3/conformance.py",
@@ -17,7 +19,8 @@
   },
   "dependencies": {
     "@noble/curves": "^1.6.0",
-    "@noble/hashes": "^1.5.0"
+    "@noble/hashes": "^1.5.0",
+    "node-llama-cpp": "^3.18.1"
   },
   "devDependencies": {
     "tsx": "^4.22.4"

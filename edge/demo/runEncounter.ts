@@ -26,6 +26,7 @@ import { retrieve, type Knn, type Embed } from '../e2/retrieval.ts';
 import { InMemoryJournal, journalingHost, resumeSeed, finalize, reduce, type Event } from '../e5/stateMachine.ts';
 import { buildHandoff, type HandoffBrief } from '../e5/handoff.ts';
 import { manifestDigest, cgtDigest, type Query, type Cell } from '../e1/canonicalDigest.ts';
+import { createQwenL3 } from '../l3/qwenL3.ts';
 
 // ---- the scripted HM encounter (the vignette, as turn-by-turn operator answers) ----
 const HM: Env = {
@@ -62,26 +63,33 @@ export interface DemoResult {
   handoff: HandoffBrief;
 }
 
-export interface DemoOpts { dbPath: string; drop?: boolean; narrate?: boolean; }
+export interface DemoOpts { dbPath: string; drop?: boolean; narrate?: boolean; modelPath?: string; }
 
 export async function runEncounter(opts: DemoOpts): Promise<DemoResult> {
-  const { dbPath, drop = true, narrate = false } = opts;
+  const { dbPath, drop = true, narrate = false, modelPath } = opts;
   const say = (s = '') => { if (narrate) console.log(s); };
 
   const ndb = new DatabaseSync(dbPath);
   const opShim = { executeSync: (sql: string) => ({ rows: { _array: ndb.prepare(sql).all() } }) };
+  const readLeafText = (id: string) =>
+    (ndb.prepare("SELECT recommendation FROM cgt_strings WHERE node_id=? AND lang='en'").get(id) as { recommendation?: string } | undefined)?.recommendation ?? null;
 
-  // L3 (language I/O only): synthesizeLeaf reads the leaf's authored recommendation from the bundle —
-  // what the real on-device model would phrase in-language. The deterministic tree chose the leaf.
-  const l3: L3 = {
-    async cleanAsr(s) { return s; },
-    async classifyAnswer(_f, u) { return u; },
-    async phraseQuestion() { return '?'; },
-    async synthesizeLeaf(node) {
-      const row = ndb.prepare("SELECT recommendation FROM cgt_strings WHERE node_id=? AND lang='en'").get(node.id) as { recommendation?: string } | undefined;
-      return (row?.recommendation ?? `(no authored text for ${node.id})`).replace(/^\[[^\]]*\]\s*/, '');  // strip the [BADGE] render-hint prefix
-    },
-  };
+  // L3 (language I/O only). Default = deterministic stub (fast, reproducible): synthesizeLeaf reads
+  // the leaf's authored recommendation. With --model, the REAL Qwen-3B-Q4 rewords it (never invents).
+  let dispose: (() => Promise<void>) | undefined;
+  let l3: L3;
+  if (modelPath) {
+    say(`  [loading real L3 model: ${modelPath} …]`);
+    const qwen = await createQwenL3(modelPath, readLeafText);
+    dispose = qwen.dispose; l3 = qwen;
+  } else {
+    l3 = {
+      async cleanAsr(s) { return s; },
+      async classifyAnswer(_f, u) { return u; },
+      async phraseQuestion() { return '?'; },
+      async synthesizeLeaf(node) { return (readLeafText(node.id) ?? `(no authored text for ${node.id})`).replace(/^\[[^\]]*\]\s*/, ''); },
+    };
+  }
 
   // ── SCENE ⓪ — E1 bundle integrity (digest parity vs the cloud golden hexes) ──
   const subst: Record<string, string> = { 'SELECT chunk_id FROM chunk_vec': 'SELECT id FROM chunks', 'SELECT node_id FROM node_vec': 'SELECT id FROM nodes' };
@@ -157,6 +165,7 @@ export async function runEncounter(opts: DemoOpts): Promise<DemoResult> {
   say(`  active concerns: ${handoff.hypotheses.join('; ')}`);
   say('');
 
+  if (dispose) await dispose();
   ndb.close();
   return {
     verified, fieldsCaptured: journal.load().filter((e) => e.t === 'evidence').length, dropped,
@@ -176,7 +185,9 @@ if (isMain) {
   const dbPath = args.find((a) => !a.startsWith('--')) ?? '../cloud/bundles/edh-core-v0-mock.kyro';
   const json = args.includes('--json');
   const drop = !args.includes('--no-drop');
-  const result = await runEncounter({ dbPath, drop, narrate: !json });
+  const mi = args.indexOf('--model');
+  const modelPath = mi >= 0 ? args[mi + 1] : undefined;
+  const result = await runEncounter({ dbPath, drop, narrate: !json, modelPath });
   if (json) console.log(JSON.stringify(result, null, 2));
   else console.log(`RESULT: ${result.badge} ${result.action}@${result.leafId} · verified=${result.verified} · dropped=${result.dropped} · lossless handoff ✓`);
 }
