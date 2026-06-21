@@ -23,3 +23,14 @@ def test_derive_flags_out_of_range_gcs():
 def test_derive_sbp_age_stratified():
     assert derive({**HM, 'age_yr': 60, 'sbp_mmhg': 95})['sbp_at_target'] is False
     assert derive({**HM, 'age_yr': 60, 'sbp_mmhg': 105})['sbp_at_target'] is True
+
+def test_derive_second_sbp_band_and_branches():
+    # 15-49 / >70 band uses threshold 110 (distinct from the 50-69 band's 100) — pin each clinical band
+    assert derive({**HM, 'age_yr': 31, 'sbp_mmhg': 105})['sbp_at_target'] is False
+    assert derive({**HM, 'age_yr': 31, 'sbp_mmhg': 115})['sbp_at_target'] is True
+    assert derive({**HM, 'age_yr': 80, 'sbp_mmhg': 105})['sbp_at_target'] is False   # >70 band, thr 110
+    # gcs_trend 'stable' branch (total 15 not < baseline 15) and setdefault respects a supplied value
+    assert derive({**HM, 'gcs_e': 4, 'gcs_v': 5, 'gcs_m': 6})['gcs_trend'] == 'stable'
+    assert derive({**HM, 'gcs_trend': 'stable'})['gcs_trend'] == 'stable'
+    # bilateral_fixed when both pupils fixed
+    assert derive({**HM, 'pupil_react_r': 'fixed'})['bilateral_fixed'] is True
