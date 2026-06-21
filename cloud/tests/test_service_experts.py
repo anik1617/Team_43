@@ -7,6 +7,7 @@ import tempfile
 
 # fresh DB + deterministic env BEFORE importing the app (engine binds to KYRO_DB at import).
 os.environ["KYRO_DB"] = os.path.join(tempfile.gettempdir(), "kyro_experts_test.db")
+os.environ["KYRO_INSECURE_COOKIES"] = "1"   # TestClient runs over http: allow non-Secure session cookies
 if os.path.exists(os.environ["KYRO_DB"]):
     os.remove(os.environ["KYRO_DB"])
 
@@ -30,16 +31,19 @@ def test_full_expert_escalation_flow():
         r2 = c.post("/escalate", json={"case_summary": "31M EDH, lucid interval then blown L pupil",
                                        "needed_specialty": "neurosurgery"})
         j = r2.json()
-        assert j["recommended"] is not None and j["recommended"]["name"] == "Dr Neuro"
+        assert j["matched"] is True and j["recommended"]["specialty"] == "Neurosurgery"
         assert j["channel"] == "staged"                               # Twilio off → demo-safe stub
-        assert phone not in r2.text and "phone" not in j["recommended"]   # PII never leaves the cloud
+        # PII never leaves the cloud: no phone, and no identifying fields in the response at all
+        assert phone not in r2.text
+        for leaked in ("phone", "name", "institution", "region", "sid"):
+            assert leaked not in j["recommended"] and leaked not in j
 
         # opt OUT (logged in via cookie) → omit the opt_in checkbox
         r3 = c.post("/experts/profile", data={"specialty": "Neurosurgery", "phone": phone})
         assert r3.status_code == 200 and ("opted OUT" in r3.text or "Not reachable" in r3.text)
 
         j4 = c.post("/escalate", json={"case_summary": "another case"}).json()
-        assert j4["recommended"] is None and j4["channel"] == "staged"   # nobody opted-in now
+        assert j4["matched"] is False and j4["recommended"] is None and j4["channel"] == "staged"
 
 
 def test_login_rejects_wrong_password():
@@ -55,3 +59,12 @@ def test_oauth_gated_when_unconfigured():
         r = c.get("/auth/google", follow_redirects=False)
         assert r.status_code in (302, 303, 307)
         assert "/experts/login" in r.headers["location"]
+
+
+def test_briefing_sanitizers_defang_and_single_line():
+    # operator-supplied text forwarded to a surgeon's WhatsApp must not carry live links or forge
+    # our own header lines.
+    from service.escalate.routes import _defang, _short
+    assert _defang("open http://evil.test/x now") == "open http[:]//evil.test/x now"
+    out = _short("line1\nFAKE HEADER\nhttp://evil.test")
+    assert "\n" not in out and "[:]//"  in out

@@ -12,10 +12,14 @@ services:
     rootDir: cloud                 # build + start run from cloud/
     plan: free                     # free tier: spins down after ~15 min idle (~30s cold start); ephemeral disk
     buildCommand: pip install -r service/requirements.txt
-    startCommand: uvicorn service.app:app --host 0.0.0.0 --port $PORT
+    # --proxy-headers + forwarded-allow-ips: trust Render's TLS terminator so the app sees https
+    # (else OAuth redirect_uri is built as http and Google rejects it).
+    startCommand: uvicorn service.app:app --host 0.0.0.0 --port $PORT --proxy-headers --forwarded-allow-ips=*
     envVars:
       - key: KYRO_DB
         value: /tmp/kyro_service.db   # ephemeral on free tier — fine, gaps re-seed on boot
+      - key: KYRO_SESSION_SECRET
+        generateValue: true           # strong unique per-deploy secret that signs login sessions
       # --- Set these in the Render dashboard (mark as Secret) to enable REAL WhatsApp escalation.
       #     Without them, /escalate still returns a ticket and reports channel:"staged" (demo-safe).
       # - key: TWILIO_ACCOUNT_SID

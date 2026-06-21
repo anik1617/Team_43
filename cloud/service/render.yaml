@@ -8,12 +8,14 @@ services:
     rootDir: cloud
     plan: free
     buildCommand: pip install -r service/requirements.txt
-    startCommand: uvicorn service.app:app --host 0.0.0.0 --port $PORT
+    # --proxy-headers: trust Render's TLS terminator so OAuth builds an https redirect_uri.
+    startCommand: uvicorn service.app:app --host 0.0.0.0 --port $PORT --proxy-headers --forwarded-allow-ips=*
     envVars:
       - key: KYRO_DB
         value: /tmp/kyro_service.db        # free tier disk is ephemeral; fine for the demo
-      # Set these in the Render dashboard (Secret) to enable real WhatsApp escalation:
-      # - TWILIO_ACCOUNT_SID
-      # - TWILIO_AUTH_TOKEN
-      # - TWILIO_WHATSAPP_FROM        e.g. whatsapp:+14155238886
-      # - KYRO_ONCALL_WHATSAPP_TO     e.g. whatsapp:+92XXXXXXXXXX
+      - key: KYRO_SESSION_SECRET
+        generateValue: true                # strong unique per-deploy secret (signs login sessions)
+      # Set these in the Render dashboard (Secret) to light up Google sign-in + WhatsApp:
+      # - GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET     (Google OAuth)
+      # - TWILIO_ACCOUNT_SID / TWILIO_AUTH_TOKEN / TWILIO_WHATSAPP_FROM   (whatsapp:+1415…)
+      # - KYRO_ESCALATE_TOKEN     REQUIRED to actually send once Twilio is live (relay is fail-closed otherwise)

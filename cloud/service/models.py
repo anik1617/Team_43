@@ -98,13 +98,13 @@ class Expert(SQLModel, table=True):
 
 
 class EscalationLog(SQLModel, table=True):
-    """Audit trail: every escalation, who it matched, and whether it actually sent. Makes the
-    'who did we contact and why' question answerable — the auditability the judges reward."""
+    """Audit trail: every escalation, who it matched, whether it sent. Deliberately stores NO PHI —
+    the patient case text is relayed to the surgeon but never persisted (the 'PHI never leaves the
+    room' keystone). Answers 'who did we contact, when, for what specialty' — not the case itself."""
     id: int | None = Field(default=None, primary_key=True)
     ticket: str
-    case_summary: str = ""
     needed_specialty: str = ""
-    region: str | None = None
+    region: str | None = None                    # coarse locality only — no patient identifiers
     matched_expert_id: int | None = Field(default=None, foreign_key="expert.id")
     matched_name: str | None = None
     channel: str = "none"                        # whatsapp | staged | none

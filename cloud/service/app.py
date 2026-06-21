@@ -30,9 +30,20 @@ from .experts.routes import router as experts_router    # noqa: E402
 from .portal.routes import router as portal_router      # noqa: E402
 from .seed import seed_if_empty                    # noqa: E402
 
-# Session secret: a real random value via KYRO_SESSION_SECRET in prod; a dev fallback keeps local
-# runs working. A rotated/!= secret just invalidates existing login cookies (acceptable).
-_SESSION_SECRET = os.environ.get("KYRO_SESSION_SECRET", "kyro-dev-session-secret-change-me")
+# Session secret: NEVER a hardcoded fallback (a known key in the repo = forgeable sessions). Use
+# KYRO_SESSION_SECRET if set; otherwise generate an unguessable per-process secret so cookies are
+# never signable with a public key — the trade-off is that a restart invalidates logins (fine for
+# the demo). Set KYRO_SESSION_SECRET on the deploy for stable sessions.
+_SESSION_SECRET = os.environ.get("KYRO_SESSION_SECRET")
+if not _SESSION_SECRET:
+    import secrets
+    _SESSION_SECRET = secrets.token_urlsafe(32)
+    print("[kyro] WARNING: KYRO_SESSION_SECRET not set — using a random per-process secret "
+          "(logins reset on restart). Set KYRO_SESSION_SECRET on the deploy for stable sessions.")
+
+# Secure cookies by default (Render serves HTTPS). Local dev / the test suite run over plain HTTP,
+# where a Secure cookie is never sent — those set KYRO_INSECURE_COOKIES=1 to allow it.
+_INSECURE_COOKIES = os.environ.get("KYRO_INSECURE_COOKIES") == "1"
 
 
 @asynccontextmanager
@@ -43,7 +54,8 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="Kyro Cloud Service", version="0.1.0", lifespan=lifespan)
-app.add_middleware(SessionMiddleware, secret_key=_SESSION_SECRET, https_only=False, same_site="lax")
+app.add_middleware(SessionMiddleware, secret_key=_SESSION_SECRET,
+                   https_only=not _INSECURE_COOKIES, same_site="lax")
 
 
 @app.get("/healthz")

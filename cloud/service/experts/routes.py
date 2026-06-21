@@ -140,7 +140,10 @@ def profile_post(request: Request, name: str = Form(""), specialty: str = Form("
     e.name, e.specialty, e.role = name.strip(), specialty.strip(), role.strip()
     e.institution, e.region, e.phone_e164 = institution.strip(), region.strip(), phone.strip()
     e.on_call = on_call is not None
-    if opted and not e.contact_opt_in:                 # opting IN now → record fresh consent
+    # record fresh consent on opt-IN, OR when the consent wording (CONSENT_VERSION) has been bumped
+    # since they last agreed — otherwise a stale-version opt-in would keep them matched under terms
+    # they never accepted.
+    if opted and (not e.contact_opt_in or e.consent_version != CONSENT_VERSION):
         e.consent_version, e.consent_at = CONSENT_VERSION, now_iso()
     e.contact_opt_in = opted                            # opting out keeps the record but stops matching
     session.add(e)
@@ -175,15 +178,23 @@ async def auth_google_callback(request: Request, session: Session = Depends(get_
     sub, email = info.get("sub"), (info.get("email") or "").strip().lower()
     if not sub or not email:
         return RedirectResponse(_flash("/experts/login", "Google returned no email."), 303)
+    if not info.get("email_verified"):                  # only ever trust a Google-VERIFIED address
+        return RedirectResponse(_flash("/experts/login", "Your Google email isn't verified."), 303)
 
-    e = session.exec(select(Expert).where(Expert.oauth_sub == sub)).first() \
-        or session.exec(select(Expert).where(Expert.email == email)).first()
+    e = session.exec(select(Expert).where(Expert.oauth_sub == sub)).first()
     if not e:
-        e = Expert(email=email, oauth_provider="google", oauth_sub=sub,
-                   name=info.get("name", ""))
-        session.add(e)
-    else:                                               # link Google to an existing account
-        e.oauth_provider, e.oauth_sub = "google", sub
+        existing = session.exec(select(Expert).where(Expert.email == email)).first()
+        if existing and existing.password_hash:
+            # A password account already owns this email — do NOT silently link Google to it
+            # (pre-registration account-takeover). Make them prove the password first.
+            return RedirectResponse(_flash("/experts/login",
+                "An account with this email already exists — sign in with your password."), 303)
+        if existing:                                    # OAuth-only row (no password) → safe to attach
+            existing.oauth_provider, existing.oauth_sub = "google", sub
+            e = existing
+        else:
+            e = Expert(email=email, oauth_provider="google", oauth_sub=sub, name=info.get("name", ""))
+            session.add(e)
     session.commit()
     session.refresh(e)
     request.session["expert_id"] = e.id
