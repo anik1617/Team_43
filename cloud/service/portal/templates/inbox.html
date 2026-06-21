@@ -1,0 +1,28 @@
+{% extends "base.html" %}{% block body %}
+<h1>Gap inbox</h1>
+<p class="mut">What the field told us is missing — Kyro abstained, hit a 🔴 stop, or couldn't resolve a field.
+Contribute the knowledge that closes a gap.{% if pending %} · <a href="/portal/curate">{{ pending }} pending review →</a>{% endif %}</p>
+{% for g in gaps %}
+<div class="card">
+ <div class="row"><h2 class="col">{{ g.summary }}</h2><span class="tag {{ g.status.value }}">{{ g.status.value }}</span></div>
+ <p class="mut">{{ g.detail }} <span class="tag">{{ g.source }}</span></p>
+ {% if g.status.value == 'open' %}
+ <details><summary>+ Contribute knowledge for this gap</summary>
+  <form method="post" action="/portal/contribute">
+   <input type="hidden" name="gap_id" value="{{ g.id }}">
+   <label>Title</label><input name="title" required placeholder="e.g. Pediatric EDH volume thresholds">
+   <label>Knowledge — the nugget the graph will ingest</label><textarea name="body" required placeholder="State the clinical knowledge clearly; it becomes a cited source document."></textarea>
+   <div class="row">
+    <div class="col"><label>Citation / source</label><input name="citation" required placeholder="Author, source, year"></div>
+    <div class="col"><label>Your name (provenance)</label><input name="contributor" required placeholder="Dr. ..."></div>
+    <div class="col"><label>Trust tier</label><select name="tier"><option value="2">2 · community</option><option value="1">1 · expert/textbook</option><option value="0">0 · guideline</option></select></div>
+   </div>
+   <button type="submit">Submit contribution</button>
+  </form>
+ </details>
+ {% endif %}
+</div>
+{% else %}
+<div class="card mut">No gaps logged yet.</div>
+{% endfor %}
+{% endblock %}

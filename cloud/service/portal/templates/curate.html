@@ -1,0 +1,17 @@
+{% extends "base.html" %}{% block body %}
+<h1>Curate · pending contributions</h1>
+<p class="mut">Approve to stage into the corpus (the next bundle build ingests it) or reject. Every decision is provenance-stamped.</p>
+{% if not pending %}<div class="card mut">Nothing pending. <a href="/portal">← Back to gap inbox</a></div>{% endif %}
+{% for c in pending %}
+<div class="card">
+ <div class="row"><h2 class="col">{{ c.title }}</h2><span class="tag">tier {{ c.tier }}</span></div>
+ <p class="mut">addresses: <b>{{ gaps[c.gap_id].summary if c.gap_id in gaps else '—' }}</b> · by {{ c.contributor }} · {{ c.citation }}</p>
+ <p>{{ c.body }}</p>
+ <form method="post" action="/portal/curate/{{ c.id }}">
+  <div class="row"><div class="col"><input name="reviewer" placeholder="reviewer name"></div><div class="col"><input name="note" placeholder="review note (optional)"></div></div>
+  <button name="action" value="approve" type="submit">Approve → stage to corpus</button>
+  <button name="action" value="reject" type="submit" class="bad">Reject</button>
+ </form>
+</div>
+{% endfor %}
+{% endblock %}

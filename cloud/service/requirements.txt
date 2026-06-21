@@ -1,0 +1,9 @@
+# Kyro Cloud Service (C7 portal + E8 escalate). Installed separately from the build
+# pipeline's requirements so the deploy image stays small.
+fastapi>=0.115
+uvicorn[standard]>=0.30
+sqlmodel>=0.0.21
+jinja2>=3.1
+python-multipart>=0.0.9
+# optional — only needed to actually send WhatsApp escalations:
+twilio>=9.0

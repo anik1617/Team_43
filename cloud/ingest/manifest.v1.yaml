@@ -1,0 +1,360 @@
+# Kyro edh-core-v1 — INGESTION MANIFEST
+# =====================================================================================
+# PURPOSE: the decision artifact that says, per source, IN-or-OUT of the v1 EDH bundle,
+#          how we acquire it, its license/trust tier, and its rendered citation.
+#          Building this manifest DOWNLOADS NOTHING. It is the gate before any fetch.
+#
+# WHY NOT "ingest everything": docs/08-knowledge-sources.md line 129 — the MVP needs a
+#          hand-built EDH canonical-core subgraph (~a few dozen vetted chunks / ~160
+#          node-classes), NOT the whole catalog. Three classes are deliberately EXCLUDED:
+#            1. Copyrighted textbooks/atlases (Youmans/Greenberg/Schmidek/Rhoton) — legal,
+#               and an MD judge panel would catch a copyright ingest. Reference, never ingest.
+#            2. Credentialed datasets (MIMIC-IV) — that is the harness VALIDATION pipeline,
+#               not KB content. Different track, needs CITI/PhysioNet.
+#            3. Tier-1 enrichment (operative-video libraries, lecture series) — vision/roadmap.
+#
+# PIPELINE THIS FEEDS: acquire raw -> clean to one UTF-8 .txt per source named by `id`
+#          (the stem) -> drop in cloud/graphrag/input/ -> `graphrag index` ->
+#          build_bundle.py (BGE-M3 re-embed + sign) -> bundles/edh-core-v1.kyro.
+#          `id` + `citation` + `tier` here are the source of truth that seeds
+#          kyro_bundle/sources.py SOURCE_REGISTRY.
+#
+# FIELD KEYS
+#   id        : filename stem == sources.py key == graphrag/input/<id>.txt  (lowercase, _)
+#   title     : human title
+#   citation  : exact provenance string the app renders behind a recommendation
+#   tier      : 0 canonical/guideline-grade (preferred on critical path) | 1 enrichment/expert
+#   license   : green  = open / CC / WHO / already-in-repo — safe to distil + cite
+#               yellow = free-to-read but ©  — distil-with-citation, prefer paraphrase
+#               red    = copyrighted — REFERENCE ONLY, never ingested
+#   priority  : 1 = v1 core (must-have)  | 2 = v1 optional depth  | 0 = excluded from v1
+#   acquire   : in_repo | fetch_pdf | fetch_html | reference_only | credentialed
+#   src       : local path (in_repo) OR url (fetch_*)
+#   bucket    : the doc-08 ingestion-priority bucket (lines 128-137)
+#   fetch_risk: (fetch_* only) low | med | high — bot-block/paywall likelihood; high => may
+#               need a manual download by Aniket, manifest still records the target.
+#   notes     : anything reconcile-worthy
+# =====================================================================================
+
+meta:
+  bundle: edh-core-v1
+  scope: "Acute TBI emergency pathway, deepest on EDH. English only."
+  target_size: "~15-20 source docs -> a few dozen chunks -> ~160 node-classes"
+  built_on: aniket/knowledge-bundle-pipeline
+  manifest_version: 1
+  excludes_new_transcripts: true   # the 4 surgeon transcripts + Hackathon Mentorship.txt are NOT folded in (Aniket's call)
+
+# -------------------------------------------------------------------------------------
+# IN — v1 core. Build the EDH canonical core from these, in doc-08 priority order.
+# -------------------------------------------------------------------------------------
+v1_core:
+
+  # --- bucket 1: EDH procedure spine (operate-vs-transfer thresholds + the burr hole) ---
+  - id: statpearls_edh
+    title: "StatPearls — Epidural Hematoma"
+    citation: "StatPearls, Epidural Hematoma (NCBI Bookshelf NBK518982)"
+    tier: 0
+    license: green
+    priority: 1
+    acquire: fetch_html
+    src: "https://www.ncbi.nlm.nih.gov/books/NBK518982/"
+    bucket: "1-edh-spine"
+    fetch_risk: low
+    notes: "Definitive free concept ref: pathophysiology, lucid interval, CT signs, surgical-vs-conservative."
+
+  - id: emergency_burr_holes_howto
+    title: "Emergency Burr Holes: How to do it"
+    citation: "Wilson et al., Emergency Burr Holes: How to do it (PMC3352313)"
+    tier: 0
+    license: green
+    priority: 1
+    acquire: fetch_pdf
+    src: "https://pmc.ncbi.nlm.nih.gov/articles/PMC3352313/"
+    bucket: "1-edh-spine"
+    fetch_risk: low
+    notes: "Step-by-step burr hole written FOR the non-neurosurgeon as a temporizing measure. The procedure-node core."
+
+  - id: bullock_edh_surgical
+    title: "Surgical Management of Acute Epidural Hematomas (Bullock)"
+    citation: "Bullock et al., Surgical Management of Acute Epidural Hematomas, Neurosurgery 2006"
+    tier: 0
+    license: green
+    priority: 1
+    acquire: fetch_pdf
+    src: "https://seattleneurosciences.com/wp-content/uploads/2017/10/Surgical-Management-of-Acute-Epidural-Hematomas.pdf"
+    bucket: "1-edh-spine"
+    fetch_risk: med
+    notes: "Primary evidence behind every EDH surgical number Kyro cites (>30 cm3 -> evacuate, etc.)."
+
+  - id: btf_surgical_guidelines
+    title: "BTF — Surgical Management of TBI"
+    citation: "Brain Trauma Foundation, Surgical Management of TBI"
+    tier: 0
+    license: green
+    priority: 1
+    acquire: fetch_html
+    src: "https://braintrauma.org/coma/guidelines/surgical"
+    bucket: "1-edh-spine"
+    fetch_risk: med
+    notes: "ALREADY a stem in sources.py. EDH >30 cm3 -> evacuate regardless of GCS; coma+anisocoria -> operate ASAP."
+
+  # --- bucket 2: the no-neurosurgeon decision layer (HM's exact situation) ---
+  - id: peshawar_recommendations_2019
+    title: "WFNS Peshawar Recommendations 2019"
+    citation: "Park & Khan, WFNS Peshawar Recommendations, World Neurosurg 2019"
+    tier: 0
+    license: green
+    priority: 1
+    acquire: in_repo
+    src: "TBI Resources/Park & Khan 2019 - Peshawar Recommendations Head Spine Injury LMICs.pdf"
+    bucket: "2-no-neurosurgeon"
+    notes: "ALREADY in sources.py. Home-turf rulebook: endorses SUPERVISED non-specialist EDH evacuation + golden window. NOTE repo has a near-dup 'Park 2019 - ...' — use this Park & Khan file; ignore the dup."
+
+  - id: wses_no_neurosurgical_capability
+    title: "WSES — Early mgmt of isolated severe TBI in hospitals WITHOUT neurosurgical capability"
+    citation: "Picetti, Servadei, Rubiano et al., WSES consensus, World J Emerg Surg 2023 (PMC9830860)"
+    tier: 0
+    license: green
+    priority: 1
+    acquire: fetch_pdf
+    src: "https://pmc.ncbi.nlm.nih.gov/articles/PMC9830860/"
+    bucket: "2-no-neurosurgeon"
+    fetch_risk: low
+    notes: "Literally the 'GMO with no neurosurgeon' protocol — single most on-point Tier-0 source after Peshawar."
+
+  # --- bucket 3: the 🟡 stabilize / secondary-injury principles layer ---
+  - id: primary_trauma_care_manual
+    title: "Primary Trauma Care Course Manual"
+    citation: "Primary Trauma Care Foundation, PTC Manual (head-injury chapter)"
+    tier: 0
+    license: green
+    priority: 1
+    acquire: fetch_pdf
+    src: "https://www.primarytraumacare.org/wp-content/uploads/2011/09/PTC_ENG.pdf"
+    bucket: "3-stabilize-principles"
+    fetch_risk: low
+    notes: "The GMO's bible: ABCs, c-spine, preventing secondary injury — built for district hospitals. Large; chunk the head-injury + shock sections."
+
+  - id: enls_tbi_protocol
+    title: "Emergency Neurological Life Support — TBI Protocol"
+    citation: "Neurocritical Care Society, ENLS TBI Protocol v4.0"
+    tier: 0
+    license: green
+    priority: 1
+    acquire: fetch_pdf
+    src: "https://www.neurocriticalcare.org/Portals/0/Docs/ENLS/ENLS_V_4_0_Protocol_TBI_FINAL.pdf"
+    bucket: "3-stabilize-principles"
+    fetch_risk: med
+    notes: "Algorithmic first-hour management; herniation/anisocoria triggers — maps cleanly to 🟡 principle nodes."
+
+  - id: wfsa_head_injury
+    title: "WFSA — Management of the Head-Injured Patient"
+    citation: "WFSA Anaesthesia Tutorial of the Week, Management of the Head-Injured Patient"
+    tier: 0
+    license: green
+    priority: 1
+    acquire: fetch_html
+    src: "https://resources.wfsahq.org/atotw/management-of-the-head-injured-patient/"
+    bucket: "3-stabilize-principles"
+    fetch_risk: low
+    notes: "Non-specialist head-injury mgmt; explicitly CC-licensed (cleanest license in the set)."
+
+  - id: btf_guidelines_4th_ed
+    title: "BTF — Guidelines for the Management of Severe TBI, 4th ed."
+    citation: "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017"
+    tier: 0
+    license: green
+    priority: 1
+    acquire: fetch_pdf
+    src: "https://globalneuro.org/uploads/files/Guidelines_for_Management_of_Severe_TBI_4th_Edition.pdf"
+    bucket: "3-stabilize-principles"
+    fetch_risk: med
+    notes: "ALREADY a stem in sources.py. ICP/CPP thresholds, BP targets. Large — chunk to thresholds/recommendations."
+
+  # --- bucket 4: perioperative flags (the post-op / adjunct nodes) ---
+  - id: seizure_prophylaxis_cpg
+    title: "Post-Traumatic Seizure Prophylaxis CPG (levetiracetam, 7-day)"
+    citation: "McGovern Medical School, Post-Traumatic Seizure Prophylaxis in TBI CPG"
+    tier: 0
+    license: green
+    priority: 1
+    acquire: fetch_html
+    src: "https://med.uth.edu/surgery/post-traumatic-seizure-prophylaxis-in-patients-with-traumatic-brain-injury-clinical-practice-guideline/"
+    bucket: "4-perioperative-flags"
+    fetch_risk: low
+    notes: "Seizure-prophylaxis flag node (HM's 6-month seizure)."
+
+  - id: ketamine_rsi_head_injury
+    title: "Ketamine RSI for Head Injury (LITFL)"
+    citation: "Life in the Fast Lane (LITFL), Ketamine RSI for Head Injury"
+    tier: 1
+    license: yellow
+    priority: 1
+    acquire: fetch_html
+    src: "https://litfl.com/ketamine-rsi-for-head-injury/"
+    bucket: "4-perioperative-flags"
+    fetch_risk: low
+    notes: "Airway/induction when the GMO intubates without a neuro-anaesthetist. © but free-to-read — paraphrase + cite."
+
+  # --- bucket 5: in-repo primary + recognition/mechanism (no download) ---
+  - id: nawaz_peshawar_lecture
+    title: "Dr. Nawaz — Managing TBI in the Resource-Limited Setting (Peshawar lecture)"
+    citation: "Khan N., 'Managing TBI in the Resource-Limited Setting', Peshawar lecture (primary source)"
+    tier: 0
+    license: green
+    priority: 1
+    acquire: in_repo
+    src: "Case deep dive tbi in a resource limited setting, trancript.txt"
+    bucket: "5-in-repo-primary"
+    notes: "Home-turf expert primary source + judge credibility. Transcript -> clean (strip timestamps/filler) before ingest."
+
+  - id: khellaf_2019
+    title: "Khellaf 2019 — Recent Advances in TBI"
+    citation: "Khellaf, Khan & Helmy, Recent advances in TBI, J Neurol 2019"
+    tier: 1
+    license: green
+    priority: 1
+    acquire: in_repo
+    src: "TBI Resources/Khellaf 2019 - Recent Advances in TBI.pdf"
+    bucket: "5-in-repo-primary"
+    notes: "Primary-vs-secondary injury, closed-box/ICP, herniation — the mechanism nodes behind the 🟡 principles."
+
+  - id: zarmer_2025
+    title: "Zarmer 2025 — Advances in TBI Diagnosis and Treatment"
+    citation: "Zarmer et al., Advances in TBI Diagnosis and Treatment, 2025"
+    tier: 1
+    license: green
+    priority: 1
+    acquire: in_repo
+    src: "TBI Resources/Zarmer 2025 - Advances in TBI Diagnosis and Treatment.pdf"
+    bucket: "5-in-repo-primary"
+    notes: "Diagnose-without-CT (GFAP/UCH-L1 biomarkers) — supports the recognition/triage nodes."
+
+# -------------------------------------------------------------------------------------
+# IN (optional) — v1 depth. Add if extraction budget allows; each is clean to fetch.
+# -------------------------------------------------------------------------------------
+v1_optional:
+  - id: wses_lmic_bootstrap
+    title: "TBI management in limited-resource regions (BOOTStraP, Rubiano)"
+    citation: "Rubiano et al., BOOTStraP stratified protocol for TBI in limited-resource regions, J Neurosci Rural Pract 2020 (PMC7055642)"
+    tier: 0
+    license: green
+    priority: 2
+    acquire: fetch_html
+    src: "https://www.tandfonline.com/doi/full/10.1080/02699052.2021.1972149"
+    bucket: "2-no-neurosurgeon"
+    fetch_risk: high
+    notes: "Stratified prehospital->ED->surgery->ICU protocol when imaging/monitoring absent. Publisher may block bots -> manual dl."
+
+  - id: wfsa_major_trauma
+    title: "WFSA — Management of Major Trauma"
+    citation: "WFSA, Management of Major Trauma (Update in Anaesthesia)"
+    tier: 0
+    license: green
+    priority: 2
+    acquire: fetch_pdf
+    src: "https://resources.wfsahq.org/wp-content/uploads/uia28-Management-of-major-trauma.pdf"
+    bucket: "3-stabilize-principles"
+    fetch_risk: low
+    notes: "Resource-aware trauma; 'no neurosurgeon + lateralizing signs -> burr holes/craniectomy'."
+
+  - id: radiopaedia_edh
+    title: "Radiopaedia — Extradural Haematoma"
+    citation: "Radiopaedia.org, Extradural haemorrhage"
+    tier: 1
+    license: yellow
+    priority: 2
+    acquire: fetch_html
+    src: "https://radiopaedia.org/articles/extradural-haemorrhage"
+    bucket: "1-edh-spine"
+    fetch_risk: med
+    notes: "Imaging-recognition node (biconvex, swirl sign, suture limits). CC-BY-NC-SA — cite carefully."
+
+  - id: updated_review_tbi_2025
+    title: "Updated Review of the Management of and Guidelines for TBI (2025)"
+    citation: "Updated Review of TBI Management and Guidelines, 2025 (PMC12525523)"
+    tier: 0
+    license: green
+    priority: 2
+    acquire: fetch_pdf
+    src: "https://pmc.ncbi.nlm.nih.gov/articles/PMC12525523/"
+    bucket: "3-stabilize-principles"
+    fetch_risk: low
+    notes: "Modern synthesis tying BTF + SIBICC + DC trials together. Good connective tissue for the graph."
+
+# -------------------------------------------------------------------------------------
+# IN (demo-only, user-provided) — copyrighted textbooks.
+# Aniket's call 2026-06-21: hackathon MVP, non-commercial, life-saving demo => ingest as
+# Tier-1 DEPTH + citation authority (citing Greenberg/Youmans to an MD panel is a credibility
+# win). They NEVER override Tier-0 guidelines on the critical path.
+# CAVEAT (recorded honestly): a SHIPPING product needs licensed/open content — the expert-
+# contributor network is how the real product sources proprietary procedural knowledge.
+# BLOCKER: these are paywalled; cloud stream cannot legitimately download them. Aniket must
+# drop the PDFs in cloud/ingest/textbooks/ (gitignored, NEVER committed) and they get folded
+# into graphrag/input/ on the next corpus pass. license=red kept as an honest flag, not a gate.
+# -------------------------------------------------------------------------------------
+v1_demo_only:
+  - id: greenberg_handbook_neurosurgery
+    title: "Greenberg — Handbook of Neurosurgery"
+    citation: "Greenberg MS, Handbook of Neurosurgery (Thieme)"
+    tier: 1
+    license: red
+    priority: 2
+    acquire: user_provided
+    src: "cloud/ingest/textbooks/greenberg_handbook_neurosurgery.pdf"
+    pages: "815-925"   # 0-based inclusive; the head-trauma chapter block (EDH/SDH/GCS/ICP/skull fx/herniation), found by keyword density (no embedded TOC). PROVIDED 2026-06-21.
+    bucket: "demo-only-textbook"
+    notes: "THE practical bench reference; sliced to the head-trauma section only, not the whole 1664-pg book. Secondary trauma clusters at pp~300/1050 left out for EDH focus."
+  - id: youmans_winn_neurological_surgery
+    title: "Youmans & Winn — Neurological Surgery (8th ed.)"
+    citation: "Winn HR (ed.), Youmans & Winn Neurological Surgery, 8th ed. (Elsevier)"
+    tier: 1
+    license: red
+    priority: 2
+    acquire: user_provided
+    src: "cloud/ingest/textbooks/youmans_winn_neurological_surgery.pdf  (Aniket to provide)"
+    bucket: "demo-only-textbook"
+    notes: "Comprehensive reference. Ingest only the TBI/EDH/surgical-management chapters for the demo."
+  - id: schmidek_sweet_operative
+    title: "Schmidek & Sweet — Operative Neurosurgical Techniques"
+    citation: "Schmidek & Sweet, Operative Neurosurgical Techniques (Elsevier)"
+    tier: 1
+    license: red
+    priority: 2
+    acquire: user_provided
+    src: "cloud/ingest/textbooks/schmidek_sweet_operative.pdf"
+    pages: "325-410"   # 0-based inclusive; "Section Seven: TRAUMA" operative block — EDH/SDH evacuation, BURR-HOLE CRANIOSTOMY (p381), decompressive (hemi)craniectomy, craniotomy for trauma. VERIFIED on-point operative prose (77:1 prose:legend). PROVIDED 2026-06-21.
+    bucket: "demo-only-textbook"
+    notes: "VERIFIED HIGH-VALUE: the operative how-to behind the procedure nodes (positioning/approach/craniostomy steps/complications/outcomes). Sliced to the trauma section only, not the 1240-pg work. Secondary cluster pp1175-1224 (spine/peripheral trauma) left out for EDH focus."
+  # rhoton_cranial_anatomy — DROPPED 2026-06-21 (moved to `excluded`). Checked: NOT mostly-images
+  # (28:1 prose:legend) but its only temporal chapter is out-of-scope transtemporal skull-base
+  # approach anatomy; Kyro red-stops on localization. Kept as a citation reference, not ingested.
+
+# -------------------------------------------------------------------------------------
+# OUT — explicitly excluded from v1, with the reason. (Visibility, not deletion.)
+# -------------------------------------------------------------------------------------
+excluded:
+  - id: rhoton_cranial_anatomy
+    reason: "Provided + checked 2026-06-21. NOT mostly-images (28:1 prose:legend) — but the only temporal chapter is deep transtemporal skull-base approach microanatomy (mastoid/pterygoid/petrous/CN) for tumor surgery, NOT EDH burr-hole. Out of scope (Kyro red-stops on where-to-drill) + redundant (StatPearls/burr-hole/Greenberg cover the EDH-relevant anatomy). PDF kept for citation only."
+    acquire: reference_only
+  - id: mimic_iv
+    reason: "PhysioNet credentialing DONE (2026-06-21, Aniket). But MIMIC-IV is patient ICU records, not guideline text — it feeds the harness VALIDATION track (Tier-C concordance study), NOT the knowledge graph. Stays OUT of KB ingestion; the validation track can now proceed separately."
+    acquire: credentialed
+  - id: neurosurgical_atlas_and_video_libraries
+    reason: "Tier-1 operative-video enrichment — vision/roadmap, not the weekend EDH core."
+    acquire: reference_only
+  - id: lecture_series_cns_aans_eans
+    reason: "Tier-1 enrichment / credibility — roadmap, not clinical decision content."
+    acquire: reference_only
+  - id: epi_and_burden_pdfs
+    reason: "Wang2025/Hyder2007/Ackah2021/Clark2022/Global-Coalition/the two fact sheets = epidemiology, burden, task-shifting JUSTIFICATION. PITCH material (category 1/3), not clinical KB. In repo; cite in the deck, don't ingest as decision nodes."
+    acquire: reference_only
+  - id: internal_strategy_docs
+    reason: "docs 16/17 (red-team), 18 (pitch cases) = our internal strategy, never KB."
+    acquire: reference_only
+  - id: test_vignettes_doc19
+    reason: "HELD OUT benchmark answer-key. Ingesting it would contaminate the eval. NEVER ingest."
+    acquire: reference_only
+  - id: new_surgeon_transcripts
+    reason: "The 4 main-problems-conversation-with-surgeons_*.txt + Hackathon Mentorship.txt — Aniket's call: NOT folded into v1."
+    acquire: reference_only

@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% block body %}
+<h1>Provenance log</h1>
+<p class="mut">Every contribution and its decision — the auditable moat. Approved nuggets are staged as cited corpus files for the next build.</p>
+{% for c in items %}
+<div class="card">
+ <div class="row"><h2 class="col">{{ c.title }}</h2><span class="tag {{ c.status.value }}">{{ c.status.value }}</span></div>
+ <p class="mut">by <b>{{ c.contributor }}</b> · tier {{ c.tier }} · {{ c.citation }} · gap: {{ gaps[c.gap_id].summary if c.gap_id in gaps else '—' }}</p>
+ <p>{{ c.body }}</p>
+ {% if c.status.value == 'approved' %}<p class="mut">✓ staged → <code>{{ c.staged_path }}</code> · reviewed by {{ c.reviewer }} · {{ c.reviewed_at }}</p>{% endif %}
+ {% if c.status.value == 'rejected' %}<p class="mut">✗ rejected by {{ c.reviewer }} · {{ c.reviewed_at }}{% if c.review_note %} · {{ c.review_note }}{% endif %}</p>{% endif %}
+</div>
+{% else %}
+<div class="card mut">No contributions yet. <a href="/portal">← Gap inbox</a></div>
+{% endfor %}
+{% endblock %}

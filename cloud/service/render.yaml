@@ -1,0 +1,19 @@
+# Render blueprint for the Kyro Cloud Service (portal + escalate).
+# Deploy: push the branch to GitHub → Render → "New + Blueprint" → point at this file,
+# OR create a Web Service in the dashboard with the Root Directory / commands below.
+services:
+  - type: web
+    name: kyro-cloud
+    runtime: python
+    rootDir: cloud
+    plan: free
+    buildCommand: pip install -r service/requirements.txt
+    startCommand: uvicorn service.app:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: KYRO_DB
+        value: /tmp/kyro_service.db        # free tier disk is ephemeral; fine for the demo
+      # Set these in the Render dashboard (Secret) to enable real WhatsApp escalation:
+      # - TWILIO_ACCOUNT_SID
+      # - TWILIO_AUTH_TOKEN
+      # - TWILIO_WHATSAPP_FROM        e.g. whatsapp:+14155238886
+      # - KYRO_ONCALL_WHATSAPP_TO     e.g. whatsapp:+92XXXXXXXXXX
