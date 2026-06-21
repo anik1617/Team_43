@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 180" width="660" height="180" role="img" aria-label="Kyro logo">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1E40AF"/><stop offset="1" stop-color="#3B82F6"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(24,30)">
+    <rect width="120" height="120" rx="28" fill="url(#bg)"/>
+    <text x="56" y="88" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="78" fill="#FFFFFF">k</text>
+    <path d="M84 26 L86 33 L93 35 L86 37 L84 44 L82 37 L75 35 L82 33 Z" fill="#FFFFFF"/>
+  </g>
+  <text x="170" y="92" font-family="Poppins" font-weight="700" font-size="72" fill="#13245C">kyro</text>
+  <text x="173" y="124" font-family="Poppins" font-weight="500" font-size="17" fill="#3B82F6">The guide that never drops the call</text>
+</svg>

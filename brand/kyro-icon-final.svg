@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="Kyro">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1E40AF"/><stop offset="1" stop-color="#3B82F6"/>
+    </linearGradient>
+  </defs>
+  <rect width="120" height="120" rx="28" fill="url(#bg)"/>
+  <text x="56" y="88" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="78" fill="#FFFFFF">k</text>
+  <path d="M84 26 L86 33 L93 35 L86 37 L84 44 L82 37 L75 35 L82 33 Z" fill="#FFFFFF"/>
+</svg>
