@@ -15,6 +15,20 @@ def test_cond_true_evaluates_against_env():
     assert cond_true("true", env) is True
 
 def test_cond_true_is_sandboxed():
+    # the AST whitelist rejects any escape attempt (no eval/compile anywhere)
     import pytest
     with pytest.raises(Exception):
-        cond_true("__import__('os')", {})
+        cond_true("__import__('os')", {})            # dunder Name -> unknown name
+    with pytest.raises(Exception):
+        cond_true("().__class__", {})                # Attribute access -> rejected
+    with pytest.raises(Exception):
+        cond_true("os.system('x')", {"os": object})  # Attribute on a real obj -> rejected
+    with pytest.raises(Exception):
+        cond_true("len([1,2])", {})                  # non-range Call -> rejected
+
+def test_cond_true_chained_and_membership():
+    # behavioral parity with the old eval for the grammar's harder forms
+    assert cond_true("age_yr BETWEEN 15 AND 49", {"age_yr": 31}) is True
+    assert cond_true("age_yr BETWEEN 15 AND 49", {"age_yr": 60}) is False
+    assert cond_true("gcs_e NOT IN [3..15]", {"gcs_e": 7}) is False   # 7 in range(3,16)
+    assert cond_true("gcs_e NOT IN [3..15]", {"gcs_e": 20}) is True
