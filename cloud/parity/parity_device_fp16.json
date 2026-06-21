@@ -1,0 +1,1291 @@
+{
+  "plane": "device-proxy-llamacpp",
+  "engine": "llama.cpp (llama-cpp-python)",
+  "gguf": "bge-m3-FP16.gguf",
+  "pooling": "cls",
+  "embedder_dim": 1024,
+  "bundle": "edh-core-v1.kyro",
+  "k": 6,
+  "queries": [
+    {
+      "id": "q01_lucid_interval",
+      "text": "lucid interval followed by rapid neurological deterioration after head injury",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "e6f27cbd76b1ee294dd2993b58f60b3b61748f3a8950dda8ec3b1ed020cb2f6b3482795c72423f6ab6ec60a6daf227dbceebbfe52cf7f3ac016e992c6ce9c10d",
+          "score": 0.647959,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "StatPearls, Epidural Hematoma (NCBI Bookshelf NBK518982)"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "98332a6c78f3916eb13e42b28918524b6fc49d21ac3d0d2c46a060a7e0d27c29892008eb691998457605e7f4e0f4d8aa247dba4d0b70ce40fb1306e34b6fb7a9",
+          "score": 0.65103,
+          "via": "vector",
+          "trust_tier": 1,
+          "citation": "Schmidek & Sweet, Operative Neurosurgical Techniques (Elsevier)"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "04ed2a2679eef0c6cdcab334b096d51389e1f247bc120c12e60e4f7a32537b1e60bf2c6e446bdb5a6225829ba9a2edc3af153e481afda8d57ea3e8639f80ff7b",
+          "score": 0.649967,
+          "via": "vector",
+          "trust_tier": 1,
+          "citation": "Schmidek & Sweet, Operative Neurosurgical Techniques (Elsevier)"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "cr_177",
+          "score": 0.641289,
+          "via": "vector",
+          "trust_tier": 1,
+          "citation": "Community summary (level 1)"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "cr_196",
+          "score": 0.611059,
+          "via": "vector",
+          "trust_tier": 1,
+          "citation": "Community summary (level 1)"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "b7a8de1e8a3ae7e5079898836e9a257d0936747ceba1e32baa3266ee349b003a5f117f542885da3aa61cb6de4c0356f065ce10563bf19eb4a651fb7c9aec95c1",
+          "score": 0.597839,
+          "via": "vector",
+          "trust_tier": 1,
+          "citation": "Greenberg MS, Handbook of Neurosurgery (Thieme)"
+        }
+      ],
+      "top3_set": [
+        "04ed2a2679eef0c6cdcab334b096d51389e1f247bc120c12e60e4f7a32537b1e60bf2c6e446bdb5a6225829ba9a2edc3af153e481afda8d57ea3e8639f80ff7b",
+        "98332a6c78f3916eb13e42b28918524b6fc49d21ac3d0d2c46a060a7e0d27c29892008eb691998457605e7f4e0f4d8aa247dba4d0b70ce40fb1306e34b6fb7a9",
+        "e6f27cbd76b1ee294dd2993b58f60b3b61748f3a8950dda8ec3b1ed020cb2f6b3482795c72423f6ab6ec60a6daf227dbceebbfe52cf7f3ac016e992c6ce9c10d"
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.6479594933805117,
+        "top_trust_tier": 0
+      }
+    },
+    {
+      "id": "q02_blown_pupil",
+      "text": "fixed dilated blown left pupil after head trauma",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "07dcf3a01e0770721d4da18fe273f89e130a2db6c3f228046e356cc6683883c3bff66ecc44d6384809f3754c105b66727c0686e8b5a4f161cd84f932854b48b0",
+          "score": 0.561773,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Primary Trauma Care Foundation, PTC Manual (head-injury chapter)"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "1037e186d37e59b3f56e4ef80d7fc66b0946be4c314d5edb48df39d8cafcca899d7ccdde6e5520a132aa58433c501e672a2aedf76d70adfe95a22dea00546f9d",
+          "score": 0.329968,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Brain Trauma Foundation, Surgical Management of TBI"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "4516cde012266c88f9fd15ec1a023d8fb6457f6074f696cbb3288caf79d65e58b03a7b37da094a2b68798d760248d3d2a6820ed5f04131011ac107944196f883",
+          "score": 0.329968,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Bullock et al., Surgical Management of Acute Epidural Hematomas, Neurosurgery 2006"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "4dd1d227a85528c34fb5afefda70d96e32c4b54249540ff9863550d9160212e358f15d1cda716146468f83eb8524abc0dba69b0b09a13f366e61269f601ef872",
+          "score": 0.329968,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Bullock et al., Surgical Management of Acute Epidural Hematomas, Neurosurgery 2006"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "593cca0769231e6e61237642a8a3cb21ae52239bd223451b0862c98fd01cc42544cda29090180c87acf941d178279c49fe8f8f57dcb4171e67b4408a1f68ef3d",
+          "score": 0.329968,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Wilson et al., Emergency Burr Holes: How to do it (PMC3352313)"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "7e7e13f19ca7b97ada4fa7954baabad55b5a3ac83f5ae31895b039a35b1a635332c193bb18d71521902f4bc56bb07162df87ba0036845e2a20e7d73665e02518",
+          "score": 0.329968,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Wilson et al., Emergency Burr Holes: How to do it (PMC3352313)"
+        }
+      ],
+      "top3_set": [
+        "07dcf3a01e0770721d4da18fe273f89e130a2db6c3f228046e356cc6683883c3bff66ecc44d6384809f3754c105b66727c0686e8b5a4f161cd84f932854b48b0",
+        "1037e186d37e59b3f56e4ef80d7fc66b0946be4c314d5edb48df39d8cafcca899d7ccdde6e5520a132aa58433c501e672a2aedf76d70adfe95a22dea00546f9d",
+        "4516cde012266c88f9fd15ec1a023d8fb6457f6074f696cbb3288caf79d65e58b03a7b37da094a2b68798d760248d3d2a6820ed5f04131011ac107944196f883"
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.5617731847924841,
+        "top_trust_tier": 0
+      }
+    },
+    {
+      "id": "q03_edh_volume_threshold",
+      "text": "epidural hematoma volume greater than 30 cm3 indication for surgical evacuation",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "bd597c17a10cf0f8e3acfbe25e47d33b8f37e63f00acb72b99e942a4d04036bc063a99170d1d60a640d34f9ab907c2005ea45c7b166b1254477653baed2a16c6",
+          "score": 0.735547,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Bullock et al., Surgical Management of Acute Epidural Hematomas, Neurosurgery 2006"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "1037e186d37e59b3f56e4ef80d7fc66b0946be4c314d5edb48df39d8cafcca899d7ccdde6e5520a132aa58433c501e672a2aedf76d70adfe95a22dea00546f9d",
+          "score": 0.726941,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Brain Trauma Foundation, Surgical Management of TBI"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "2d87a84a8bc7b0f6bbc1e0f8de89ad0b09d7baae2f16bc649fefb9c0d8980f01e56d71eb154944c62325243d178e419e5910de8149c46fa6c9a011162273f1da",
+          "score": 0.665073,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "StatPearls, Epidural Hematoma (NCBI Bookshelf NBK518982)"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "b659e45e651d800dd0f663c563f9894285383c8c73dfdda895afb038d3abac8430e3cdeab44d2fa066d8f6aa814e96588af7e6924d2aec1c66720a9180676a0b",
+          "score": 0.651302,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Primary Trauma Care Foundation, PTC Manual (head-injury chapter)"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "167bdbc4611c07f87bab64d6ac175b97b5ba6a7c7e3d8376cf8c67ee294c4c23da98d7507840867028fdd229e5af227a0b167d15f2fc7aa7748c23467d0d2d5e",
+          "score": 0.382822,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Bullock et al., Surgical Management of Acute Epidural Hematomas, Neurosurgery 2006"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "27dc9f8dde7c1b6f8b1386efcf01ce72ba00fa36b233c41660e7e866d54879c9e2b938e7ae9b20309dd6d0241d61ba011de07637a81bf9c2b11fed93b209836b",
+          "score": 0.382822,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Bullock et al., Surgical Management of Acute Epidural Hematomas, Neurosurgery 2006"
+        }
+      ],
+      "top3_set": [
+        "1037e186d37e59b3f56e4ef80d7fc66b0946be4c314d5edb48df39d8cafcca899d7ccdde6e5520a132aa58433c501e672a2aedf76d70adfe95a22dea00546f9d",
+        "2d87a84a8bc7b0f6bbc1e0f8de89ad0b09d7baae2f16bc649fefb9c0d8980f01e56d71eb154944c62325243d178e419e5910de8149c46fa6c9a011162273f1da",
+        "bd597c17a10cf0f8e3acfbe25e47d33b8f37e63f00acb72b99e942a4d04036bc063a99170d1d60a640d34f9ab907c2005ea45c7b166b1254477653baed2a16c6"
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.7355465809327324,
+        "top_trust_tier": 0
+      }
+    },
+    {
+      "id": "q04_burr_hole",
+      "text": "emergency burr hole technique for extradural hematoma temporizing measure",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "7e7e13f19ca7b97ada4fa7954baabad55b5a3ac83f5ae31895b039a35b1a635332c193bb18d71521902f4bc56bb07162df87ba0036845e2a20e7d73665e02518",
+          "score": 0.727075,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Wilson et al., Emergency Burr Holes: How to do it (PMC3352313)"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "593cca0769231e6e61237642a8a3cb21ae52239bd223451b0862c98fd01cc42544cda29090180c87acf941d178279c49fe8f8f57dcb4171e67b4408a1f68ef3d",
+          "score": 0.68339,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Wilson et al., Emergency Burr Holes: How to do it (PMC3352313)"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "f9943e710d9af1b209dd8255b8d4bc4b293ac2a91ac4cd754b58fd3a924cf39ed9ad5d266e05db9271ed690314c9cfa7af48864c563f8b8fafd8b192447c984b",
+          "score": 0.648664,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Wilson et al., Emergency Burr Holes: How to do it (PMC3352313)"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "0268e503482f28bbbd7ed55ab4aadaa91b06828088abce31ff059ee904f7936cdde7572468f8a775edef5e1a44888f0f0e612b156bd744954b3537fab48f2231",
+          "score": 0.369482,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Wilson et al., Emergency Burr Holes: How to do it (PMC3352313)"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "61eb2c54d520daa6686ed3db03df280cf7762651df0983395ccc4357cc63467943089a01d3299407196b4becf527325961c403c17574c8ce338e8ce5d6763d7a",
+          "score": 0.369482,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "StatPearls, Epidural Hematoma (NCBI Bookshelf NBK518982)"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "78d16c832c0f4856ca7fc13a266bf4eca945e107beee3b6e8c1d7fa3fbde21c7d42896f76faf1f58fcca9aa3fe6619839d9e1a6cf0a1a3714d883d8c0aee21ea",
+          "score": 0.369482,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "StatPearls, Epidural Hematoma (NCBI Bookshelf NBK518982)"
+        }
+      ],
+      "top3_set": [
+        "593cca0769231e6e61237642a8a3cb21ae52239bd223451b0862c98fd01cc42544cda29090180c87acf941d178279c49fe8f8f57dcb4171e67b4408a1f68ef3d",
+        "7e7e13f19ca7b97ada4fa7954baabad55b5a3ac83f5ae31895b039a35b1a635332c193bb18d71521902f4bc56bb07162df87ba0036845e2a20e7d73665e02518",
+        "f9943e710d9af1b209dd8255b8d4bc4b293ac2a91ac4cd754b58fd3a924cf39ed9ad5d266e05db9271ed690314c9cfa7af48864c563f8b8fafd8b192447c984b"
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.7270746054720103,
+        "top_trust_tier": 0
+      }
+    },
+    {
+      "id": "q05_uncal_herniation",
+      "text": "uncal herniation signs with contralateral hemiparesis and anisocoria",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "297317848d6188155f7e5a914a6d0832f9bba95e8cffb043c4587a34488dde173e1ae80684df9dcc2b4ac3871242448395329a6e889a37a6e6254d7555972bc1",
+          "score": 0.503745,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Bullock et al., Surgical Management of Acute Epidural Hematomas, Neurosurgery 2006"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "c2d305646d59ca9069eeecd733a634784b7b67abac8289388db7c255bf5e278eb00b7d2886f94807dce202c67e01695146bcf3e18f282df33f3a09b59de772cb",
+          "score": 0.488688,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "StatPearls, Epidural Hematoma (NCBI Bookshelf NBK518982)"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "2e60cfac85557013de5116770b1f320b73188f433f2382cb7ce15a8bd0825532d22672186100b6d95b1dd1899ffbb65a0722c66cd36545fa0a49c64a08c3c1b7",
+          "score": 0.314576,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "StatPearls, Epidural Hematoma (NCBI Bookshelf NBK518982)"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "87620723f5cfd6e5d1f40f290caba92827108227155b41b80e0695d654e568d609898587137092c07806d5a53ad68144dc7aaa03a0581e26db42098f5859c49e",
+          "score": 0.314576,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Bullock et al., Surgical Management of Acute Epidural Hematomas, Neurosurgery 2006"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "ca4494d5b0efc4a6e78f0243150aa8fddccd5ad3bdf0101c536c90020fdc0e215551338f9f263d695646ecf9abc73a79daea17b892e4fc6735a1a7307d84e33c",
+          "score": 0.314576,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Bullock et al., Surgical Management of Acute Epidural Hematomas, Neurosurgery 2006"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "e6f27cbd76b1ee294dd2993b58f60b3b61748f3a8950dda8ec3b1ed020cb2f6b3482795c72423f6ab6ec60a6daf227dbceebbfe52cf7f3ac016e992c6ce9c10d",
+          "score": 0.314576,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "StatPearls, Epidural Hematoma (NCBI Bookshelf NBK518982)"
+        }
+      ],
+      "top3_set": [
+        "297317848d6188155f7e5a914a6d0832f9bba95e8cffb043c4587a34488dde173e1ae80684df9dcc2b4ac3871242448395329a6e889a37a6e6254d7555972bc1",
+        "2e60cfac85557013de5116770b1f320b73188f433f2382cb7ce15a8bd0825532d22672186100b6d95b1dd1899ffbb65a0722c66cd36545fa0a49c64a08c3c1b7",
+        "c2d305646d59ca9069eeecd733a634784b7b67abac8289388db7c255bf5e278eb00b7d2886f94807dce202c67e01695146bcf3e18f282df33f3a09b59de772cb"
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.5037452513579108,
+        "top_trust_tier": 0
+      }
+    },
+    {
+      "id": "q06_gcs_drop",
+      "text": "Glasgow Coma Scale falling from 14 to 7 deteriorating consciousness",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "1cffc2f632b94a25e3dd749e3e882efa870b121bed7a872ac45e193babb916e2a5de037e3589977aad7fefb4b2b5c0ca58cb90cd68d30a32b23e8675a725d4ec",
+          "score": 0.397921,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "WFSA Anaesthesia Tutorial of the Week, Management of the Head-Injured Patient"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "38f5f514ff4b6b526eeb25bb47cc1d4629ff0f61ef138763861ff5f17eddca858afd4a60e975e4642335185830efc1d09d47e2595260f20006319c5ed13bcb2b",
+          "score": 0.397921,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "WFSA, Management of Major Trauma (Update in Anaesthesia)"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "593cca0769231e6e61237642a8a3cb21ae52239bd223451b0862c98fd01cc42544cda29090180c87acf941d178279c49fe8f8f57dcb4171e67b4408a1f68ef3d",
+          "score": 0.397921,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Wilson et al., Emergency Burr Holes: How to do it (PMC3352313)"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "9078fd397b73155a9fbbeefdf8302ea9de2852f64e10d284c5762db94d7629ed788cf93dc210f76257cf884f644bb36da0c29a0e0f481b75ec6a39fcaf5fd68a",
+          "score": 0.397921,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Khan N., 'Managing TBI in the Resource-Limited Setting', Peshawar lecture (primary source)"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "cr_332",
+          "score": 0.677605,
+          "via": "vector",
+          "trust_tier": 1,
+          "citation": "Community summary (level 1)"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "cr_10",
+          "score": 0.669956,
+          "via": "vector",
+          "trust_tier": 1,
+          "citation": "Community summary (level 0)"
+        }
+      ],
+      "top3_set": [
+        "1cffc2f632b94a25e3dd749e3e882efa870b121bed7a872ac45e193babb916e2a5de037e3589977aad7fefb4b2b5c0ca58cb90cd68d30a32b23e8675a725d4ec",
+        "38f5f514ff4b6b526eeb25bb47cc1d4629ff0f61ef138763861ff5f17eddca858afd4a60e975e4642335185830efc1d09d47e2595260f20006319c5ed13bcb2b",
+        "593cca0769231e6e61237642a8a3cb21ae52239bd223451b0862c98fd01cc42544cda29090180c87acf941d178279c49fe8f8f57dcb4171e67b4408a1f68ef3d"
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.39792121681544756,
+        "top_trust_tier": 0
+      }
+    },
+    {
+      "id": "q07_operate_vs_transfer",
+      "text": "decision to operate locally versus transfer a head injury when no neurosurgeon is available",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "1a8bb0049b61282cb3a3e63b5c95eadcb6308d30f11d03f07fa303eb2e28226e0e077d68e26ae08d7a4fb953ea050d77a832b25e950dfde5875abaa3189fb003",
+          "score": 0.615307,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Wilson et al., Emergency Burr Holes: How to do it (PMC3352313)"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "593cca0769231e6e61237642a8a3cb21ae52239bd223451b0862c98fd01cc42544cda29090180c87acf941d178279c49fe8f8f57dcb4171e67b4408a1f68ef3d",
+          "score": 0.587154,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Wilson et al., Emergency Burr Holes: How to do it (PMC3352313)"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "4516cde012266c88f9fd15ec1a023d8fb6457f6074f696cbb3288caf79d65e58b03a7b37da094a2b68798d760248d3d2a6820ed5f04131011ac107944196f883",
+          "score": 0.583187,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Bullock et al., Surgical Management of Acute Epidural Hematomas, Neurosurgery 2006"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "0268e503482f28bbbd7ed55ab4aadaa91b06828088abce31ff059ee904f7936cdde7572468f8a775edef5e1a44888f0f0e612b156bd744954b3537fab48f2231",
+          "score": 0.582438,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Wilson et al., Emergency Burr Holes: How to do it (PMC3352313)"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "77c212b1a7a9240518144cd2d3f4b180fbb42f7c3f1f4db72d0d7592f2c4a29b4b27998136b77069eab9c741c98a16f32ea36aeb412d768b568622e94fa6a498",
+          "score": 0.580771,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Park & Khan, WFNS Peshawar Recommendations, World Neurosurg 2019"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "fd5b48d69b2a842659c039582749cb91ba985bee81fd04e6096e89afb2122681060a6dc6856a9cacd63f67bd1d540a00ffa34ad8172ec9aff8abc7503c12fbba",
+          "score": 0.577764,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Bullock et al., Surgical Management of Acute Epidural Hematomas, Neurosurgery 2006"
+        }
+      ],
+      "top3_set": [
+        "1a8bb0049b61282cb3a3e63b5c95eadcb6308d30f11d03f07fa303eb2e28226e0e077d68e26ae08d7a4fb953ea050d77a832b25e950dfde5875abaa3189fb003",
+        "4516cde012266c88f9fd15ec1a023d8fb6457f6074f696cbb3288caf79d65e58b03a7b37da094a2b68798d760248d3d2a6820ed5f04131011ac107944196f883",
+        "593cca0769231e6e61237642a8a3cb21ae52239bd223451b0862c98fd01cc42544cda29090180c87acf941d178279c49fe8f8f57dcb4171e67b4408a1f68ef3d"
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.6153068673012836,
+        "top_trust_tier": 0
+      }
+    },
+    {
+      "id": "q08_manage_without_ct",
+      "text": "managing severe traumatic brain injury without CT imaging in a district hospital",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "802c0d9b1fe25534a6cd9ec09872ee92824459bad0654623bec2519edf2730e950ee5475b73710544f0585723f44f3dc63343033c84e241e87d6c9d87846456e",
+          "score": 0.608717,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Updated Review of TBI Management and Guidelines, 2025 (PMC12525523)"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "112e1b0b3f555bf86a3dd66ebca2eb4f3a0278839c7ae5cf9578c66c982b963423841157ee65a08963212fdc1b028913af13cc6c10052c506f1fb58b72fd17e7",
+          "score": 0.59994,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Neurocritical Care Society, ENLS TBI Protocol v4.0"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "28a5b03b7210cf3a65e1a3d9b3fe5c3313b8abc9badba63783891e9e423bdd7dd573220122186eb67be9460266f0f8cb14e57f7aef1e69f99d947a94ef7f1cff",
+          "score": 0.368254,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Picetti, Servadei, Rubiano et al., WSES consensus, World J Emerg Surg 2023 (PMC9830860)"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "8d6d61ce9cb56f1c0327672b21bda38c7f03a7a3073f832a45846bd0400fc5d4ae29ee347f8125d38530fb4ab8651f44fd1411de1c637ec7474aea944b25871c",
+          "score": 0.368254,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Rubiano et al., BOOTStraP stratified protocol for TBI in limited-resource regions, J Neurosci Rural Pract 2020 (PMC7055642)"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "8f19e949110dc11d8da930585e6e3eee772ed2c7c3f1992f07d74f9cba53b6a03d5ef1b579eabae3e344061757624a4e21f42064cccf44e308c3abf63329ce42",
+          "score": 0.368254,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Rubiano et al., BOOTStraP stratified protocol for TBI in limited-resource regions, J Neurosci Rural Pract 2020 (PMC7055642)"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "cr_175",
+          "score": 0.620406,
+          "via": "vector",
+          "trust_tier": 1,
+          "citation": "Community summary (level 1)"
+        }
+      ],
+      "top3_set": [
+        "112e1b0b3f555bf86a3dd66ebca2eb4f3a0278839c7ae5cf9578c66c982b963423841157ee65a08963212fdc1b028913af13cc6c10052c506f1fb58b72fd17e7",
+        "28a5b03b7210cf3a65e1a3d9b3fe5c3313b8abc9badba63783891e9e423bdd7dd573220122186eb67be9460266f0f8cb14e57f7aef1e69f99d947a94ef7f1cff",
+        "802c0d9b1fe25534a6cd9ec09872ee92824459bad0654623bec2519edf2730e950ee5475b73710544f0585723f44f3dc63343033c84e241e87d6c9d87846456e"
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.6087173908784234,
+        "top_trust_tier": 0
+      }
+    },
+    {
+      "id": "q09_secondary_injury",
+      "text": "preventing secondary brain injury from hypotension and hypoxia",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "2f6b1b64bd38a2bf330bc4d66a5418fb1a874c9c2cc4bf7bca77ece4c1b7b7785b3df75451dc551929d9e41727f41e1c9b8a41af3ace1910fd7e9bfc391b5278",
+          "score": 0.703797,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Neurocritical Care Society, ENLS TBI Protocol v4.0"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "773516a158036bc48faae0f443bc6298f51bd89566713338f70fe2fdce6eba0ad9f7fc8261610a53e32840c20b15a8458cac4ab57f261cfe087daad9091c0d9c",
+          "score": 0.672762,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Updated Review of TBI Management and Guidelines, 2025 (PMC12525523)"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "e355be955d412f03562f40e79ccc682548e41dfc839a4c7c2329987730a2d80389a3a484d37c664ca0fe6d4cb3b2c7f60891ccbaacd83055190caf2936186348",
+          "score": 0.649205,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "4587a52d4eb59c22aa330caf2c09c8f411a0fb26c4599da08f4e8b9ce12d32a3271fd833779d2de4d43703395a178e9e8065e08032b4b6fbdb2cb159f7ba0067",
+          "score": 0.644779,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "d407a8b6877bc4338f6f0ba957d8197fe5e4dcd3fb9dd6b67aea06ae4cf9194352f50b796ea99f3c2d2a09199b1a807900d46df7224d787e2cb5d16898340dce",
+          "score": 0.64224,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Primary Trauma Care Foundation, PTC Manual (head-injury chapter)"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "7b4e7d44b2781e17fe99db2b1fdb2ca37744d8174be00f3b539cbe3e4d0d2c7c3b10ac387ef8bf5dafda0bce59dfbba94ce7e1e2e60d819abfc8d71547b2d6c0",
+          "score": 0.369316,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Khan N., 'Managing TBI in the Resource-Limited Setting', Peshawar lecture (primary source)"
+        }
+      ],
+      "top3_set": [
+        "2f6b1b64bd38a2bf330bc4d66a5418fb1a874c9c2cc4bf7bca77ece4c1b7b7785b3df75451dc551929d9e41727f41e1c9b8a41af3ace1910fd7e9bfc391b5278",
+        "773516a158036bc48faae0f443bc6298f51bd89566713338f70fe2fdce6eba0ad9f7fc8261610a53e32840c20b15a8458cac4ab57f261cfe087daad9091c0d9c",
+        "e355be955d412f03562f40e79ccc682548e41dfc839a4c7c2329987730a2d80389a3a484d37c664ca0fe6d4cb3b2c7f60891ccbaacd83055190caf2936186348"
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.703796973219248,
+        "top_trust_tier": 0
+      }
+    },
+    {
+      "id": "q10_bp_target",
+      "text": "target systolic blood pressure and cerebral perfusion pressure in traumatic brain injury",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "63c66b47f781c8ad6f5679d31e18c258accc6b356af817cd139c186a45631b810177768e3e2028cecb7595f9eabbdc8c4acbd7658648ddca044d2b0544891952",
+          "score": 0.722784,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "92c6cc14a3db9908f0a13b7845f283bb9262a94027ee3d85e573b852dc0efbad3b5812c351332630a14ce826701a942dd643b0e7bd333eb9c11a753bbb60fe61",
+          "score": 0.702806,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "034be8b6181275648b9d5709828689138b6471e9f7cd6336a9e268e7b30511c79f5fa67e5c1f473fa726e16a2bc08c2796100c2564c98d0191d05607b1db3d92",
+          "score": 0.69907,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "2f32957196424a98b2957bc657eae9b85582a1bd774afcc6894ec1942fb9ba47cd67986aa3316ceb645608e76b8670a07d1c3058342905a3075314ed97ec704f",
+          "score": 0.694222,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "34e39c7fde70492a3f4264c29df1a5674510156985d4b2959808cac9098c4474a6bd69c91a5e01c227125a62862584565ee0c7b58060ac70d4334702f83128ec",
+          "score": 0.690274,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "edcf7a58b24859ff2161643d55148a80545c2da942be3e1d38fdfccfe050556c35d069b2b3f3c37d8ada10de143c8237ed218c07b44d12685ed42f43ba4e2c17",
+          "score": 0.682434,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "WFSA Anaesthesia Tutorial of the Week, Management of the Head-Injured Patient"
+        }
+      ],
+      "top3_set": [
+        "034be8b6181275648b9d5709828689138b6471e9f7cd6336a9e268e7b30511c79f5fa67e5c1f473fa726e16a2bc08c2796100c2564c98d0191d05607b1db3d92",
+        "63c66b47f781c8ad6f5679d31e18c258accc6b356af817cd139c186a45631b810177768e3e2028cecb7595f9eabbdc8c4acbd7658648ddca044d2b0544891952",
+        "92c6cc14a3db9908f0a13b7845f283bb9262a94027ee3d85e573b852dc0efbad3b5812c351332630a14ce826701a942dd643b0e7bd333eb9c11a753bbb60fe61"
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.7227844450947583,
+        "top_trust_tier": 0
+      }
+    },
+    {
+      "id": "q11_ketamine_rsi",
+      "text": "rapid sequence intubation with ketamine in the head-injured patient",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "df937ac8b3315bacf9b9e364c72cf4b4576461d29c55e7f4207060283a818c4a4f6d04f99f2baf01f45a9cc30837b564d3b1f0f0e0f34a350ed1ba8b25e0ec60",
+          "score": 0.694822,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "WFSA Anaesthesia Tutorial of the Week, Management of the Head-Injured Patient"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "5970c91ce921e5c17cf91fdd42a9935dee7f871f57eccdd442c47005aa85d05c591f390b28f2cf79b4e595a547ada32f09493f74b066a98e942a4d12ac9a5529",
+          "score": 0.620917,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "1cffc2f632b94a25e3dd749e3e882efa870b121bed7a872ac45e193babb916e2a5de037e3589977aad7fefb4b2b5c0ca58cb90cd68d30a32b23e8675a725d4ec",
+          "score": 0.367298,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "WFSA Anaesthesia Tutorial of the Week, Management of the Head-Injured Patient"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "70a9c5244134423e9da660dd524ecf49894e1611b57ccd87f757908566c400e32ef4f561131ed1ab500774a27554cc0fa1f98b93a47ad3494a59922cb116f184",
+          "score": 0.367298,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "d160f5e4d661e47c07748c784a458a6b0fcf20f46764ad102f18334d5b3cc25eac4487af6cc68f26a2aaee6865db293d358bb15d5b3d859dc3ae316f49c8be5d",
+          "score": 0.367298,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Rubiano et al., BOOTStraP stratified protocol for TBI in limited-resource regions, J Neurosci Rural Pract 2020 (PMC7055642)"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "ec671989f513dae5776480c9d2f8c9fc3ba6b0a3bf7686c5a08475d4447a36361b8797b745fcd52f1e20607f36e32d1d08fc70a69aa7f4ae9c0d74ece59080b9",
+          "score": 0.367298,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "WFSA Anaesthesia Tutorial of the Week, Management of the Head-Injured Patient"
+        }
+      ],
+      "top3_set": [
+        "1cffc2f632b94a25e3dd749e3e882efa870b121bed7a872ac45e193babb916e2a5de037e3589977aad7fefb4b2b5c0ca58cb90cd68d30a32b23e8675a725d4ec",
+        "5970c91ce921e5c17cf91fdd42a9935dee7f871f57eccdd442c47005aa85d05c591f390b28f2cf79b4e595a547ada32f09493f74b066a98e942a4d12ac9a5529",
+        "df937ac8b3315bacf9b9e364c72cf4b4576461d29c55e7f4207060283a818c4a4f6d04f99f2baf01f45a9cc30837b564d3b1f0f0e0f34a350ed1ba8b25e0ec60"
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.69482212327061,
+        "top_trust_tier": 0
+      }
+    },
+    {
+      "id": "q12_seizure_prophylaxis",
+      "text": "post-traumatic seizure prophylaxis with levetiracetam seven day course",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "f62cc47c36df19ca704a7459707c21943401901a6e1eba9abbcc936f6a9b3e0298940bcf3132af15b2656f1ef6d7af3dfbe592eabc6c83c58eedfe16f78fbabd",
+          "score": 0.708647,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "McGovern Medical School, Post-Traumatic Seizure Prophylaxis in TBI CPG"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "7cf9cdbc2a27e293d279f3c357e5c89924bb8e94b29f33f075576d387844fb2c35b0f44d6f14a296a37c3cab5a27aeaf46e66bd939b42418b92bad15aacfe011",
+          "score": 0.680326,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "972da62bddc19381fe99919469d356002b6d5987458fda4f157afcab462aa757c5702428e6e004575a8e4458eeffd0e2e8c0dbe3731c6348b95f0137540d9559",
+          "score": 0.650898,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "McGovern Medical School, Post-Traumatic Seizure Prophylaxis in TBI CPG"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "0a9b4a8262183cb09a9eacffa1aec0da4c81ba20acc0c07d5cc1fb28df889bd0e0b9a19f3c1facf726dac8cf73f8a6a78c28c58c8b7e370b57a9e52982949431",
+          "score": 0.367988,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "McGovern Medical School, Post-Traumatic Seizure Prophylaxis in TBI CPG"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "cr_241",
+          "score": 0.647503,
+          "via": "vector",
+          "trust_tier": 1,
+          "citation": "Community summary (level 1)"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "cr_11",
+          "score": 0.643443,
+          "via": "vector",
+          "trust_tier": 1,
+          "citation": "Community summary (level 0)"
+        }
+      ],
+      "top3_set": [
+        "7cf9cdbc2a27e293d279f3c357e5c89924bb8e94b29f33f075576d387844fb2c35b0f44d6f14a296a37c3cab5a27aeaf46e66bd939b42418b92bad15aacfe011",
+        "972da62bddc19381fe99919469d356002b6d5987458fda4f157afcab462aa757c5702428e6e004575a8e4458eeffd0e2e8c0dbe3731c6348b95f0137540d9559",
+        "f62cc47c36df19ca704a7459707c21943401901a6e1eba9abbcc936f6a9b3e0298940bcf3132af15b2656f1ef6d7af3dfbe592eabc6c83c58eedfe16f78fbabd"
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.7086469252025154,
+        "top_trust_tier": 0
+      }
+    },
+    {
+      "id": "q13_anisocoria",
+      "text": "anisocoria as a sign of an expanding intracranial hematoma and rising ICP",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "784d0207e5ae27f28dec9455562013744ef0a8bc064df47077cbe1b5dea3c7ae2fbf36c99c8fd95430ba061dea5d474c239be01998cbfd430113a27beb2fad3d",
+          "score": 0.591876,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "07dd4b0f31dbffbabc2f2e012e6a969474f881683cfcb9c8198dcb34c014dd4dc0a8f838ebcdc81b84b078c73c516715884b3975de961f47451a2120a51aa787",
+          "score": 0.58637,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "WFSA Anaesthesia Tutorial of the Week, Management of the Head-Injured Patient"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "07dcf3a01e0770721d4da18fe273f89e130a2db6c3f228046e356cc6683883c3bff66ecc44d6384809f3754c105b66727c0686e8b5a4f161cd84f932854b48b0",
+          "score": 0.346913,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Primary Trauma Care Foundation, PTC Manual (head-injury chapter)"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "1037e186d37e59b3f56e4ef80d7fc66b0946be4c314d5edb48df39d8cafcca899d7ccdde6e5520a132aa58433c501e672a2aedf76d70adfe95a22dea00546f9d",
+          "score": 0.346913,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Brain Trauma Foundation, Surgical Management of TBI"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "26223d64e87ac5afd801913008dcfe2cc8c026277d7cfd92e8845495822cdbfae27b638668b84cbb49ef489880f1a84088a4106c8641d72f33b82e9f5ad8c929",
+          "score": 0.346913,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Park & Khan, WFNS Peshawar Recommendations, World Neurosurg 2019"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "297317848d6188155f7e5a914a6d0832f9bba95e8cffb043c4587a34488dde173e1ae80684df9dcc2b4ac3871242448395329a6e889a37a6e6254d7555972bc1",
+          "score": 0.346913,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Bullock et al., Surgical Management of Acute Epidural Hematomas, Neurosurgery 2006"
+        }
+      ],
+      "top3_set": [
+        "07dcf3a01e0770721d4da18fe273f89e130a2db6c3f228046e356cc6683883c3bff66ecc44d6384809f3754c105b66727c0686e8b5a4f161cd84f932854b48b0",
+        "07dd4b0f31dbffbabc2f2e012e6a969474f881683cfcb9c8198dcb34c014dd4dc0a8f838ebcdc81b84b078c73c516715884b3975de961f47451a2120a51aa787",
+        "784d0207e5ae27f28dec9455562013744ef0a8bc064df47077cbe1b5dea3c7ae2fbf36c99c8fd95430ba061dea5d474c239be01998cbfd430113a27beb2fad3d"
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.5918756290069762,
+        "top_trust_tier": 0
+      }
+    },
+    {
+      "id": "q14_hyperosmolar",
+      "text": "hyperosmolar therapy mannitol or hypertonic saline for raised intracranial pressure",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "6f65dcfa6ffc086c15228e5b9f9b757b93cf4f013faa1384a9ba2b5e4661c3eae872808ec91aaf1a0f6ab9e5e928e1c91d3956081d0359a47e244ae4759df7f9",
+          "score": 0.802987,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "ea0c8734cb21eb8965f4462b54da9513e053c314d625654293968168985f2b2b7c983460a5f42ebbbd3f962d8651db1e428038e61133b5a003054d9a4533b78d",
+          "score": 0.739261,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "d742184798e577e5603b3a5e18a0c6dddc1c41489f064f4f390474c56750401f3d46a248cd7a69c3a0bf3cd5a33d7e102994d4789805cfdbff3e367d65bbd4eb",
+          "score": 0.726357,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "cr_75",
+          "score": 0.810338,
+          "via": "vector",
+          "trust_tier": 1,
+          "citation": "Community summary (level 1)"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "ece2f7812c3bc5a209f014515a74d5bf18f8a3e536c30cba9e3dec04bd313cdea3362aed6b426aa308169a14eb8563d104f375e04d45f87d715c781ca632df5b",
+          "score": 0.735064,
+          "via": "vector",
+          "trust_tier": 1,
+          "citation": "Greenberg MS, Handbook of Neurosurgery (Thieme)"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "e2e057763f50a9543eb1d2b8552349d0c3d5acb61ffc5886c430cd8a85e8101b9f2fd383664a3236ebddde2b0c8fffcefc6868f5d39af04df47d1b05dcada855",
+          "score": 0.720149,
+          "via": "vector",
+          "trust_tier": 1,
+          "citation": "Zarmer et al., Advances in TBI Diagnosis and Treatment, 2025"
+        }
+      ],
+      "top3_set": [
+        "6f65dcfa6ffc086c15228e5b9f9b757b93cf4f013faa1384a9ba2b5e4661c3eae872808ec91aaf1a0f6ab9e5e928e1c91d3956081d0359a47e244ae4759df7f9",
+        "d742184798e577e5603b3a5e18a0c6dddc1c41489f064f4f390474c56750401f3d46a248cd7a69c3a0bf3cd5a33d7e102994d4789805cfdbff3e367d65bbd4eb",
+        "ea0c8734cb21eb8965f4462b54da9513e053c314d625654293968168985f2b2b7c983460a5f42ebbbd3f962d8651db1e428038e61133b5a003054d9a4533b78d"
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.8029866453614929,
+        "top_trust_tier": 0
+      }
+    },
+    {
+      "id": "q15_ct_appearance",
+      "text": "biconvex hyperdense extradural collection limited by sutures on CT scan",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "1de7f6783ecea5543d8a88ac73ffbd9769ec60da2bcc6104547049d05dcc9c4da182e83338fc2df9a17c2c2fb7663ffd2af1c2d06c1b527f0bb91c7fa8aca1dc",
+          "score": 0.547415,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "StatPearls, Epidural Hematoma (NCBI Bookshelf NBK518982)"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "39bad18ef3f46fbf91b73d24f01f099675362f885cde06b817d6086cb91445971f0cc453f3f3357f0da6de0334a36c264e122f0b6fdab73345f1b43902334cee",
+          "score": 0.542745,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "StatPearls, Epidural Hematoma (NCBI Bookshelf NBK518982)"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "4e4acb5a073bb935eed952777b89f19c98874318d2c924aa30520667a7d651dcbd05057aeaf7b432f0a5526fdc51668d28050b22d1c1bdfa579fcedd875ce10f",
+          "score": 0.540966,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "StatPearls, Epidural Hematoma (NCBI Bookshelf NBK518982)"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "c2d305646d59ca9069eeecd733a634784b7b67abac8289388db7c255bf5e278eb00b7d2886f94807dce202c67e01695146bcf3e18f282df33f3a09b59de772cb",
+          "score": 0.330964,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "StatPearls, Epidural Hematoma (NCBI Bookshelf NBK518982)"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "b6fe8ba2675618792f425535bc5a5c800da0276817894f409cf350f24f5644151a1d1103d85f1b684e044256031fc3c0dd3fea63aa768e80899a45b73259fee6",
+          "score": 0.538247,
+          "via": "vector",
+          "trust_tier": 1,
+          "citation": "Greenberg MS, Handbook of Neurosurgery (Thieme)"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "46c21104c63b041174f87af38c4d38997473491ee768629e162f4b1611702e67796f4bd5686953be724a158fc0bdd05e6a499f130316b41c5d49afd14b3fff45",
+          "score": 0.53612,
+          "via": "vector",
+          "trust_tier": 1,
+          "citation": "Schmidek & Sweet, Operative Neurosurgical Techniques (Elsevier)"
+        }
+      ],
+      "top3_set": [
+        "1de7f6783ecea5543d8a88ac73ffbd9769ec60da2bcc6104547049d05dcc9c4da182e83338fc2df9a17c2c2fb7663ffd2af1c2d06c1b527f0bb91c7fa8aca1dc",
+        "39bad18ef3f46fbf91b73d24f01f099675362f885cde06b817d6086cb91445971f0cc453f3f3357f0da6de0334a36c264e122f0b6fdab73345f1b43902334cee",
+        "4e4acb5a073bb935eed952777b89f19c98874318d2c924aa30520667a7d651dcbd05057aeaf7b432f0a5526fdc51668d28050b22d1c1bdfa579fcedd875ce10f"
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.5474151810059009,
+        "top_trust_tier": 0
+      }
+    },
+    {
+      "id": "q16_decompressive",
+      "text": "indications for decompressive craniectomy in traumatic brain injury",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "75a7964db4064f84f624b022d831f4e29dc7dd1f9ec440d3efa77a453a7983b0a15e32b160a72536813cd964660b6d28104ea28cca330c4cba9e4af61d6e642b",
+          "score": 0.751511,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Updated Review of TBI Management and Guidelines, 2025 (PMC12525523)"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "b87035f1ae68f3733e9c58ea6e9baa62dd3ea1eaa75c8d62e47345cda1ab59250db773c888ee9efc8aa37b7f55f13ffd3cd1141643c81c2eff9865bab5ff8242",
+          "score": 0.740775,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "802c0d9b1fe25534a6cd9ec09872ee92824459bad0654623bec2519edf2730e950ee5475b73710544f0585723f44f3dc63343033c84e241e87d6c9d87846456e",
+          "score": 0.396628,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Updated Review of TBI Management and Guidelines, 2025 (PMC12525523)"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "9169bb89bdd54167a9ac1ba9f28c8fc6f889fc12b1a5f032f87617615c9089349b0a17aee4072c58c0a7ebfb77a1d89a69d9e92084a18d34060734ea603b9c4c",
+          "score": 0.396628,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Updated Review of TBI Management and Guidelines, 2025 (PMC12525523)"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "e8086d9fa2738a49df3dd7758f24f0667b8c59902cb5ef2b38fd643ccc42e90ac3386b1c186e9775d289d396ef4b7e16531f3b22ef43dc0988162ffa1683cd71",
+          "score": 0.396628,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Updated Review of TBI Management and Guidelines, 2025 (PMC12525523)"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "e8a817d7541ed096cd1ca5dd35fe514c7cb0fb3a7c4d7f012bb2f430789af85c58642335a02905f03778aac4eecaf265dcaa38fb16f990f393305f84319d6aec",
+          "score": 0.396628,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Updated Review of TBI Management and Guidelines, 2025 (PMC12525523)"
+        }
+      ],
+      "top3_set": [
+        "75a7964db4064f84f624b022d831f4e29dc7dd1f9ec440d3efa77a453a7983b0a15e32b160a72536813cd964660b6d28104ea28cca330c4cba9e4af61d6e642b",
+        "802c0d9b1fe25534a6cd9ec09872ee92824459bad0654623bec2519edf2730e950ee5475b73710544f0585723f44f3dc63343033c84e241e87d6c9d87846456e",
+        "b87035f1ae68f3733e9c58ea6e9baa62dd3ea1eaa75c8d62e47345cda1ab59250db773c888ee9efc8aa37b7f55f13ffd3cd1141643c81c2eff9865bab5ff8242"
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.7515112952377319,
+        "top_trust_tier": 0
+      }
+    },
+    {
+      "id": "q17_task_shifting",
+      "text": "general medical officer performing a craniotomy supervised remotely by a neurosurgeon",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "4e26190deb9ff320ba992011d287d503ee9e2718c91994055e7739653c34fdacb04f102961fdc0f2a84202b0efb848c953eb2e241b2016d1ae093d732cc380b5",
+          "score": 0.315669,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Park & Khan, WFNS Peshawar Recommendations, World Neurosurg 2019"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "77c212b1a7a9240518144cd2d3f4b180fbb42f7c3f1f4db72d0d7592f2c4a29b4b27998136b77069eab9c741c98a16f32ea36aeb412d768b568622e94fa6a498",
+          "score": 0.315669,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Park & Khan, WFNS Peshawar Recommendations, World Neurosurg 2019"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "85fb3366dc434620c200ba94d4ad6ed00eafd5625640f34c1c1af8cd66d781f7cb30e44526e7faea56ba28395a6744b58791eff7d4b62d10431573bcca2c1a34",
+          "score": 0.315669,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "8b1b9e4278b69ce89e6753790070a032f2bc3fa703352bc7e648ffff26f24d74c41b11eea650cd67a2f12ea200a2b6d990e13b1383520fca9218957bbfd328f9",
+          "score": 0.315669,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Park & Khan, WFNS Peshawar Recommendations, World Neurosurg 2019"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "cr_280",
+          "score": 0.563094,
+          "via": "vector",
+          "trust_tier": 1,
+          "citation": "Community summary (level 1)"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "cr_27",
+          "score": 0.555443,
+          "via": "vector",
+          "trust_tier": 1,
+          "citation": "Community summary (level 0)"
+        }
+      ],
+      "top3_set": [
+        "4e26190deb9ff320ba992011d287d503ee9e2718c91994055e7739653c34fdacb04f102961fdc0f2a84202b0efb848c953eb2e241b2016d1ae093d732cc380b5",
+        "77c212b1a7a9240518144cd2d3f4b180fbb42f7c3f1f4db72d0d7592f2c4a29b4b27998136b77069eab9c741c98a16f32ea36aeb412d768b568622e94fa6a498",
+        "85fb3366dc434620c200ba94d4ad6ed00eafd5625640f34c1c1af8cd66d781f7cb30e44526e7faea56ba28395a6744b58791eff7d4b62d10431573bcca2c1a34"
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.31566910505938495,
+        "top_trust_tier": 0
+      }
+    },
+    {
+      "id": "q18_coagulopathy",
+      "text": "reversal of coagulopathy and anticoagulation in traumatic intracranial hemorrhage",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "cf896aaecf3c11ece490c389371499d7e9b84cc97cc7bc3856feecc604681048e77f5219565affc03e457221a094649bcdc54026b433abaed6bc859acab5418e",
+          "score": 0.607464,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "f252a1fba62b250728b19cb0c4cf87d64885611a6883579158ea752dab6f835d9626153cf5acbb0729f24707720ad4ef9eeba5114783f4d90ba1fe2709d8766b",
+          "score": 0.607028,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Neurocritical Care Society, ENLS TBI Protocol v4.0"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "77c1370e2e16e15ee7200fdd47c4b58196b63c484dbe73d34b20c77d8a0a2ed715c56bdac0facfc38357e2fff1c24b89372205f9691c47ee589eb3182e14d66f",
+          "score": 0.606741,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "b890da27ff38cec9618f0dd5a2a15b76a6c46297ef7cb3ce41940fab0db26713dde0690b49908307b6287c0d207179f6b9e0fb97319e5a47bc6d55e4b3bb221b",
+          "score": 0.594145,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "41436d78e4d5bf1f1a433be45d35783f9937d817115c0a6b57c77fe601524f9b2483f193c2ba35a0a2cb9e5ce34870e5afc08627e7e0a09585b3c63755398726",
+          "score": 0.349206,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Picetti, Servadei, Rubiano et al., WSES consensus, World J Emerg Surg 2023 (PMC9830860)"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "4776958b69156c41d7c3ee204767303cb3d996f450fc172fa0e8f3e8cf78fe80e55eae3ef697b6f248aa9ce36b3fbe3119ab8a07382d29a51a956d3237c06435",
+          "score": 0.349206,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017"
+        }
+      ],
+      "top3_set": [
+        "77c1370e2e16e15ee7200fdd47c4b58196b63c484dbe73d34b20c77d8a0a2ed715c56bdac0facfc38357e2fff1c24b89372205f9691c47ee589eb3182e14d66f",
+        "cf896aaecf3c11ece490c389371499d7e9b84cc97cc7bc3856feecc604681048e77f5219565affc03e457221a094649bcdc54026b433abaed6bc859acab5418e",
+        "f252a1fba62b250728b19cb0c4cf87d64885611a6883579158ea752dab6f835d9626153cf5acbb0729f24707720ad4ef9eeba5114783f4d90ba1fe2709d8766b"
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.6074641015660927,
+        "top_trust_tier": 0
+      }
+    },
+    {
+      "id": "q19_golden_window",
+      "text": "time since injury golden window for evacuating an epidural hematoma",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "fd5b48d69b2a842659c039582749cb91ba985bee81fd04e6096e89afb2122681060a6dc6856a9cacd63f67bd1d540a00ffa34ad8172ec9aff8abc7503c12fbba",
+          "score": 0.614897,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Bullock et al., Surgical Management of Acute Epidural Hematomas, Neurosurgery 2006"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "7e7e13f19ca7b97ada4fa7954baabad55b5a3ac83f5ae31895b039a35b1a635332c193bb18d71521902f4bc56bb07162df87ba0036845e2a20e7d73665e02518",
+          "score": 0.612316,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Wilson et al., Emergency Burr Holes: How to do it (PMC3352313)"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "1037e186d37e59b3f56e4ef80d7fc66b0946be4c314d5edb48df39d8cafcca899d7ccdde6e5520a132aa58433c501e672a2aedf76d70adfe95a22dea00546f9d",
+          "score": 0.605624,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Brain Trauma Foundation, Surgical Management of TBI"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "27dc9f8dde7c1b6f8b1386efcf01ce72ba00fa36b233c41660e7e866d54879c9e2b938e7ae9b20309dd6d0241d61ba011de07637a81bf9c2b11fed93b209836b",
+          "score": 0.355128,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Bullock et al., Surgical Management of Acute Epidural Hematomas, Neurosurgery 2006"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "2d87a84a8bc7b0f6bbc1e0f8de89ad0b09d7baae2f16bc649fefb9c0d8980f01e56d71eb154944c62325243d178e419e5910de8149c46fa6c9a011162273f1da",
+          "score": 0.355128,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "StatPearls, Epidural Hematoma (NCBI Bookshelf NBK518982)"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "2e60cfac85557013de5116770b1f320b73188f433f2382cb7ce15a8bd0825532d22672186100b6d95b1dd1899ffbb65a0722c66cd36545fa0a49c64a08c3c1b7",
+          "score": 0.355128,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "StatPearls, Epidural Hematoma (NCBI Bookshelf NBK518982)"
+        }
+      ],
+      "top3_set": [
+        "1037e186d37e59b3f56e4ef80d7fc66b0946be4c314d5edb48df39d8cafcca899d7ccdde6e5520a132aa58433c501e672a2aedf76d70adfe95a22dea00546f9d",
+        "7e7e13f19ca7b97ada4fa7954baabad55b5a3ac83f5ae31895b039a35b1a635332c193bb18d71521902f4bc56bb07162df87ba0036845e2a20e7d73665e02518",
+        "fd5b48d69b2a842659c039582749cb91ba985bee81fd04e6096e89afb2122681060a6dc6856a9cacd63f67bd1d540a00ffa34ad8172ec9aff8abc7503c12fbba"
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.6148965532583031,
+        "top_trust_tier": 0
+      }
+    },
+    {
+      "id": "q20_pediatric",
+      "text": "pediatric head injury assessment and management considerations",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "343b8a3b0f2051a1028e78ef4101681baac381409c415f37e81576e63ab39ebc6055e28a3bb10db6a599f892a696aecd56855b3c5959e50c8137a737ce43cf14",
+          "score": 0.629248,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Neurocritical Care Society, ENLS TBI Protocol v4.0"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "31efb28275be8529ae2c78b63054581d42642608fe5e788f5133a2cd189c048dfddbbc9b0e4daf6ee9c2c964718ebafcd5b52ac593ab0801bd5ccb07eaf3e28e",
+          "score": 0.615028,
+          "via": "vector",
+          "trust_tier": 0,
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "a92f0d1493af82cd5d5d71e131ce368da1ef7c28a5a0fd1217322c94033cae765a8a22d2bd04ec39a09367f2d6ae2ab0bb9f8953aa6fe8d865d4b15c56e49af2",
+          "score": 0.368485,
+          "via": "graph",
+          "trust_tier": 0,
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "cr_110",
+          "score": 0.651421,
+          "via": "vector",
+          "trust_tier": 1,
+          "citation": "Community summary (level 1)"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "152c4ef6a13bb11afb955117d53fbd860fdd07900d888915017fb42307ab7270fd50a3c3f2d52215ac05bf2a2d782d11730fbed2e226e6fa1c6c745fb1561b43",
+          "score": 0.64988,
+          "via": "vector",
+          "trust_tier": 1,
+          "citation": "Greenberg MS, Handbook of Neurosurgery (Thieme)"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "f58768cc282c5a3ffbfba31af5a64ad57f0d5c606f70755851c0b0db09de5a25546e8567f0e76fdb4ffd1a21d5fd6f7d62d5fd270456b4cdb4c1e8c749a7f4f6",
+          "score": 0.645217,
+          "via": "vector",
+          "trust_tier": 1,
+          "citation": "Greenberg MS, Handbook of Neurosurgery (Thieme)"
+        }
+      ],
+      "top3_set": [
+        "31efb28275be8529ae2c78b63054581d42642608fe5e788f5133a2cd189c048dfddbbc9b0e4daf6ee9c2c964718ebafcd5b52ac593ab0801bd5ccb07eaf3e28e",
+        "343b8a3b0f2051a1028e78ef4101681baac381409c415f37e81576e63ab39ebc6055e28a3bb10db6a599f892a696aecd56855b3c5959e50c8137a737ce43cf14",
+        "a92f0d1493af82cd5d5d71e131ce368da1ef7c28a5a0fd1217322c94033cae765a8a22d2bd04ec39a09367f2d6ae2ab0bb9f8953aa6fe8d865d4b15c56e49af2"
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.6292478362978766,
+        "top_trust_tier": 0
+      }
+    }
+  ]
+}

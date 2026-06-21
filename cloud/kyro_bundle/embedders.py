@@ -27,6 +27,12 @@ class Embedder:
     def embed(self, text: str) -> np.ndarray:  # returns float32[dim], L2-normalized
         raise NotImplementedError
 
+    def embed_many(self, texts: list[str]) -> list[np.ndarray]:
+        """Batch embed. Default maps embed() per text; real embedders override for GPU batching.
+        Per-text output MUST match embed() (no cross-text interaction) — attention masking makes
+        BGE-M3 batch results per-text-identical to single encodes, so parity is unaffected."""
+        return [self.embed(t) for t in texts]
+
 
 class HashEmbedder(Embedder):
     """
@@ -78,7 +84,11 @@ class BgeM3Embedder(Embedder):
             # Deferred so the mock path never needs the dependency installed.
             from FlagEmbedding import BGEM3FlagModel  # noqa: F401  (step ③ dependency)
 
-            self._model = BGEM3FlagModel("BAAI/bge-m3", use_fp16=True)
+            # use_fp16=False (was True): fp16 GPU inference is NOT bit-reproducible across
+            # architectures; the corpus is tiny so fp32 speed is irrelevant and determinism
+            # matters for the build plane. (Part B: even fp32 won't byte-match the device —
+            # NN-order stability, not byte-identity, is the real bar.)
+            self._model = BGEM3FlagModel("BAAI/bge-m3", use_fp16=False)
         return self._model
 
     def embed(self, text: str) -> np.ndarray:
@@ -87,3 +97,16 @@ class BgeM3Embedder(Embedder):
         v = np.asarray(out, dtype=np.float32)
         n = np.linalg.norm(v)
         return v / n if n > 0 else v
+
+    def embed_many(self, texts: list[str]) -> list[np.ndarray]:
+        """GPU-batched encode (BGE-M3 batches a list internally). Per-text output matches embed()
+        — attention masking makes batched results per-text-identical, so corpus vectors + parity
+        are unaffected; this is purely a build-speed optimization for the ~13k-vector full corpus."""
+        model = self._lazy_load()
+        out = model.encode(list(texts), return_dense=True, batch_size=64)["dense_vecs"]
+        res = []
+        for row in out:
+            v = np.asarray(row, dtype=np.float32)
+            n = np.linalg.norm(v)
+            res.append(v / n if n > 0 else v)
+        return res

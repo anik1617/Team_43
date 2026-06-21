@@ -1,0 +1,25 @@
+{
+  "_about": "Shared cross-plane parity query set for edh-core-v{N}.kyro (Part B). The SAME file is embedded + retrieved on BOTH planes (cloud BGE-M3 here; device llama.rn BGE-M3) and the top-3 retrieval is diffed. Acceptance bar: on >=95% of queries the top-3 chunk SET is identical AND there is no swap within the top-3 (top-4/5 may reorder). Clinical strings span the acute-TBI/EDH decision space the corpus + L1 spine cover.",
+  "queries": [
+    {"id": "q01_lucid_interval",        "text": "lucid interval followed by rapid neurological deterioration after head injury"},
+    {"id": "q02_blown_pupil",           "text": "fixed dilated blown left pupil after head trauma"},
+    {"id": "q03_edh_volume_threshold",  "text": "epidural hematoma volume greater than 30 cm3 indication for surgical evacuation"},
+    {"id": "q04_burr_hole",             "text": "emergency burr hole technique for extradural hematoma temporizing measure"},
+    {"id": "q05_uncal_herniation",      "text": "uncal herniation signs with contralateral hemiparesis and anisocoria"},
+    {"id": "q06_gcs_drop",              "text": "Glasgow Coma Scale falling from 14 to 7 deteriorating consciousness"},
+    {"id": "q07_operate_vs_transfer",   "text": "decision to operate locally versus transfer a head injury when no neurosurgeon is available"},
+    {"id": "q08_manage_without_ct",     "text": "managing severe traumatic brain injury without CT imaging in a district hospital"},
+    {"id": "q09_secondary_injury",      "text": "preventing secondary brain injury from hypotension and hypoxia"},
+    {"id": "q10_bp_target",             "text": "target systolic blood pressure and cerebral perfusion pressure in traumatic brain injury"},
+    {"id": "q11_ketamine_rsi",          "text": "rapid sequence intubation with ketamine in the head-injured patient"},
+    {"id": "q12_seizure_prophylaxis",   "text": "post-traumatic seizure prophylaxis with levetiracetam seven day course"},
+    {"id": "q13_anisocoria",            "text": "anisocoria as a sign of an expanding intracranial hematoma and rising ICP"},
+    {"id": "q14_hyperosmolar",          "text": "hyperosmolar therapy mannitol or hypertonic saline for raised intracranial pressure"},
+    {"id": "q15_ct_appearance",         "text": "biconvex hyperdense extradural collection limited by sutures on CT scan"},
+    {"id": "q16_decompressive",         "text": "indications for decompressive craniectomy in traumatic brain injury"},
+    {"id": "q17_task_shifting",         "text": "general medical officer performing a craniotomy supervised remotely by a neurosurgeon"},
+    {"id": "q18_coagulopathy",          "text": "reversal of coagulopathy and anticoagulation in traumatic intracranial hemorrhage"},
+    {"id": "q19_golden_window",         "text": "time since injury golden window for evacuating an epidural hematoma"},
+    {"id": "q20_pediatric",             "text": "pediatric head injury assessment and management considerations"}
+  ]
+}

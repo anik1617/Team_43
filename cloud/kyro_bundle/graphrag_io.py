@@ -80,7 +80,7 @@ def load(output_dir: str) -> GraphRAGTables:
         "rel_tu": _first_col(rel, ["text_unit_ids"], required=False),
         "tu_id": _first_col(tu, ["id"]),
         "tu_text": _first_col(tu, ["text"]),
-        "tu_docs": _first_col(tu, ["document_ids"], required=False),
+        "tu_docs": _first_col(tu, ["document_ids", "document_id"], required=False),
         "cr_community": _first_col(cr, ["community"]),
         "cr_text": _first_col(cr, ["full_content", "summary"]),
         "cr_level": _first_col(cr, ["level"], required=False),

@@ -206,8 +206,13 @@ def retrieve(conn, query: str, leaf_citation, embed: Callable, knn: Callable,
             score=score_of[cid] if is_vector else graph_score,
             via="vector" if is_vector else "graph"))
 
-    # 4 · order: trust_tier asc (prefer canonical), then score desc
-    context.sort(key=lambda c: (_tier(c), -c.score))
+    # 4 · order: trust_tier asc (prefer canonical), then score desc, then id asc.
+    #     The id tiebreak is a CROSS-PLANE PARITY fix: graph-expansion chunks all inherit the
+    #     same capped graph_score, so without a stable key the order among equal-scored chunks
+    #     is arbitrary and can differ between the cloud and device sorts. Ordering ties by the
+    #     (plane-identical) chunk id makes the ranking deterministic across planes. Mirror this
+    #     in the device retrieval.ts sort comparator.
+    context.sort(key=lambda c: (_tier(c), -c.score, c.id))
 
     coverage = compute_coverage(leaf_citation, context, o)
     return RetrievalResult(chunks=context, seed_nodes=seed_nodes,
@@ -252,10 +257,17 @@ def make_vec0_knn(conn) -> Callable:
 
 
 def _manifest_get(conn, key: str):
-    """Best-effort read of a manifest key (embedder_id etc.); None if the table/shape differs."""
+    """Best-effort read of a manifest column (embedder_id etc.); None if the table/shape differs.
+
+    The manifest is a WIDE single-row table (bundle_id, version, scope, embedder_id, ...),
+    NOT a key/value store — read the row and index by column name. (The earlier key/value
+    form silently raised → was swallowed → defaulted EVERY bundle to the hash embedder; on a
+    real bge-m3 bundle that hash-embeds the QUERY against a BGE-M3 corpus = the #1 killer,
+    invisibly. The mock bundle happened to want the hash embedder, which masked the bug.)"""
     try:
-        row = conn.execute("SELECT value FROM manifest WHERE key=?", (key,)).fetchone()
-        return row[0] if row else None
+        cols = [d[0] for d in conn.execute("SELECT * FROM manifest").description]
+        row = conn.execute("SELECT * FROM manifest").fetchone()
+        return dict(zip(cols, row)).get(key) if row else None
     except Exception:
         return None
 

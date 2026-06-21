@@ -1,0 +1,2004 @@
+{
+  "plane": "cloud",
+  "bundle": "edh-core-v1.kyro",
+  "embedder_id": "bge-m3",
+  "embedder_dim": 1024,
+  "bge_m3_revision": "5617a9f61b028005a4858fdac845db406aefb181",
+  "use_fp16": false,
+  "k": 6,
+  "acceptance": "top-3 chunk SET identical AND no swap within top-3, on >=95% of queries",
+  "self_retrieval": {
+    "chunk": {
+      "sampled": 25,
+      "rank1_self": 25,
+      "min_top1_score": 1.0
+    },
+    "node": {
+      "sampled": 25,
+      "rank1_self": 25,
+      "min_top1_score": 1.0
+    }
+  },
+  "queries": [
+    {
+      "id": "q01_lucid_interval",
+      "text": "lucid interval followed by rapid neurological deterioration after head injury",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "e6f27cbd76b1ee294dd2993b58f60b3b61748f3a8950dda8ec3b1ed020cb2f6b3482795c72423f6ab6ec60a6daf227dbceebbfe52cf7f3ac016e992c6ce9c10d",
+          "score": 0.648251,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "StatPearls, Epidural Hematoma (NCBI Bookshelf NBK518982)",
+          "snippet": ", occipital, frontal, and posterior fossa regions. A skull fracture is present in most patients with EDH and commonly overlies the squamous portion of the tempo"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "98332a6c78f3916eb13e42b28918524b6fc49d21ac3d0d2c46a060a7e0d27c29892008eb691998457605e7f4e0f4d8aa247dba4d0b70ce40fb1306e34b6fb7a9",
+          "score": 0.651416,
+          "via": "vector",
+          "trust_tier": 1,
+          "kind": "text_unit",
+          "citation": "Schmidek & Sweet, Operative Neurosurgical Techniques (Elsevier)",
+          "snippet": "Nevertheless, nonoperative management based on anticipated stability should be supported by serial imaging. The \u201cclassic\u201d lucid interval consisting of a brief L"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "04ed2a2679eef0c6cdcab334b096d51389e1f247bc120c12e60e4f7a32537b1e60bf2c6e446bdb5a6225829ba9a2edc3af153e481afda8d57ea3e8639f80ff7b",
+          "score": 0.650356,
+          "via": "vector",
+          "trust_tier": 1,
+          "kind": "text_unit",
+          "citation": "Schmidek & Sweet, Operative Neurosurgical Techniques (Elsevier)",
+          "snippet": "are usually produced when the stationary skull is struck by a moving object with relatively small mass, such as a stick or baseball bat. Focal brain injuries ar"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "cr_177",
+          "score": 0.64154,
+          "via": "vector",
+          "trust_tier": 1,
+          "kind": "community_report",
+          "citation": "Community summary (level 1)",
+          "snippet": "Community summary (level 1): BRAIN INJURY, LOSS OF CONSCIOUSNESS, EXTRADURAL HAEMATOMA, LUCID INTERVAL, ARTERIAL BLEEDING, FIXED DILATED PUPILS, BURR HOLE EVACU"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "cr_196",
+          "score": 0.611384,
+          "via": "vector",
+          "trust_tier": 1,
+          "kind": "community_report",
+          "citation": "Community summary (level 1)",
+          "snippet": "Community summary (level 1): POST-TRAUMATIC SYNDROME, MINOR HEAD TRAUMA, LOSS OF INTEREST IN FAVORITE TOYS, EASY FATIGABILITY, JOB LOSS, MEMORY DIFFICULTIES, LI"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "b7a8de1e8a3ae7e5079898836e9a257d0936747ceba1e32baa3266ee349b003a5f117f542885da3aa61cb6de4c0356f065ce10563bf19eb4a651fb7c9aec95c1",
+          "score": 0.598243,
+          "via": "vector",
+          "trust_tier": 1,
+          "kind": "text_unit",
+          "citation": "Greenberg MS, Handbook of Neurosurgery (Thieme)",
+          "snippet": "disc) or the 10\u201315 mm of the intraorbital segment immediately behind the globe where the central retinal artery is contained within the optic nerve), whereas po"
+        }
+      ],
+      "top3_set": [
+        "04ed2a2679eef0c6cdcab334b096d51389e1f247bc120c12e60e4f7a32537b1e60bf2c6e446bdb5a6225829ba9a2edc3af153e481afda8d57ea3e8639f80ff7b",
+        "98332a6c78f3916eb13e42b28918524b6fc49d21ac3d0d2c46a060a7e0d27c29892008eb691998457605e7f4e0f4d8aa247dba4d0b70ce40fb1306e34b6fb7a9",
+        "e6f27cbd76b1ee294dd2993b58f60b3b61748f3a8950dda8ec3b1ed020cb2f6b3482795c72423f6ab6ec60a6daf227dbceebbfe52cf7f3ac016e992c6ce9c10d"
+      ],
+      "seed_nodes": [
+        {
+          "node_id": "1136a519-cf12-4b1f-ae99-11f5c7d2cf1f",
+          "score": 0.738853
+        },
+        {
+          "node_id": "5c0fafd3-b5f7-49cd-bb68-b6a68bfa72cc",
+          "score": 0.72476
+        },
+        {
+          "node_id": "9d722b2b-c34f-469a-ae28-41171d6abd9c",
+          "score": 0.724422
+        },
+        {
+          "node_id": "5a8a9c10-fb4d-4a2b-9719-532e72119590",
+          "score": 0.720479
+        }
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.6482507645441,
+        "top_trust_tier": 0,
+        "citations": [
+          "StatPearls, Epidural Hematoma (NCBI Bookshelf NBK518982)"
+        ]
+      }
+    },
+    {
+      "id": "q02_blown_pupil",
+      "text": "fixed dilated blown left pupil after head trauma",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "07dcf3a01e0770721d4da18fe273f89e130a2db6c3f228046e356cc6683883c3bff66ecc44d6384809f3754c105b66727c0686e8b5a4f161cd84f932854b48b0",
+          "score": 0.561835,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Primary Trauma Care Foundation, PTC Manual (head-injury chapter)",
+          "snippet": "paralysis on the opposite side with a fixed pupil on the same side as the impact to the head. Acute subdural haematoma commonly occurs in association with sever"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "593cca0769231e6e61237642a8a3cb21ae52239bd223451b0862c98fd01cc42544cda29090180c87acf941d178279c49fe8f8f57dcb4171e67b4408a1f68ef3d",
+          "score": 0.329983,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Wilson et al., Emergency Burr Holes: How to do it (PMC3352313)",
+          "snippet": "surgeons closer to neurosurgical centres [4]. This may paradoxically result in more optimal management in more remote regions. With adequate training and skill "
+        },
+        {
+          "rank": 3,
+          "chunk_id": "7e7e13f19ca7b97ada4fa7954baabad55b5a3ac83f5ae31895b039a35b1a635332c193bb18d71521902f4bc56bb07162df87ba0036845e2a20e7d73665e02518",
+          "score": 0.329983,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Wilson et al., Emergency Burr Holes: How to do it (PMC3352313)",
+          "snippet": "[Kyro source: Emergency Burr Holes: How to do it] Citation: Wilson et al., Emergency Burr Holes: How to do it (PMC3352313) Abstract This paper describes a simpl"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "a061206d39c12c9911f76ed21ebcf963b22971aa56717726e88a0861920ff973c7d7654d1ef205729ec75a4fd8e76845ae4a5f78ed738a8a593c9ef69f328b7e",
+          "score": 0.329983,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Bullock et al., Surgical Management of Acute Epidural Hematomas, Neurosurgery 2006",
+          "snippet": "fluencing the outcome of patients undergoing surgery in coma. J Neurosurg 68:48\u201357, 1988. 25. Maggi G, Aliberti F, Petrone G, Ruggiero C: Extradural hematomas i"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "b52ddf03a661f1bfa0f76cd0900d8855653e5ab1b0da6cc6c894791f770be8d26e862374da4fb88d0f4a484cb9819e97b46ce1602a5f699a64686fc7480cd84d",
+          "score": 0.329983,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Park & Khan, WFNS Peshawar Recommendations, World Neurosurg 2019",
+          "snippet": "in a position to collaborate with societies and leadership of other surgical and medical specialties, such as neurology, trauma, general surgery, and anesthesia"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "fd2abdb6bb509252f79759701b47c1338c32971786cdcfb624a994434dd0b9fe5ba61878766795029b9de635c5ac8ed7c3d250d64ec2d2eff2254f0042f79153",
+          "score": 0.329983,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Park & Khan, WFNS Peshawar Recommendations, World Neurosurg 2019",
+          "snippet": "comatose patients. J Trauma 41, 120\u2013122 (1996). 8. Sakas, D. E., Bullock, M. R. & Teasdale, G. M. One-year outcome following craniotomy for traumatic hematoma i"
+        }
+      ],
+      "top3_set": [
+        "07dcf3a01e0770721d4da18fe273f89e130a2db6c3f228046e356cc6683883c3bff66ecc44d6384809f3754c105b66727c0686e8b5a4f161cd84f932854b48b0",
+        "593cca0769231e6e61237642a8a3cb21ae52239bd223451b0862c98fd01cc42544cda29090180c87acf941d178279c49fe8f8f57dcb4171e67b4408a1f68ef3d",
+        "7e7e13f19ca7b97ada4fa7954baabad55b5a3ac83f5ae31895b039a35b1a635332c193bb18d71521902f4bc56bb07162df87ba0036845e2a20e7d73665e02518"
+      ],
+      "seed_nodes": [
+        {
+          "node_id": "7170bd50-0584-4627-80a1-74bd65373374",
+          "score": 0.659966
+        },
+        {
+          "node_id": "77ca27fc-9794-41be-9e24-f5cab50a8087",
+          "score": 0.652025
+        },
+        {
+          "node_id": "18460f94-da15-477f-a94b-6ff908d72223",
+          "score": 0.646176
+        },
+        {
+          "node_id": "d88942ff-450e-414f-a479-fcf632ba94b8",
+          "score": 0.645108
+        }
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.5618354568681081,
+        "top_trust_tier": 0,
+        "citations": [
+          "Primary Trauma Care Foundation, PTC Manual (head-injury chapter)",
+          "Wilson et al., Emergency Burr Holes: How to do it (PMC3352313)",
+          "Bullock et al., Surgical Management of Acute Epidural Hematomas, Neurosurgery 2006",
+          "Park & Khan, WFNS Peshawar Recommendations, World Neurosurg 2019"
+        ]
+      }
+    },
+    {
+      "id": "q03_edh_volume_threshold",
+      "text": "epidural hematoma volume greater than 30 cm3 indication for surgical evacuation",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "bd597c17a10cf0f8e3acfbe25e47d33b8f37e63f00acb72b99e942a4d04036bc063a99170d1d60a640d34f9ab907c2005ea45c7b166b1254477653baed2a16c6",
+          "score": 0.735847,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Bullock et al., Surgical Management of Acute Epidural Hematomas, Neurosurgery 2006",
+          "snippet": "[Kyro source: Surgical Management of Acute Epidural Hematomas (Bullock)] Citation: Bullock et al., Surgical Management of Acute Epidural Hematomas, Neurosurgery"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "1037e186d37e59b3f56e4ef80d7fc66b0946be4c314d5edb48df39d8cafcca899d7ccdde6e5520a132aa58433c501e672a2aedf76d70adfe95a22dea00546f9d",
+          "score": 0.727334,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Brain Trauma Foundation, Surgical Management of TBI",
+          "snippet": "[Kyro source: BTF \u2014 Surgical Management of TBI] Citation: Brain Trauma Foundation, Surgical Management of TBI Guidelines for the Surgical Management of TBI - Vi"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "2d87a84a8bc7b0f6bbc1e0f8de89ad0b09d7baae2f16bc649fefb9c0d8980f01e56d71eb154944c62325243d178e419e5910de8149c46fa6c9a011162273f1da",
+          "score": 0.665412,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "StatPearls, Epidural Hematoma (NCBI Bookshelf NBK518982)",
+          "snippet": "oplastin time remains elevated. Low-molecular-weight heparin is also reversed with protamine. Patients on warfarin should receive intravenous vitamin K and eith"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "b659e45e651d800dd0f663c563f9894285383c8c73dfdda895afb038d3abac8430e3cdeab44d2fa066d8f6aa814e96588af7e6924d2aec1c66720a9180676a0b",
+          "score": 0.651587,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Primary Trauma Care Foundation, PTC Manual (head-injury chapter)",
+          "snippet": "this should be done, guided by the criteria in the table. Watch out for: \u2022 Drowsiness or excessive sleepiness \u2022 Confusion or disorientation \u2022 Severe headache, v"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "27dc9f8dde7c1b6f8b1386efcf01ce72ba00fa36b233c41660e7e866d54879c9e2b938e7ae9b20309dd6d0241d61ba011de07637a81bf9c2b11fed93b209836b",
+          "score": 0.382906,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Bullock et al., Surgical Management of Acute Epidural Hematomas, Neurosurgery 2006",
+          "snippet": "authors noted that only 6% of the direct admissions experienced a poor outcome, as compared with 18% of patients who were transferred after undergoing CT scanni"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "4bbcdd5aa8aedc1004bccce96ca7c51b0df87c4e6793f5ae93b17ded52a0cafc8b6faf030b11b4197afdb81bebd4bbc7680e8f0f35fdae1c7f1fe68bd3a0d458",
+          "score": 0.382906,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Bullock et al., Surgical Management of Acute Epidural Hematomas, Neurosurgery 2006",
+          "snippet": "\u25cfIt is strongly recommended that patients with an acute EDH in coma (GCS score \u0001 9) with anisocoria undergo surgical evacuation as soon as possible. Methods \u25cfTh"
+        }
+      ],
+      "top3_set": [
+        "1037e186d37e59b3f56e4ef80d7fc66b0946be4c314d5edb48df39d8cafcca899d7ccdde6e5520a132aa58433c501e672a2aedf76d70adfe95a22dea00546f9d",
+        "2d87a84a8bc7b0f6bbc1e0f8de89ad0b09d7baae2f16bc649fefb9c0d8980f01e56d71eb154944c62325243d178e419e5910de8149c46fa6c9a011162273f1da",
+        "bd597c17a10cf0f8e3acfbe25e47d33b8f37e63f00acb72b99e942a4d04036bc063a99170d1d60a640d34f9ab907c2005ea45c7b166b1254477653baed2a16c6"
+      ],
+      "seed_nodes": [
+        {
+          "node_id": "9af845bb-7526-4533-8513-6505bfaf1ab6",
+          "score": 0.765812
+        },
+        {
+          "node_id": "b28a9db6-1067-4a3f-b893-2b6af99a2848",
+          "score": 0.756729
+        },
+        {
+          "node_id": "ce39a9e3-ad43-4a11-91dc-d5facfefe267",
+          "score": 0.708404
+        },
+        {
+          "node_id": "73392ff6-6227-4bf4-91aa-34dcb7d61431",
+          "score": 0.695607
+        }
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.7358466377586677,
+        "top_trust_tier": 0,
+        "citations": [
+          "Bullock et al., Surgical Management of Acute Epidural Hematomas, Neurosurgery 2006",
+          "Brain Trauma Foundation, Surgical Management of TBI",
+          "StatPearls, Epidural Hematoma (NCBI Bookshelf NBK518982)",
+          "Primary Trauma Care Foundation, PTC Manual (head-injury chapter)",
+          "WFSA Anaesthesia Tutorial of the Week, Management of the Head-Injured Patient",
+          "Updated Review of TBI Management and Guidelines, 2025 (PMC12525523)"
+        ]
+      }
+    },
+    {
+      "id": "q04_burr_hole",
+      "text": "emergency burr hole technique for extradural hematoma temporizing measure",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "7e7e13f19ca7b97ada4fa7954baabad55b5a3ac83f5ae31895b039a35b1a635332c193bb18d71521902f4bc56bb07162df87ba0036845e2a20e7d73665e02518",
+          "score": 0.727323,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Wilson et al., Emergency Burr Holes: How to do it (PMC3352313)",
+          "snippet": "[Kyro source: Emergency Burr Holes: How to do it] Citation: Wilson et al., Emergency Burr Holes: How to do it (PMC3352313) Abstract This paper describes a simpl"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "593cca0769231e6e61237642a8a3cb21ae52239bd223451b0862c98fd01cc42544cda29090180c87acf941d178279c49fe8f8f57dcb4171e67b4408a1f68ef3d",
+          "score": 0.683794,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Wilson et al., Emergency Burr Holes: How to do it (PMC3352313)",
+          "snippet": "surgeons closer to neurosurgical centres [4]. This may paradoxically result in more optimal management in more remote regions. With adequate training and skill "
+        },
+        {
+          "rank": 3,
+          "chunk_id": "f9943e710d9af1b209dd8255b8d4bc4b293ac2a91ac4cd754b58fd3a924cf39ed9ad5d266e05db9271ed690314c9cfa7af48864c563f8b8fafd8b192447c984b",
+          "score": 0.649152,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Wilson et al., Emergency Burr Holes: How to do it (PMC3352313)",
+          "snippet": "for use in an emergency department or operating theatre. Importantly, in preparation, check the drill bit fits the drill. Procedure Note: It may be useful to no"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "0268e503482f28bbbd7ed55ab4aadaa91b06828088abce31ff059ee904f7936cdde7572468f8a775edef5e1a44888f0f0e612b156bd744954b3537fab48f2231",
+          "score": 0.369553,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Wilson et al., Emergency Burr Holes: How to do it (PMC3352313)",
+          "snippet": "hands of non-specialists. Competing interests The authors declare that they have no competing interests. Contributor Information Mark H Wilson, Email: mark@rcse"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "61eb2c54d520daa6686ed3db03df280cf7762651df0983395ccc4357cc63467943089a01d3299407196b4becf527325961c403c17574c8ce338e8ce5d6763d7a",
+          "score": 0.369553,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "StatPearls, Epidural Hematoma (NCBI Bookshelf NBK518982)",
+          "snippet": "staff. This condition can be life-threatening, and the initial level of consciousness is a key prognostic indicator. Early diagnosis and prompt surgical interve"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "78d16c832c0f4856ca7fc13a266bf4eca945e107beee3b6e8c1d7fa3fbde21c7d42896f76faf1f58fcca9aa3fe6619839d9e1a6cf0a1a3714d883d8c0aee21ea",
+          "score": 0.369553,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "StatPearls, Epidural Hematoma (NCBI Bookshelf NBK518982)",
+          "snippet": "thicker and occupied a larger volume of the already restricted posterior fossa. Overall, 74% of patients underwent surgical intervention, while 26% were managed"
+        }
+      ],
+      "top3_set": [
+        "593cca0769231e6e61237642a8a3cb21ae52239bd223451b0862c98fd01cc42544cda29090180c87acf941d178279c49fe8f8f57dcb4171e67b4408a1f68ef3d",
+        "7e7e13f19ca7b97ada4fa7954baabad55b5a3ac83f5ae31895b039a35b1a635332c193bb18d71521902f4bc56bb07162df87ba0036845e2a20e7d73665e02518",
+        "f9943e710d9af1b209dd8255b8d4bc4b293ac2a91ac4cd754b58fd3a924cf39ed9ad5d266e05db9271ed690314c9cfa7af48864c563f8b8fafd8b192447c984b"
+      ],
+      "seed_nodes": [
+        {
+          "node_id": "73392ff6-6227-4bf4-91aa-34dcb7d61431",
+          "score": 0.739105
+        },
+        {
+          "node_id": "ec1a8fd8-6944-4c0b-aa43-33f6a00ffe90",
+          "score": 0.702322
+        },
+        {
+          "node_id": "cf3d9033-a5c6-47a8-b2cd-d464b361470a",
+          "score": 0.701207
+        },
+        {
+          "node_id": "22000b16-d848-4b1f-ae6a-b1a1a28a1eec",
+          "score": 0.69209
+        }
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.727322829241329,
+        "top_trust_tier": 0,
+        "citations": [
+          "Wilson et al., Emergency Burr Holes: How to do it (PMC3352313)",
+          "StatPearls, Epidural Hematoma (NCBI Bookshelf NBK518982)"
+        ]
+      }
+    },
+    {
+      "id": "q05_uncal_herniation",
+      "text": "uncal herniation signs with contralateral hemiparesis and anisocoria",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "297317848d6188155f7e5a914a6d0832f9bba95e8cffb043c4587a34488dde173e1ae80684df9dcc2b4ac3871242448395329a6e889a37a6e6254d7555972bc1",
+          "score": 0.50416,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Bullock et al., Surgical Management of Acute Epidural Hematomas, Neurosurgery 2006",
+          "snippet": "(19) 22 III All GCS Surgery and nonsurgical Not documented Retrospective analysis of 22 patients of all age groups who were initially treated nonoperatively. 7 "
+        },
+        {
+          "rank": 2,
+          "chunk_id": "c2d305646d59ca9069eeecd733a634784b7b67abac8289388db7c255bf5e278eb00b7d2886f94807dce202c67e01695146bcf3e18f282df33f3a09b59de772cb",
+          "score": 0.489157,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "StatPearls, Epidural Hematoma (NCBI Bookshelf NBK518982)",
+          "snippet": ", false localizing signs such as ipsilateral motor weakness may occur due to cerebral peduncle compression, a phenomenon known as the Kernohan notch or phenomen"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "2e60cfac85557013de5116770b1f320b73188f433f2382cb7ce15a8bd0825532d22672186100b6d95b1dd1899ffbb65a0722c66cd36545fa0a49c64a08c3c1b7",
+          "score": 0.314806,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "StatPearls, Epidural Hematoma (NCBI Bookshelf NBK518982)",
+          "snippet": "significantly influences EDH prognosis. The 5-component modified Frailty Index (mFI-5) assigns 1 point each for chronic obstructive pulmonary disease, congestiv"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "87620723f5cfd6e5d1f40f290caba92827108227155b41b80e0695d654e568d609898587137092c07806d5a53ad68144dc7aaa03a0581e26db42098f5859c49e",
+          "score": 0.314806,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Bullock et al., Surgical Management of Acute Epidural Hematomas, Neurosurgery 2006",
+          "snippet": "III GCS \u0001 8 All surgery Not documented Prospective data collection on 21 adult patients admitted during 3 yr with acute EDH and GCS \u0001 8, who underwent surgery. "
+        },
+        {
+          "rank": 5,
+          "chunk_id": "ca4494d5b0efc4a6e78f0243150aa8fddccd5ad3bdf0101c536c90020fdc0e215551338f9f263d695646ecf9abc73a79daea17b892e4fc6735a1a7307d84e33c",
+          "score": 0.314806,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Bullock et al., Surgical Management of Acute Epidural Hematomas, Neurosurgery 2006",
+          "snippet": ", 1995. 34. Schutzman S, Barnes P, Mantello M, Scott R: Epidural hematomas in children. Ann Emerg Med 22:535\u2013541, 1993. 35. Seelig J, Marshall L, Toutant S, Too"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "e6f27cbd76b1ee294dd2993b58f60b3b61748f3a8950dda8ec3b1ed020cb2f6b3482795c72423f6ab6ec60a6daf227dbceebbfe52cf7f3ac016e992c6ce9c10d",
+          "score": 0.314806,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "StatPearls, Epidural Hematoma (NCBI Bookshelf NBK518982)",
+          "snippet": ", occipital, frontal, and posterior fossa regions. A skull fracture is present in most patients with EDH and commonly overlies the squamous portion of the tempo"
+        }
+      ],
+      "top3_set": [
+        "297317848d6188155f7e5a914a6d0832f9bba95e8cffb043c4587a34488dde173e1ae80684df9dcc2b4ac3871242448395329a6e889a37a6e6254d7555972bc1",
+        "2e60cfac85557013de5116770b1f320b73188f433f2382cb7ce15a8bd0825532d22672186100b6d95b1dd1899ffbb65a0722c66cd36545fa0a49c64a08c3c1b7",
+        "c2d305646d59ca9069eeecd733a634784b7b67abac8289388db7c255bf5e278eb00b7d2886f94807dce202c67e01695146bcf3e18f282df33f3a09b59de772cb"
+      ],
+      "seed_nodes": [
+        {
+          "node_id": "07f344d6-c87f-4218-8ef4-02ccebdc4c39",
+          "score": 0.629612
+        },
+        {
+          "node_id": "369bca72-e760-444c-a678-82c1c8f81bda",
+          "score": 0.607923
+        },
+        {
+          "node_id": "b23e17b4-e1a4-4c78-83c2-a1815a01e6b4",
+          "score": 0.599208
+        },
+        {
+          "node_id": "5f6de561-e435-44f8-9360-3c2ae3cd8da3",
+          "score": 0.592877
+        }
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.5041601783344092,
+        "top_trust_tier": 0,
+        "citations": [
+          "Bullock et al., Surgical Management of Acute Epidural Hematomas, Neurosurgery 2006",
+          "StatPearls, Epidural Hematoma (NCBI Bookshelf NBK518982)"
+        ]
+      }
+    },
+    {
+      "id": "q06_gcs_drop",
+      "text": "Glasgow Coma Scale falling from 14 to 7 deteriorating consciousness",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "1cffc2f632b94a25e3dd749e3e882efa870b121bed7a872ac45e193babb916e2a5de037e3589977aad7fefb4b2b5c0ca58cb90cd68d30a32b23e8675a725d4ec",
+          "score": 0.397871,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "WFSA Anaesthesia Tutorial of the Week, Management of the Head-Injured Patient",
+          "snippet": ", unreactive to light, may indicate life-threatening intracranial pressure. In this situation, pupillary dilatation results from compression of the oculomotor n"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "38f5f514ff4b6b526eeb25bb47cc1d4629ff0f61ef138763861ff5f17eddca858afd4a60e975e4642335185830efc1d09d47e2595260f20006319c5ed13bcb2b",
+          "score": 0.397871,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "WFSA, Management of Major Trauma (Update in Anaesthesia)",
+          "snippet": "position of the patient in the vehicle, restraints worn, speed of collision, vehicle rollover, passenger ejection and other casualties or fatalities are key ind"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "593cca0769231e6e61237642a8a3cb21ae52239bd223451b0862c98fd01cc42544cda29090180c87acf941d178279c49fe8f8f57dcb4171e67b4408a1f68ef3d",
+          "score": 0.397871,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Wilson et al., Emergency Burr Holes: How to do it (PMC3352313)",
+          "snippet": "surgeons closer to neurosurgical centres [4]. This may paradoxically result in more optimal management in more remote regions. With adequate training and skill "
+        },
+        {
+          "rank": 4,
+          "chunk_id": "9078fd397b73155a9fbbeefdf8302ea9de2852f64e10d284c5762db94d7629ed788cf93dc210f76257cf884f644bb36da0c29a0e0f481b75ec6a39fcaf5fd68a",
+          "score": 0.397871,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Khan N., 'Managing TBI in the Resource-Limited Setting', Peshawar lecture (primary source)",
+          "snippet": "6:20 vacant ICU bed. Right? So what happens with the patient that 6:24 this patient is referred to another third hospital 6:29 and uh patient reaches to that ho"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "cr_332",
+          "score": 0.677669,
+          "via": "vector",
+          "trust_tier": 1,
+          "kind": "community_report",
+          "citation": "Community summary (level 1)",
+          "snippet": "Community summary (level 1): GLASGOW COMA SCORE, LIMB WEAKNESS, FOCAL BRAIN ABNORMALITY, CONSCIOUS LEVEL, INTRACRANIAL PROBLEM, FREQUENT ASSESSMENT AND REASSESS"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "cr_10",
+          "score": 0.670189,
+          "via": "vector",
+          "trust_tier": 1,
+          "kind": "community_report",
+          "citation": "Community summary (level 0)",
+          "snippet": "Community summary (level 0): GLASGOW COMA SCALE, GLASGOW COMA SCALE SCORE, MODERATE-SEVERE TBI, NEUROLOGIC DETERIORATION, MINOR HEAD INJURY, MODERATE HEAD INJUR"
+        }
+      ],
+      "top3_set": [
+        "1cffc2f632b94a25e3dd749e3e882efa870b121bed7a872ac45e193babb916e2a5de037e3589977aad7fefb4b2b5c0ca58cb90cd68d30a32b23e8675a725d4ec",
+        "38f5f514ff4b6b526eeb25bb47cc1d4629ff0f61ef138763861ff5f17eddca858afd4a60e975e4642335185830efc1d09d47e2595260f20006319c5ed13bcb2b",
+        "593cca0769231e6e61237642a8a3cb21ae52239bd223451b0862c98fd01cc42544cda29090180c87acf941d178279c49fe8f8f57dcb4171e67b4408a1f68ef3d"
+      ],
+      "seed_nodes": [
+        {
+          "node_id": "c5a5000b-02a8-420b-a2ec-3283d56b3c82",
+          "score": 0.795743
+        },
+        {
+          "node_id": "a412d656-da23-4fd7-a4e2-5a9ae8e47ded",
+          "score": 0.763336
+        },
+        {
+          "node_id": "aa0386d1-ee5f-4ecd-8ca2-6b274e06e402",
+          "score": 0.748923
+        },
+        {
+          "node_id": "8a5b8e2a-b79c-443e-bd03-cc9f8e092ba2",
+          "score": 0.746191
+        }
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.3978714880587537,
+        "top_trust_tier": 0,
+        "citations": [
+          "WFSA Anaesthesia Tutorial of the Week, Management of the Head-Injured Patient",
+          "WFSA, Management of Major Trauma (Update in Anaesthesia)",
+          "Wilson et al., Emergency Burr Holes: How to do it (PMC3352313)",
+          "Khan N., 'Managing TBI in the Resource-Limited Setting', Peshawar lecture (primary source)"
+        ]
+      }
+    },
+    {
+      "id": "q07_operate_vs_transfer",
+      "text": "decision to operate locally versus transfer a head injury when no neurosurgeon is available",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "1a8bb0049b61282cb3a3e63b5c95eadcb6308d30f11d03f07fa303eb2e28226e0e077d68e26ae08d7a4fb953ea050d77a832b25e950dfde5875abaa3189fb003",
+          "score": 0.615816,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Wilson et al., Emergency Burr Holes: How to do it (PMC3352313)",
+          "snippet": ". Subdural blood is likely to be more clotted and difficult to extrude than extradural. Manual removal of clot (e.g. with forceps or very careful suction) could"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "593cca0769231e6e61237642a8a3cb21ae52239bd223451b0862c98fd01cc42544cda29090180c87acf941d178279c49fe8f8f57dcb4171e67b4408a1f68ef3d",
+          "score": 0.587667,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Wilson et al., Emergency Burr Holes: How to do it (PMC3352313)",
+          "snippet": "surgeons closer to neurosurgical centres [4]. This may paradoxically result in more optimal management in more remote regions. With adequate training and skill "
+        },
+        {
+          "rank": 3,
+          "chunk_id": "4516cde012266c88f9fd15ec1a023d8fb6457f6074f696cbb3288caf79d65e58b03a7b37da094a2b68798d760248d3d2a6820ed5f04131011ac107944196f883",
+          "score": 0.583705,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Bullock et al., Surgical Management of Acute Epidural Hematomas, Neurosurgery 2006",
+          "snippet": "60 patients with EDH, and 34 patients developed coma before surgery. They found that patients treated within 2 hours after loss of consciousness exhibited a mor"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "0268e503482f28bbbd7ed55ab4aadaa91b06828088abce31ff059ee904f7936cdde7572468f8a775edef5e1a44888f0f0e612b156bd744954b3537fab48f2231",
+          "score": 0.58294,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Wilson et al., Emergency Burr Holes: How to do it (PMC3352313)",
+          "snippet": "hands of non-specialists. Competing interests The authors declare that they have no competing interests. Contributor Information Mark H Wilson, Email: mark@rcse"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "77c212b1a7a9240518144cd2d3f4b180fbb42f7c3f1f4db72d0d7592f2c4a29b4b27998136b77069eab9c741c98a16f32ea36aeb412d768b568622e94fa6a498",
+          "score": 0.581116,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Park & Khan, WFNS Peshawar Recommendations, World Neurosurg 2019",
+          "snippet": "and functionality of neurotrauma centers will require first the development of trauma centers and referral networks. Efforts to scale up trauma systems should b"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "fd5b48d69b2a842659c039582749cb91ba985bee81fd04e6096e89afb2122681060a6dc6856a9cacd63f67bd1d540a00ffa34ad8172ec9aff8abc7503c12fbba",
+          "score": 0.578265,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Bullock et al., Surgical Management of Acute Epidural Hematomas, Neurosurgery 2006",
+          "snippet": "neurological deterioration, as defined by onset of coma, pupillary abnormalities, or neurological deterioration to surgery, is more important than time between "
+        }
+      ],
+      "top3_set": [
+        "1a8bb0049b61282cb3a3e63b5c95eadcb6308d30f11d03f07fa303eb2e28226e0e077d68e26ae08d7a4fb953ea050d77a832b25e950dfde5875abaa3189fb003",
+        "4516cde012266c88f9fd15ec1a023d8fb6457f6074f696cbb3288caf79d65e58b03a7b37da094a2b68798d760248d3d2a6820ed5f04131011ac107944196f883",
+        "593cca0769231e6e61237642a8a3cb21ae52239bd223451b0862c98fd01cc42544cda29090180c87acf941d178279c49fe8f8f57dcb4171e67b4408a1f68ef3d"
+      ],
+      "seed_nodes": [
+        {
+          "node_id": "a8453a3a-44d6-4625-9121-282c9bc9d8ba",
+          "score": 0.707427
+        },
+        {
+          "node_id": "20469dba-465b-4dd6-bfe4-7191a010387d",
+          "score": 0.660724
+        },
+        {
+          "node_id": "2770dcaa-9367-49aa-a13a-887a970c5d48",
+          "score": 0.652306
+        },
+        {
+          "node_id": "f5eb52e3-d0b7-43ac-a6a3-9510c058f5fd",
+          "score": 0.639798
+        }
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.6158163958368092,
+        "top_trust_tier": 0,
+        "citations": [
+          "Wilson et al., Emergency Burr Holes: How to do it (PMC3352313)",
+          "Bullock et al., Surgical Management of Acute Epidural Hematomas, Neurosurgery 2006",
+          "Park & Khan, WFNS Peshawar Recommendations, World Neurosurg 2019",
+          "Rubiano et al., BOOTStraP stratified protocol for TBI in limited-resource regions, J Neurosci Rural Pract 2020 (PMC7055642)"
+        ]
+      }
+    },
+    {
+      "id": "q08_manage_without_ct",
+      "text": "managing severe traumatic brain injury without CT imaging in a district hospital",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "802c0d9b1fe25534a6cd9ec09872ee92824459bad0654623bec2519edf2730e950ee5475b73710544f0585723f44f3dc63343033c84e241e87d6c9d87846456e",
+          "score": 0.609143,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Updated Review of TBI Management and Guidelines, 2025 (PMC12525523)",
+          "snippet": "neurological examination, neuroimaging should be obtained to assess the severity of the TBI. Non-contrast computed tomography (CT) is the cornerstone of neuroim"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "112e1b0b3f555bf86a3dd66ebca2eb4f3a0278839c7ae5cf9578c66c982b963423841157ee65a08963212fdc1b028913af13cc6c10052c506f1fb58b72fd17e7",
+          "score": 0.600289,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Neurocritical Care Society, ENLS TBI Protocol v4.0",
+          "snippet": "withdraws with the left upper extremity, then a GCS motor score of 6 (not 4) should be awarded. The size and shape of pupils, and their reactivity to light, sho"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "28a5b03b7210cf3a65e1a3d9b3fe5c3313b8abc9badba63783891e9e423bdd7dd573220122186eb67be9460266f0f8cb14e57f7aef1e69f99d947a94ef7f1cff",
+          "score": 0.368335,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Picetti, Servadei, Rubiano et al., WSES consensus, World J Emerg Surg 2023 (PMC9830860)",
+          "snippet": "[Kyro source: WSES \u2014 Early management of isolated severe TBI in hospitals without neurosurgical capability] Citation: Picetti, Servadei, Rubiano et al., WSES co"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "8d6d61ce9cb56f1c0327672b21bda38c7f03a7a3073f832a45846bd0400fc5d4ae29ee347f8125d38530fb4ab8651f44fd1411de1c637ec7474aea944b25871c",
+          "score": 0.368335,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Rubiano et al., BOOTStraP stratified protocol for TBI in limited-resource regions, J Neurosci Rural Pract 2020 (PMC7055642)",
+          "snippet": "or imaging criteria without clinical criteria. Surgery may be indicated in the patient with neurological impairment, defined as a decrease in the GCS of more th"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "8f19e949110dc11d8da930585e6e3eee772ed2c7c3f1992f07d74f9cba53b6a03d5ef1b579eabae3e344061757624a4e21f42064cccf44e308c3abf63329ce42",
+          "score": 0.368335,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Rubiano et al., BOOTStraP stratified protocol for TBI in limited-resource regions, J Neurosci Rural Pract 2020 (PMC7055642)",
+          "snippet": "area, as well as CPGs\u2014those based on evidence and those based on expert consensus. The questions were allocated to each subgroup, and in the first session (day "
+        },
+        {
+          "rank": 6,
+          "chunk_id": "cr_175",
+          "score": 0.620755,
+          "via": "vector",
+          "trust_tier": 1,
+          "kind": "community_report",
+          "citation": "Community summary (level 1)",
+          "snippet": "Community summary (level 1): COMPUTED TOMOGRAPHY, DEBRIDEMENT, MAGNETIC RESONANCE IMAGING, PENETRATING NEUROLOGIC INJURIES, CEREBRAL CONTUSION, SUBDURAL BLOOD, "
+        }
+      ],
+      "top3_set": [
+        "112e1b0b3f555bf86a3dd66ebca2eb4f3a0278839c7ae5cf9578c66c982b963423841157ee65a08963212fdc1b028913af13cc6c10052c506f1fb58b72fd17e7",
+        "28a5b03b7210cf3a65e1a3d9b3fe5c3313b8abc9badba63783891e9e423bdd7dd573220122186eb67be9460266f0f8cb14e57f7aef1e69f99d947a94ef7f1cff",
+        "802c0d9b1fe25534a6cd9ec09872ee92824459bad0654623bec2519edf2730e950ee5475b73710544f0585723f44f3dc63343033c84e241e87d6c9d87846456e"
+      ],
+      "seed_nodes": [
+        {
+          "node_id": "f9b0de0e-bc85-4d52-9ec0-41d199b09210",
+          "score": 0.73667
+        },
+        {
+          "node_id": "6a3f4a21-d217-4aca-a366-68c8eb2ae04a",
+          "score": 0.733345
+        },
+        {
+          "node_id": "f3144e9f-7287-4243-8781-d58e6853710c",
+          "score": 0.718241
+        },
+        {
+          "node_id": "a322a6e4-19b0-4050-a7da-c0dc697dae9d",
+          "score": 0.711135
+        }
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.6091428419473957,
+        "top_trust_tier": 0,
+        "citations": [
+          "Updated Review of TBI Management and Guidelines, 2025 (PMC12525523)",
+          "Neurocritical Care Society, ENLS TBI Protocol v4.0",
+          "Picetti, Servadei, Rubiano et al., WSES consensus, World J Emerg Surg 2023 (PMC9830860)",
+          "Rubiano et al., BOOTStraP stratified protocol for TBI in limited-resource regions, J Neurosci Rural Pract 2020 (PMC7055642)"
+        ]
+      }
+    },
+    {
+      "id": "q09_secondary_injury",
+      "text": "preventing secondary brain injury from hypotension and hypoxia",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "2f6b1b64bd38a2bf330bc4d66a5418fb1a874c9c2cc4bf7bca77ece4c1b7b7785b3df75451dc551929d9e41727f41e1c9b8a41af3ace1910fd7e9bfc391b5278",
+          "score": 0.703975,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Neurocritical Care Society, ENLS TBI Protocol v4.0",
+          "snippet": "post-resuscitative GCS scores including best eye opening, verbal and motor components. - Pupillary size, shape, symmetry and reactivity to light - Head CT and C"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "773516a158036bc48faae0f443bc6298f51bd89566713338f70fe2fdce6eba0ad9f7fc8261610a53e32840c20b15a8458cac4ab57f261cfe087daad9091c0d9c",
+          "score": 0.673003,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Updated Review of TBI Management and Guidelines, 2025 (PMC12525523)",
+          "snippet": "research highlights the role of neuroinflammation in long-term neurodegeneration, potentially linking TBI to chronic traumatic encephalopathy [19]. This critica"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "e355be955d412f03562f40e79ccc682548e41dfc839a4c7c2329987730a2d80389a3a484d37c664ca0fe6d4cb3b2c7f60891ccbaacd83055190caf2936186348",
+          "score": 0.649439,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017",
+          "snippet": "Abeshaus S, Zaaroor M. Cerebral blood flow and metabolism following decompressive craniectomy for control of increased intracranial pressure. Neurosurg. 2010;67"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "4587a52d4eb59c22aa330caf2c09c8f411a0fb26c4599da08f4e8b9ce12d32a3271fd833779d2de4d43703395a178e9e8065e08032b4b6fbdb2cb159f7ba0067",
+          "score": 0.645096,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017",
+          "snippet": "Bifrontal decompressive craniectomy in the management of posttraumatic intracranial hypertension.\" Br J Neurosurg 2001;15(6):500-7. 21. Williams RF, Magnotti LJ"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "d407a8b6877bc4338f6f0ba957d8197fe5e4dcd3fb9dd6b67aea06ae4cf9194352f50b796ea99f3c2d2a09199b1a807900d46df7224d787e2cb5d16898340dce",
+          "score": 0.642446,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Primary Trauma Care Foundation, PTC Manual (head-injury chapter)",
+          "snippet": "prolonged severe crushing of soft tissues, principally skeletal muscle of the upper limbs, lower limbs and pelvis, with sensory and motor disturbances in the co"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "7b4e7d44b2781e17fe99db2b1fdb2ca37744d8174be00f3b539cbe3e4d0d2c7c3b10ac387ef8bf5dafda0bce59dfbba94ce7e1e2e60d819abfc8d71547b2d6c0",
+          "score": 0.369463,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Khan N., 'Managing TBI in the Resource-Limited Setting', Peshawar lecture (primary source)",
+          "snippet": ":11 what I propose a single theory uh saving traumatic brain injury 37:17 patients might not require as much resources as we as we presume they 37:23 require on"
+        }
+      ],
+      "top3_set": [
+        "2f6b1b64bd38a2bf330bc4d66a5418fb1a874c9c2cc4bf7bca77ece4c1b7b7785b3df75451dc551929d9e41727f41e1c9b8a41af3ace1910fd7e9bfc391b5278",
+        "773516a158036bc48faae0f443bc6298f51bd89566713338f70fe2fdce6eba0ad9f7fc8261610a53e32840c20b15a8458cac4ab57f261cfe087daad9091c0d9c",
+        "e355be955d412f03562f40e79ccc682548e41dfc839a4c7c2329987730a2d80389a3a484d37c664ca0fe6d4cb3b2c7f60891ccbaacd83055190caf2936186348"
+      ],
+      "seed_nodes": [
+        {
+          "node_id": "7c9c5e47-33e2-4fc6-a07d-f64f04b973b6",
+          "score": 0.738925
+        },
+        {
+          "node_id": "c8e05483-c8d8-4526-a951-f61e9f418173",
+          "score": 0.726939
+        },
+        {
+          "node_id": "3f499d0f-2e96-4749-9991-7131f1c76199",
+          "score": 0.724086
+        },
+        {
+          "node_id": "e6c3733b-1de6-4974-b740-1f361812b438",
+          "score": 0.717937
+        }
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.7039745802197714,
+        "top_trust_tier": 0,
+        "citations": [
+          "Neurocritical Care Society, ENLS TBI Protocol v4.0",
+          "Updated Review of TBI Management and Guidelines, 2025 (PMC12525523)",
+          "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017",
+          "Primary Trauma Care Foundation, PTC Manual (head-injury chapter)",
+          "Khan N., 'Managing TBI in the Resource-Limited Setting', Peshawar lecture (primary source)"
+        ]
+      }
+    },
+    {
+      "id": "q10_bp_target",
+      "text": "target systolic blood pressure and cerebral perfusion pressure in traumatic brain injury",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "63c66b47f781c8ad6f5679d31e18c258accc6b356af817cd139c186a45631b810177768e3e2028cecb7595f9eabbdc8c4acbd7658648ddca044d2b0544891952",
+          "score": 0.722994,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017",
+          "snippet": "JW, Tsai JT, Lin CM, et al. Evaluation of optimal cerebral perfusion pressure in severe traumatic brain injury. Acta Neurochirg Suppl. 2008;101:131-136. PMID: 1"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "92c6cc14a3db9908f0a13b7845f283bb9262a94027ee3d85e573b852dc0efbad3b5812c351332630a14ce826701a942dd643b0e7bd333eb9c11a753bbb60fe61",
+          "score": 0.703341,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017",
+          "snippet": ";40(8):2456-63. 2. Jaeger M, Dengl M, Meixensberger J, Schuhmann MU. Effects of cerebrovascular pressure reactivity-guided optimization of cerebral perfusion pr"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "034be8b6181275648b9d5709828689138b6471e9f7cd6336a9e268e7b30511c79f5fa67e5c1f473fa726e16a2bc08c2796100c2564c98d0191d05607b1db3d92",
+          "score": 0.699178,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017",
+          "snippet": "those parameters that are specific to TBI, either because they are only measured in TBI or because the value may be different in TBI patients than in other trau"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "2f32957196424a98b2957bc657eae9b85582a1bd774afcc6894ec1942fb9ba47cd67986aa3316ceb645608e76b8670a07d1c3058342905a3075314ed97ec704f",
+          "score": 0.694781,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017",
+          "snippet": "74 5. Allen BB, Chiu YL, Gerber LM, Ghajar J, Greenfield JP. Age-specific cerebral perfusion pressure thresholds and survival in children and adolescents with s"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "34e39c7fde70492a3f4264c29df1a5674510156985d4b2959808cac9098c4474a6bd69c91a5e01c227125a62862584565ee0c7b58060ac70d4334702f83128ec",
+          "score": 0.69055,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017",
+          "snippet": "ial pressure monitoring in severe traumatic brain injury: who is still bold enough to keep sinning against the level I evidence? World Neurosurg. 2013;79(5- 6):"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "edcf7a58b24859ff2161643d55148a80545c2da942be3e1d38fdfccfe050556c35d069b2b3f3c37d8ada10de143c8237ed218c07b44d12685ed42f43ba4e2c17",
+          "score": 0.682662,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "WFSA Anaesthesia Tutorial of the Week, Management of the Head-Injured Patient",
+          "snippet": "g/min. Irreversible neuronal damage occurs once cerebral blood flow falls below 18 mls/100g/min, meaning that after severe head injury the brain is extremely su"
+        }
+      ],
+      "top3_set": [
+        "034be8b6181275648b9d5709828689138b6471e9f7cd6336a9e268e7b30511c79f5fa67e5c1f473fa726e16a2bc08c2796100c2564c98d0191d05607b1db3d92",
+        "63c66b47f781c8ad6f5679d31e18c258accc6b356af817cd139c186a45631b810177768e3e2028cecb7595f9eabbdc8c4acbd7658648ddca044d2b0544891952",
+        "92c6cc14a3db9908f0a13b7845f283bb9262a94027ee3d85e573b852dc0efbad3b5812c351332630a14ce826701a942dd643b0e7bd333eb9c11a753bbb60fe61"
+      ],
+      "seed_nodes": [
+        {
+          "node_id": "911200a3-cc4e-49db-86dd-a02588448ea7",
+          "score": 0.806387
+        },
+        {
+          "node_id": "7614c6d0-399f-4a3d-9650-b7ad7f604083",
+          "score": 0.771614
+        },
+        {
+          "node_id": "9b91e958-34a6-4b62-9997-c6f286006590",
+          "score": 0.76449
+        },
+        {
+          "node_id": "f4624de9-fd75-45de-9425-389547cebda1",
+          "score": 0.755813
+        }
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.7229944195069162,
+        "top_trust_tier": 0,
+        "citations": [
+          "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017",
+          "WFSA Anaesthesia Tutorial of the Week, Management of the Head-Injured Patient"
+        ]
+      }
+    },
+    {
+      "id": "q11_ketamine_rsi",
+      "text": "rapid sequence intubation with ketamine in the head-injured patient",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "df937ac8b3315bacf9b9e364c72cf4b4576461d29c55e7f4207060283a818c4a4f6d04f99f2baf01f45a9cc30837b564d3b1f0f0e0f34a350ed1ba8b25e0ec60",
+          "score": 0.695132,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "WFSA Anaesthesia Tutorial of the Week, Management of the Head-Injured Patient",
+          "snippet": "F leak Initial Management Airway Indications for intubation following head injury are listed in Box 3 below. If the cervical spine has not been cleared manual i"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "5970c91ce921e5c17cf91fdd42a9935dee7f871f57eccdd442c47005aa85d05c591f390b28f2cf79b4e595a547ada32f09493f74b066a98e942a4d12ac9a5529",
+          "score": 0.621183,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017",
+          "snippet": ". Mellion SA, Bennett KS, Ellsworth GL, et al. High-dose barbiturates for refractory intracranial hypertension in children with severe traumatic brain injury. P"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "0f1b5c5f5bb8a40f38ea055731e871cc62e0bb1090dc747127b693fbcfa124feed49b383f976d937ae3fc945c9a17953e8c32cd8d138d91ea85c64af7aed48c9",
+          "score": 0.36744,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Primary Trauma Care Foundation, PTC Manual (head-injury chapter)",
+          "snippet": "(incremental) doses of a strong opioid such as morphine against the pain relief. Addiction is not a problem with short-term use of morphine and other opioids, a"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "1cffc2f632b94a25e3dd749e3e882efa870b121bed7a872ac45e193babb916e2a5de037e3589977aad7fefb4b2b5c0ca58cb90cd68d30a32b23e8675a725d4ec",
+          "score": 0.36744,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "WFSA Anaesthesia Tutorial of the Week, Management of the Head-Injured Patient",
+          "snippet": ", unreactive to light, may indicate life-threatening intracranial pressure. In this situation, pupillary dilatation results from compression of the oculomotor n"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "70a9c5244134423e9da660dd524ecf49894e1611b57ccd87f757908566c400e32ef4f561131ed1ab500774a27554cc0fa1f98b93a47ad3494a59922cb116f184",
+          "score": 0.36744,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017",
+          "snippet": "pressure on cerebral injury patients with hypoxemia. Am J Emerg Med 2011;29(7):699-703. Anesthetics, Analgesics, and Sedatives 1. Cordato DJ, Herkes GK, Mather "
+        },
+        {
+          "rank": 6,
+          "chunk_id": "d160f5e4d661e47c07748c784a458a6b0fcf20f46764ad102f18334d5b3cc25eac4487af6cc68f26a2aaee6865db293d358bb15d5b3d859dc3ae316f49c8be5d",
+          "score": 0.36744,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Rubiano et al., BOOTStraP stratified protocol for TBI in limited-resource regions, J Neurosci Rural Pract 2020 (PMC7055642)",
+          "snippet": "90 bpm; cerebral perfusion pressure (CPP) 60\u201370 mm Hg. Metabolic: glucose 110\u2013170 mg/dL; sodium 135\u2013155 mmol/L; temperature 36\u201337.5\u00b0C (normothermia; no prophyla"
+        }
+      ],
+      "top3_set": [
+        "0f1b5c5f5bb8a40f38ea055731e871cc62e0bb1090dc747127b693fbcfa124feed49b383f976d937ae3fc945c9a17953e8c32cd8d138d91ea85c64af7aed48c9",
+        "5970c91ce921e5c17cf91fdd42a9935dee7f871f57eccdd442c47005aa85d05c591f390b28f2cf79b4e595a547ada32f09493f74b066a98e942a4d12ac9a5529",
+        "df937ac8b3315bacf9b9e364c72cf4b4576461d29c55e7f4207060283a818c4a4f6d04f99f2baf01f45a9cc30837b564d3b1f0f0e0f34a350ed1ba8b25e0ec60"
+      ],
+      "seed_nodes": [
+        {
+          "node_id": "160b8c86-7af7-4705-97a9-dc832821c7ff",
+          "score": 0.73488
+        },
+        {
+          "node_id": "7a69073a-b7b8-4a08-a81d-06c10e0f4048",
+          "score": 0.728846
+        },
+        {
+          "node_id": "4431b902-80fd-4b18-902a-6f9fdf2d1abb",
+          "score": 0.699174
+        },
+        {
+          "node_id": "6f4ef2fa-731a-420d-99fa-7f4857650cd1",
+          "score": 0.699174
+        }
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.6951323621318135,
+        "top_trust_tier": 0,
+        "citations": [
+          "WFSA Anaesthesia Tutorial of the Week, Management of the Head-Injured Patient",
+          "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017",
+          "Primary Trauma Care Foundation, PTC Manual (head-injury chapter)",
+          "Rubiano et al., BOOTStraP stratified protocol for TBI in limited-resource regions, J Neurosci Rural Pract 2020 (PMC7055642)"
+        ]
+      }
+    },
+    {
+      "id": "q12_seizure_prophylaxis",
+      "text": "post-traumatic seizure prophylaxis with levetiracetam seven day course",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "f62cc47c36df19ca704a7459707c21943401901a6e1eba9abbcc936f6a9b3e0298940bcf3132af15b2656f1ef6d7af3dfbe592eabc6c83c58eedfe16f78fbabd",
+          "score": 0.708915,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "McGovern Medical School, Post-Traumatic Seizure Prophylaxis in TBI CPG",
+          "snippet": "[Kyro source: Post-Traumatic Seizure Prophylaxis CPG (levetiracetam, 7-day)] Citation: McGovern Medical School, Post-Traumatic Seizure Prophylaxis in TBI CPG Po"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "7cf9cdbc2a27e293d279f3c357e5c89924bb8e94b29f33f075576d387844fb2c35b0f44d6f14a296a37c3cab5a27aeaf46e66bd939b42418b92bad15aacfe011",
+          "score": 0.680481,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017",
+          "snippet": "hematoma or cortical contusion; posttraumatic amnesia lasting longer than 24 hours; age >65 years; or premorbid history of depression.1 Seizure prophylaxis for "
+        },
+        {
+          "rank": 3,
+          "chunk_id": "972da62bddc19381fe99919469d356002b6d5987458fda4f157afcab462aa757c5702428e6e004575a8e4458eeffd0e2e8c0dbe3731c6348b95f0137540d9559",
+          "score": 0.651218,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "McGovern Medical School, Post-Traumatic Seizure Prophylaxis in TBI CPG",
+          "snippet": "(4):E3 - Cotton BA, et al. Cost-Utility Analysis of Levetiracetam and Phenytoin for Post-Traumatic Seizure Prophylaxis. J Trauma. Aug 2011;71(2):375-9 - Pieracc"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "0a9b4a8262183cb09a9eacffa1aec0da4c81ba20acc0c07d5cc1fb28df889bd0e0b9a19f3c1facf726dac8cf73f8a6a78c28c58c8b7e370b57a9e52982949431",
+          "score": 0.36815,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "McGovern Medical School, Post-Traumatic Seizure Prophylaxis in TBI CPG",
+          "snippet": ", Evans RM, Bakare AA, Safavi-Abbasi S. Early and Late Posttraumatic Epilepsy in the Setting of Traumatic Brain Injury: A Meta-analysis and Review of Antiepilep"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "cr_241",
+          "score": 0.648044,
+          "via": "vector",
+          "trust_tier": 1,
+          "kind": "community_report",
+          "citation": "Community summary (level 1)",
+          "snippet": "Community summary (level 1): TREATMENT STRATEGY, FOSPHENYTOIN 1G, LEVETIRACETAM 1G, LEVETIRACETAM 1G IV Q12 X 3 DAYS, LEVETIRACETAM 1G PO SUSPENSION Q12 X 4 DAY"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "cr_11",
+          "score": 0.643821,
+          "via": "vector",
+          "trust_tier": 1,
+          "kind": "community_report",
+          "citation": "Community summary (level 0)",
+          "snippet": "Community summary (level 0): PHENYTOIN, SEIZURES, LEVETIRACETAM, SEIZURE PROPHYLAXIS, SEIZURE, POST-TRAUMATIC SEIZURES, BRAIN TRAUMA FOUNDATION GUIDELINES, DELA"
+        }
+      ],
+      "top3_set": [
+        "7cf9cdbc2a27e293d279f3c357e5c89924bb8e94b29f33f075576d387844fb2c35b0f44d6f14a296a37c3cab5a27aeaf46e66bd939b42418b92bad15aacfe011",
+        "972da62bddc19381fe99919469d356002b6d5987458fda4f157afcab462aa757c5702428e6e004575a8e4458eeffd0e2e8c0dbe3731c6348b95f0137540d9559",
+        "f62cc47c36df19ca704a7459707c21943401901a6e1eba9abbcc936f6a9b3e0298940bcf3132af15b2656f1ef6d7af3dfbe592eabc6c83c58eedfe16f78fbabd"
+      ],
+      "seed_nodes": [
+        {
+          "node_id": "247d162b-beeb-4d67-96c7-2b800f1dc9ea",
+          "score": 0.736301
+        },
+        {
+          "node_id": "098fa929-e1d8-48c5-8a81-89dcd2dd393b",
+          "score": 0.705326
+        },
+        {
+          "node_id": "1f57e95d-7681-4092-b414-29de71de9b29",
+          "score": 0.692062
+        },
+        {
+          "node_id": "b07d52a0-1f74-42cb-89f6-9390319d7941",
+          "score": 0.677389
+        }
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.7089150364845338,
+        "top_trust_tier": 0,
+        "citations": [
+          "McGovern Medical School, Post-Traumatic Seizure Prophylaxis in TBI CPG",
+          "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017"
+        ]
+      }
+    },
+    {
+      "id": "q13_anisocoria",
+      "text": "anisocoria as a sign of an expanding intracranial hematoma and rising ICP",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "784d0207e5ae27f28dec9455562013744ef0a8bc064df47077cbe1b5dea3c7ae2fbf36c99c8fd95430ba061dea5d474c239be01998cbfd430113a27beb2fad3d",
+          "score": 0.592362,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017",
+          "snippet": "secondary insults in head-injured patients during intensive care. J Neurosurg Anesthesiol. Jan 1994;6(1):4-14. PMID: 8298263. 21. Manley G, Knudson MM, Morabito"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "07dd4b0f31dbffbabc2f2e012e6a969474f881683cfcb9c8198dcb34c014dd4dc0a8f838ebcdc81b84b078c73c516715884b3975de961f47451a2120a51aa787",
+          "score": 0.586604,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "WFSA Anaesthesia Tutorial of the Week, Management of the Head-Injured Patient",
+          "snippet": "mmHg MANAGEMENT OF RAISED INTRACRANIAL PRESSURE ICP above 20mmHg requires urgent treatment. In the absence of ICP monitoring, the first indication of intracrani"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "cr_331",
+          "score": 0.627559,
+          "via": "vector",
+          "trust_tier": 1,
+          "kind": "community_report",
+          "citation": "Community summary (level 1)",
+          "snippet": "Community summary (level 1): UNEQUAL PUPILS, ACUTE EXTRADURAL HAEMATOMA, REDUCED GCS, IPSILATERAL FIXED PUPIL, GCS > 8. UNEQUAL PUPILS: Unequal pupils, medicall"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "817eafaa9fd975f21d3c4cf22c1d42d34db69a50571894165900a117aeac35c1ab31734bd15df8063dc047552efe5699a36f39da4eb8d3f364b719a54a9001e6",
+          "score": 0.621343,
+          "via": "vector",
+          "trust_tier": 1,
+          "kind": "text_unit",
+          "citation": "Schmidek & Sweet, Operative Neurosurgical Techniques (Elsevier)",
+          "snippet": "findings. Clinical features indicating high ICP or any impairment to the level of consciousness, oculomotor paresis ipsilateral to a sizable hematoma, bra- dyca"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "cr_162",
+          "score": 0.616827,
+          "via": "vector",
+          "trust_tier": 1,
+          "kind": "community_report",
+          "citation": "Community summary (level 1)",
+          "snippet": "Community summary (level 1): EPIDURAL HEMATOMA, SUBDURAL HEMATOMA, DURA MATER, INTRACEREBRAL HEMORRHAGE, ANISOCORIA, HEMATOMA EVACUATION, HEMATOMA EXPANSION, CO"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "1e513207e8fca237ea587cd07fa512c040da9b7d566a3d15f44836ff105ac0ef2d943094dfa313c7d54a1217b8ac31789a317b8576f401f45e2c6ffb634e174f",
+          "score": 0.586889,
+          "via": "vector",
+          "trust_tier": 1,
+          "kind": "text_unit",
+          "citation": "Greenberg MS, Handbook of Neurosurgery (Thieme)",
+          "snippet": "childrena <10\u201315 young children 3\u20137 term infantsb 1.5\u20136 athe age of transition from \u201cyoung\u201d to \u201colder\u201d child is not precisely defined bmay be subatmospheric in "
+        }
+      ],
+      "top3_set": [
+        "07dd4b0f31dbffbabc2f2e012e6a969474f881683cfcb9c8198dcb34c014dd4dc0a8f838ebcdc81b84b078c73c516715884b3975de961f47451a2120a51aa787",
+        "784d0207e5ae27f28dec9455562013744ef0a8bc064df47077cbe1b5dea3c7ae2fbf36c99c8fd95430ba061dea5d474c239be01998cbfd430113a27beb2fad3d",
+        "cr_331"
+      ],
+      "seed_nodes": [
+        {
+          "node_id": "e146834b-3b72-465d-a3d7-82cc6f0df540",
+          "score": 0.699636
+        },
+        {
+          "node_id": "47c3ca28-0ca9-4e19-b8ff-46a55f561f82",
+          "score": 0.699636
+        },
+        {
+          "node_id": "d820fadb-7c45-485c-b86f-818e7e3b8cf6",
+          "score": 0.694308
+        },
+        {
+          "node_id": "7d7bcbad-c5e3-4138-b6ad-ae503afc5ce9",
+          "score": 0.684964
+        }
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.5923620250904307,
+        "top_trust_tier": 0,
+        "citations": [
+          "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017",
+          "WFSA Anaesthesia Tutorial of the Week, Management of the Head-Injured Patient"
+        ]
+      }
+    },
+    {
+      "id": "q14_hyperosmolar",
+      "text": "hyperosmolar therapy mannitol or hypertonic saline for raised intracranial pressure",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "6f65dcfa6ffc086c15228e5b9f9b757b93cf4f013faa1384a9ba2b5e4661c3eae872808ec91aaf1a0f6ab9e5e928e1c91d3956081d0359a47e244ae4759df7f9",
+          "score": 0.8031,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017",
+          "snippet": "hyperosmolar agents has become routine in the management of intracranial hypertension and herniation syndromes. However, the optimal agent, their optimal means "
+        },
+        {
+          "rank": 2,
+          "chunk_id": "ea0c8734cb21eb8965f4462b54da9513e053c314d625654293968168985f2b2b7c983460a5f42ebbbd3f962d8651db1e428038e61133b5a003054d9a4533b78d",
+          "score": 0.739567,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017",
+          "snippet": "Marshall LF, RW SM, Rauscher LA, Shapiro HM. Mannitol dose requirements in braininjured patients. J Neurosurg. Feb 1978;48(2):169-172. PMID: 624964. 13. Mendelo"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "d742184798e577e5603b3a5e18a0c6dddc1c41489f064f4f390474c56750401f3d46a248cd7a69c3a0bf3cd5a33d7e102994d4789805cfdbff3e367d65bbd4eb",
+          "score": 0.726717,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017",
+          "snippet": "modulates inflammatory, coagulation and endothelial activation marker profiles in severe traumatic brain injured patients. J Neuroinflammation 2010;7:5. 3. Rock"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "cr_75",
+          "score": 0.810365,
+          "via": "vector",
+          "trust_tier": 1,
+          "kind": "community_report",
+          "citation": "Community summary (level 1)",
+          "snippet": "Community summary (level 1): MANNITOL, HYPERTONIC SALINE, HYPEROSMOLAR THERAPY, TRANSTENTORIAL HERNIATION, OSMOTIC THERAPY, INTRACRANIAL VOLUME, CEREBRAL OEDEMA"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "ece2f7812c3bc5a209f014515a74d5bf18f8a3e536c30cba9e3dec04bd313cdea3362aed6b426aa308169a14eb8563d104f375e04d45f87d715c781ca632df5b",
+          "score": 0.735153,
+          "via": "vector",
+          "trust_tier": 1,
+          "kind": "text_unit",
+          "citation": "Greenberg MS, Handbook of Neurosurgery (Thieme)",
+          "snippet": "1\u20136 [123] Doyle JA, Davis DP, Hoyt DB. The use of hypertonic saline in the treatment of traumatic brain injury. J Trauma. 2001; 50:367\u2013383 [124] Ogden AT, Mayer"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "e2e057763f50a9543eb1d2b8552349d0c3d5acb61ffc5886c430cd8a85e8101b9f2fd383664a3236ebddde2b0c8fffcefc6868f5d39af04df47d1b05dcada855",
+          "score": 0.720445,
+          "via": "vector",
+          "trust_tier": 1,
+          "kind": "text_unit",
+          "citation": "Zarmer et al., Advances in TBI Diagnosis and Treatment, 2025",
+          "snippet": "ranial Pressure: A Comprehensive Review of Recent Research and Clinical Experiences. Korean J. Neurotrauma 2023, 19, 162\u2013176. [CrossRef] [PubMed] 54. Boone, M.D"
+        }
+      ],
+      "top3_set": [
+        "6f65dcfa6ffc086c15228e5b9f9b757b93cf4f013faa1384a9ba2b5e4661c3eae872808ec91aaf1a0f6ab9e5e928e1c91d3956081d0359a47e244ae4759df7f9",
+        "d742184798e577e5603b3a5e18a0c6dddc1c41489f064f4f390474c56750401f3d46a248cd7a69c3a0bf3cd5a33d7e102994d4789805cfdbff3e367d65bbd4eb",
+        "ea0c8734cb21eb8965f4462b54da9513e053c314d625654293968168985f2b2b7c983460a5f42ebbbd3f962d8651db1e428038e61133b5a003054d9a4533b78d"
+      ],
+      "seed_nodes": [
+        {
+          "node_id": "ec6d2afc-c94c-4c60-8e3b-3866ca43af09",
+          "score": 0.785538
+        },
+        {
+          "node_id": "f6809fd1-bf77-4224-8132-d3b4948d7b7c",
+          "score": 0.784595
+        },
+        {
+          "node_id": "c180c44a-8979-4e81-9164-6ae2a753584c",
+          "score": 0.76095
+        },
+        {
+          "node_id": "8c79fa3a-e635-4440-bd49-cfdb5a7e164f",
+          "score": 0.746783
+        }
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.8030995095160005,
+        "top_trust_tier": 0,
+        "citations": [
+          "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017"
+        ]
+      }
+    },
+    {
+      "id": "q15_ct_appearance",
+      "text": "biconvex hyperdense extradural collection limited by sutures on CT scan",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "1de7f6783ecea5543d8a88ac73ffbd9769ec60da2bcc6104547049d05dcc9c4da182e83338fc2df9a17c2c2fb7663ffd2af1c2d06c1b527f0bb91c7fa8aca1dc",
+          "score": 0.54797,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "StatPearls, Epidural Hematoma (NCBI Bookshelf NBK518982)",
+          "snippet": "should be used. The neck should be flexed gently to expose the suboccipital region without obstructing venous return from the cervical vasculature. A midline li"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "39bad18ef3f46fbf91b73d24f01f099675362f885cde06b817d6086cb91445971f0cc453f3f3357f0da6de0334a36c264e122f0b6fdab73345f1b43902334cee",
+          "score": 0.543283,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "StatPearls, Epidural Hematoma (NCBI Bookshelf NBK518982)",
+          "snippet": "timely evaluation. - Differentiate epidural hematoma from subdural hematoma and other types of intracranial hemorrhage by analyzing characteristic findings on n"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "4e4acb5a073bb935eed952777b89f19c98874318d2c924aa30520667a7d651dcbd05057aeaf7b432f0a5526fdc51668d28050b22d1c1bdfa579fcedd875ce10f",
+          "score": 0.541597,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "StatPearls, Epidural Hematoma (NCBI Bookshelf NBK518982)",
+          "snippet": "H cases occur without a detectable fracture on plain imaging. Computed Tomography Head CT is the primary diagnostic modality for EDH due to its widespread avail"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "c2d305646d59ca9069eeecd733a634784b7b67abac8289388db7c255bf5e278eb00b7d2886f94807dce202c67e01695146bcf3e18f282df33f3a09b59de772cb",
+          "score": 0.331153,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "StatPearls, Epidural Hematoma (NCBI Bookshelf NBK518982)",
+          "snippet": ", false localizing signs such as ipsilateral motor weakness may occur due to cerebral peduncle compression, a phenomenon known as the Kernohan notch or phenomen"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "b6fe8ba2675618792f425535bc5a5c800da0276817894f409cf350f24f5644151a1d1103d85f1b684e044256031fc3c0dd3fea63aa768e80899a45b73259fee6",
+          "score": 0.538617,
+          "via": "vector",
+          "trust_tier": 1,
+          "kind": "text_unit",
+          "citation": "Greenberg MS, Handbook of Neurosurgery (Thieme)",
+          "snippet": "follow those of CSF. 58.7.5 Treatment Asymptomatic hygromas do not require treatment. Recurrence following simple burr-hole drainage is common. Many surgeons ma"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "46c21104c63b041174f87af38c4d38997473491ee768629e162f4b1611702e67796f4bd5686953be724a158fc0bdd05e6a499f130316b41c5d49afd14b3fff45",
+          "score": 0.536736,
+          "via": "vector",
+          "trust_tier": 1,
+          "kind": "text_unit",
+          "citation": "Schmidek & Sweet, Operative Neurosurgical Techniques (Elsevier)",
+          "snippet": "a venous origin due to tearing of the superior sagittal sinus. They may be missed, because they are often displayed only in the upper axial sections of the CT s"
+        }
+      ],
+      "top3_set": [
+        "1de7f6783ecea5543d8a88ac73ffbd9769ec60da2bcc6104547049d05dcc9c4da182e83338fc2df9a17c2c2fb7663ffd2af1c2d06c1b527f0bb91c7fa8aca1dc",
+        "39bad18ef3f46fbf91b73d24f01f099675362f885cde06b817d6086cb91445971f0cc453f3f3357f0da6de0334a36c264e122f0b6fdab73345f1b43902334cee",
+        "4e4acb5a073bb935eed952777b89f19c98874318d2c924aa30520667a7d651dcbd05057aeaf7b432f0a5526fdc51668d28050b22d1c1bdfa579fcedd875ce10f"
+      ],
+      "seed_nodes": [
+        {
+          "node_id": "83ed788c-0bbb-423f-ab32-b2420cbaa603",
+          "score": 0.662305
+        },
+        {
+          "node_id": "6d2ca5f6-70d3-4987-aedd-751b7030f34a",
+          "score": 0.659675
+        },
+        {
+          "node_id": "0049ef83-8882-4c02-b2a8-91c6a52ea9a6",
+          "score": 0.647239
+        },
+        {
+          "node_id": "e541df7e-924c-4587-84d1-fe8d18355ef0",
+          "score": 0.64116
+        }
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.5479704097404134,
+        "top_trust_tier": 0,
+        "citations": [
+          "StatPearls, Epidural Hematoma (NCBI Bookshelf NBK518982)"
+        ]
+      }
+    },
+    {
+      "id": "q16_decompressive",
+      "text": "indications for decompressive craniectomy in traumatic brain injury",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "75a7964db4064f84f624b022d831f4e29dc7dd1f9ec440d3efa77a453a7983b0a15e32b160a72536813cd964660b6d28104ea28cca330c4cba9e4af61d6e642b",
+          "score": 0.751906,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Updated Review of TBI Management and Guidelines, 2025 (PMC12525523)",
+          "snippet": "al. Decompressive craniectomy in diffuse traumatic brain injury (DECRA) N. Engl. J. Med. 2011;364:1493\u20131502. doi: 10.1056/NEJMoa1102077. [DOI] [PubMed] [Google "
+        },
+        {
+          "rank": 2,
+          "chunk_id": "b87035f1ae68f3733e9c58ea6e9baa62dd3ea1eaa75c8d62e47345cda1ab59250db773c888ee9efc8aa37b7f55f13ffd3cd1141643c81c2eff9865bab5ff8242",
+          "score": 0.741293,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017",
+          "snippet": ", randomized controlled study. J Neurotrauma. 2005;22(6):623-628. PMID: 15941372. 16. Qiu W, Guo C, Shen H, et al. Effects of unilateral decompressive craniecto"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "802c0d9b1fe25534a6cd9ec09872ee92824459bad0654623bec2519edf2730e950ee5475b73710544f0585723f44f3dc63343033c84e241e87d6c9d87846456e",
+          "score": 0.396763,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Updated Review of TBI Management and Guidelines, 2025 (PMC12525523)",
+          "snippet": "neurological examination, neuroimaging should be obtained to assess the severity of the TBI. Non-contrast computed tomography (CT) is the cornerstone of neuroim"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "9169bb89bdd54167a9ac1ba9f28c8fc6f889fc12b1a5f032f87617615c9089349b0a17aee4072c58c0a7ebfb77a1d89a69d9e92084a18d34060734ea603b9c4c",
+          "score": 0.396763,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Updated Review of TBI Management and Guidelines, 2025 (PMC12525523)",
+          "snippet": "affect up to 30% of TBI survivors [32]. Long-term care may involve outpatient follow-up, vocational rehabilitation, and community reintegration programs to opti"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "e8086d9fa2738a49df3dd7758f24f0667b8c59902cb5ef2b38fd643ccc42e90ac3386b1c186e9775d289d396ef4b7e16531f3b22ef43dc0988162ffa1683cd71",
+          "score": 0.396763,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Updated Review of TBI Management and Guidelines, 2025 (PMC12525523)",
+          "snippet": "the past decade, reflecting on the state of TBI care as of April 2025. 2. Materials and Methods 2.1. Search Strategy and Eligibility Criteria A systematic PubMe"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "e8a817d7541ed096cd1ca5dd35fe514c7cb0fb3a7c4d7f012bb2f430789af85c58642335a02905f03778aac4eecaf265dcaa38fb16f990f393305f84319d6aec",
+          "score": 0.396763,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Updated Review of TBI Management and Guidelines, 2025 (PMC12525523)",
+          "snippet": "[Kyro source: Updated Review of the Management of and Guidelines for TBI (2025)] Citation: Updated Review of TBI Management and Guidelines, 2025 (PMC12525523) A"
+        }
+      ],
+      "top3_set": [
+        "75a7964db4064f84f624b022d831f4e29dc7dd1f9ec440d3efa77a453a7983b0a15e32b160a72536813cd964660b6d28104ea28cca330c4cba9e4af61d6e642b",
+        "802c0d9b1fe25534a6cd9ec09872ee92824459bad0654623bec2519edf2730e950ee5475b73710544f0585723f44f3dc63343033c84e241e87d6c9d87846456e",
+        "b87035f1ae68f3733e9c58ea6e9baa62dd3ea1eaa75c8d62e47345cda1ab59250db773c888ee9efc8aa37b7f55f13ffd3cd1141643c81c2eff9865bab5ff8242"
+      ],
+      "seed_nodes": [
+        {
+          "node_id": "9661fe6d-4304-4368-ac1c-b89c41dca1c8",
+          "score": 0.793526
+        },
+        {
+          "node_id": "7f0e8505-13a4-4af4-a4e5-998321e58ee5",
+          "score": 0.770199
+        },
+        {
+          "node_id": "86877b24-6b38-4749-ac27-3b69ddd04018",
+          "score": 0.753267
+        },
+        {
+          "node_id": "52580861-13e6-4c97-9024-549579479f24",
+          "score": 0.742727
+        }
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.7519061193485594,
+        "top_trust_tier": 0,
+        "citations": [
+          "Updated Review of TBI Management and Guidelines, 2025 (PMC12525523)",
+          "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017"
+        ]
+      }
+    },
+    {
+      "id": "q17_task_shifting",
+      "text": "general medical officer performing a craniotomy supervised remotely by a neurosurgeon",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "593cca0769231e6e61237642a8a3cb21ae52239bd223451b0862c98fd01cc42544cda29090180c87acf941d178279c49fe8f8f57dcb4171e67b4408a1f68ef3d",
+          "score": 0.546903,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Wilson et al., Emergency Burr Holes: How to do it (PMC3352313)",
+          "snippet": "surgeons closer to neurosurgical centres [4]. This may paradoxically result in more optimal management in more remote regions. With adequate training and skill "
+        },
+        {
+          "rank": 2,
+          "chunk_id": "4e26190deb9ff320ba992011d287d503ee9e2718c91994055e7739653c34fdacb04f102961fdc0f2a84202b0efb848c953eb2e241b2016d1ae093d732cc380b5",
+          "score": 0.315961,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Park & Khan, WFNS Peshawar Recommendations, World Neurosurg 2019",
+          "snippet": "ICs have partnered with LMIC institutions in a twinning model, and in many cases, financial support comes directly from the HIC institution or department.50, 51"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "77c212b1a7a9240518144cd2d3f4b180fbb42f7c3f1f4db72d0d7592f2c4a29b4b27998136b77069eab9c741c98a16f32ea36aeb412d768b568622e94fa6a498",
+          "score": 0.315961,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Park & Khan, WFNS Peshawar Recommendations, World Neurosurg 2019",
+          "snippet": "and functionality of neurotrauma centers will require first the development of trauma centers and referral networks. Efforts to scale up trauma systems should b"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "85fb3366dc434620c200ba94d4ad6ed00eafd5625640f34c1c1af8cd66d781f7cb30e44526e7faea56ba28395a6744b58791eff7d4b62d10431573bcca2c1a34",
+          "score": 0.315961,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017",
+          "snippet": "Class 3 Mortality did not differ and there was no difference in survival between groups, with 52% vs. 79%, p=0.08. Complications were more frequent among cranie"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "8b1b9e4278b69ce89e6753790070a032f2bc3fa703352bc7e648ffff26f24d74c41b11eea650cd67a2f12ea200a2b6d990e13b1383520fca9218957bbfd328f9",
+          "score": 0.315961,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Park & Khan, WFNS Peshawar Recommendations, World Neurosurg 2019",
+          "snippet": "HICs.40 Examples include the development of battery powered surgical headlights and pulse oximetry for intraoperative monitoring.41,42 Another well-known exampl"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "cr_280",
+          "score": 0.563209,
+          "via": "vector",
+          "trust_tier": 1,
+          "kind": "community_report",
+          "citation": "Community summary (level 1)",
+          "snippet": "Community summary (level 1): NEURONAVIGATION, MRI AND CT SCAN FUSION. NEURONAVIGATION: Image-guided surgical technique using fused MRI and CT scans to provide a"
+        }
+      ],
+      "top3_set": [
+        "4e26190deb9ff320ba992011d287d503ee9e2718c91994055e7739653c34fdacb04f102961fdc0f2a84202b0efb848c953eb2e241b2016d1ae093d732cc380b5",
+        "593cca0769231e6e61237642a8a3cb21ae52239bd223451b0862c98fd01cc42544cda29090180c87acf941d178279c49fe8f8f57dcb4171e67b4408a1f68ef3d",
+        "77c212b1a7a9240518144cd2d3f4b180fbb42f7c3f1f4db72d0d7592f2c4a29b4b27998136b77069eab9c741c98a16f32ea36aeb412d768b568622e94fa6a498"
+      ],
+      "seed_nodes": [
+        {
+          "node_id": "3640e290-01de-4f91-860c-b69f2d6b4ad7",
+          "score": 0.631922
+        },
+        {
+          "node_id": "cbde0ef1-a0e2-457e-bb93-2f0e318d096b",
+          "score": 0.625865
+        },
+        {
+          "node_id": "c5fcc621-3716-411c-bc61-cb8b0b3d9590",
+          "score": 0.593161
+        },
+        {
+          "node_id": "f70d8208-88ea-49e2-b4e2-3f63662b1278",
+          "score": 0.592213
+        }
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.5469025080996754,
+        "top_trust_tier": 0,
+        "citations": [
+          "Wilson et al., Emergency Burr Holes: How to do it (PMC3352313)",
+          "Park & Khan, WFNS Peshawar Recommendations, World Neurosurg 2019",
+          "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017"
+        ]
+      }
+    },
+    {
+      "id": "q18_coagulopathy",
+      "text": "reversal of coagulopathy and anticoagulation in traumatic intracranial hemorrhage",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "cf896aaecf3c11ece490c389371499d7e9b84cc97cc7bc3856feecc604681048e77f5219565affc03e457221a094649bcdc54026b433abaed6bc859acab5418e",
+          "score": 0.607842,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017",
+          "snippet": "et al. Gold Medal Forum Winner. Unfractionated heparin three times a day versus enoxaparin in the prevention of deep vein thrombosis in trauma patients. America"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "f252a1fba62b250728b19cb0c4cf87d64885611a6883579158ea752dab6f835d9626153cf5acbb0729f24707720ad4ef9eeba5114783f4d90ba1fe2709d8766b",
+          "score": 0.607153,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Neurocritical Care Society, ENLS TBI Protocol v4.0",
+          "snippet": "findings indicate mass effect and may suggest high ICP, a reliable relationship does not exist between the admission CT and subsequent development of high ICP i"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "77c1370e2e16e15ee7200fdd47c4b58196b63c484dbe73d34b20c77d8a0a2ed715c56bdac0facfc38357e2fff1c24b89372205f9691c47ee589eb3182e14d66f",
+          "score": 0.606855,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017",
+          "snippet": "was underpowered to detect efficacy of intervention) Did not find increase in bleeding complications Abbreviations: CT=computed tomography, DVT=deep venous thro"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "b890da27ff38cec9618f0dd5a2a15b76a6c46297ef7cb3ce41940fab0db26713dde0690b49908307b6287c0d207179f6b9e0fb97319e5a47bc6d55e4b3bb221b",
+          "score": 0.594507,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017",
+          "snippet": "Trauma Data Bank. Ann Surg. 2004;240:490-496; discussion 496-498. 10. Koehler DM, Shipman J, Davidson MA, Guillamondegui O. Is early venous thromboembolism prop"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "41436d78e4d5bf1f1a433be45d35783f9937d817115c0a6b57c77fe601524f9b2483f193c2ba35a0a2cb9e5ce34870e5afc08627e7e0a09585b3c63755398726",
+          "score": 0.349205,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Picetti, Servadei, Rubiano et al., WSES consensus, World J Emerg Surg 2023 (PMC9830860)",
+          "snippet": "acheal intubation and mechanical ventilation. Careful intubation with appropriate analgesia and sedation prevents arterial desaturation, ABP elevation exacerbat"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "4776958b69156c41d7c3ee204767303cb3d996f450fc172fa0e8f3e8cf78fe80e55eae3ef697b6f248aa9ce36b3fbe3119ab8a07382d29a51a956d3237c06435",
+          "score": 0.349205,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017",
+          "snippet": "and imprecise estimates of effect, providing low-quality evidence.13-15 Two studies16,17 compared outcomes for periods before and after protocols were implement"
+        }
+      ],
+      "top3_set": [
+        "77c1370e2e16e15ee7200fdd47c4b58196b63c484dbe73d34b20c77d8a0a2ed715c56bdac0facfc38357e2fff1c24b89372205f9691c47ee589eb3182e14d66f",
+        "cf896aaecf3c11ece490c389371499d7e9b84cc97cc7bc3856feecc604681048e77f5219565affc03e457221a094649bcdc54026b433abaed6bc859acab5418e",
+        "f252a1fba62b250728b19cb0c4cf87d64885611a6883579158ea752dab6f835d9626153cf5acbb0729f24707720ad4ef9eeba5114783f4d90ba1fe2709d8766b"
+      ],
+      "seed_nodes": [
+        {
+          "node_id": "983d9ac1-8ead-4605-952c-fdf54dfc1433",
+          "score": 0.698411
+        },
+        {
+          "node_id": "d7e270e3-f013-4c2d-b284-b8e6ab91180b",
+          "score": 0.674957
+        },
+        {
+          "node_id": "a875ad8a-fda3-4fad-83f7-cb0472e730a5",
+          "score": 0.664066
+        },
+        {
+          "node_id": "7853552a-7085-421e-8441-2358d3391e5e",
+          "score": 0.654907
+        }
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.6078424630368442,
+        "top_trust_tier": 0,
+        "citations": [
+          "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017",
+          "Neurocritical Care Society, ENLS TBI Protocol v4.0",
+          "Picetti, Servadei, Rubiano et al., WSES consensus, World J Emerg Surg 2023 (PMC9830860)"
+        ]
+      }
+    },
+    {
+      "id": "q19_golden_window",
+      "text": "time since injury golden window for evacuating an epidural hematoma",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "fd5b48d69b2a842659c039582749cb91ba985bee81fd04e6096e89afb2122681060a6dc6856a9cacd63f67bd1d540a00ffa34ad8172ec9aff8abc7503c12fbba",
+          "score": 0.615336,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Bullock et al., Surgical Management of Acute Epidural Hematomas, Neurosurgery 2006",
+          "snippet": "neurological deterioration, as defined by onset of coma, pupillary abnormalities, or neurological deterioration to surgery, is more important than time between "
+        },
+        {
+          "rank": 2,
+          "chunk_id": "7e7e13f19ca7b97ada4fa7954baabad55b5a3ac83f5ae31895b039a35b1a635332c193bb18d71521902f4bc56bb07162df87ba0036845e2a20e7d73665e02518",
+          "score": 0.612889,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Wilson et al., Emergency Burr Holes: How to do it (PMC3352313)",
+          "snippet": "[Kyro source: Emergency Burr Holes: How to do it] Citation: Wilson et al., Emergency Burr Holes: How to do it (PMC3352313) Abstract This paper describes a simpl"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "1037e186d37e59b3f56e4ef80d7fc66b0946be4c314d5edb48df39d8cafcca899d7ccdde6e5520a132aa58433c501e672a2aedf76d70adfe95a22dea00546f9d",
+          "score": 0.606071,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Brain Trauma Foundation, Surgical Management of TBI",
+          "snippet": "[Kyro source: BTF \u2014 Surgical Management of TBI] Citation: Brain Trauma Foundation, Surgical Management of TBI Guidelines for the Surgical Management of TBI - Vi"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "27dc9f8dde7c1b6f8b1386efcf01ce72ba00fa36b233c41660e7e866d54879c9e2b938e7ae9b20309dd6d0241d61ba011de07637a81bf9c2b11fed93b209836b",
+          "score": 0.355275,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Bullock et al., Surgical Management of Acute Epidural Hematomas, Neurosurgery 2006",
+          "snippet": "authors noted that only 6% of the direct admissions experienced a poor outcome, as compared with 18% of patients who were transferred after undergoing CT scanni"
+        },
+        {
+          "rank": 5,
+          "chunk_id": "2d87a84a8bc7b0f6bbc1e0f8de89ad0b09d7baae2f16bc649fefb9c0d8980f01e56d71eb154944c62325243d178e419e5910de8149c46fa6c9a011162273f1da",
+          "score": 0.355275,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "StatPearls, Epidural Hematoma (NCBI Bookshelf NBK518982)",
+          "snippet": "oplastin time remains elevated. Low-molecular-weight heparin is also reversed with protamine. Patients on warfarin should receive intravenous vitamin K and eith"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "2e60cfac85557013de5116770b1f320b73188f433f2382cb7ce15a8bd0825532d22672186100b6d95b1dd1899ffbb65a0722c66cd36545fa0a49c64a08c3c1b7",
+          "score": 0.355275,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "StatPearls, Epidural Hematoma (NCBI Bookshelf NBK518982)",
+          "snippet": "significantly influences EDH prognosis. The 5-component modified Frailty Index (mFI-5) assigns 1 point each for chronic obstructive pulmonary disease, congestiv"
+        }
+      ],
+      "top3_set": [
+        "1037e186d37e59b3f56e4ef80d7fc66b0946be4c314d5edb48df39d8cafcca899d7ccdde6e5520a132aa58433c501e672a2aedf76d70adfe95a22dea00546f9d",
+        "7e7e13f19ca7b97ada4fa7954baabad55b5a3ac83f5ae31895b039a35b1a635332c193bb18d71521902f4bc56bb07162df87ba0036845e2a20e7d73665e02518",
+        "fd5b48d69b2a842659c039582749cb91ba985bee81fd04e6096e89afb2122681060a6dc6856a9cacd63f67bd1d540a00ffa34ad8172ec9aff8abc7503c12fbba"
+      ],
+      "seed_nodes": [
+        {
+          "node_id": "73392ff6-6227-4bf4-91aa-34dcb7d61431",
+          "score": 0.710549
+        },
+        {
+          "node_id": "9af845bb-7526-4533-8513-6505bfaf1ab6",
+          "score": 0.65339
+        },
+        {
+          "node_id": "cdd7eb2d-b0e5-4347-9fbc-622a88cc8b87",
+          "score": 0.651941
+        },
+        {
+          "node_id": "b2718370-583a-4808-8772-f480577fe4ec",
+          "score": 0.64381
+        }
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.615335778712442,
+        "top_trust_tier": 0,
+        "citations": [
+          "Bullock et al., Surgical Management of Acute Epidural Hematomas, Neurosurgery 2006",
+          "Wilson et al., Emergency Burr Holes: How to do it (PMC3352313)",
+          "Brain Trauma Foundation, Surgical Management of TBI",
+          "StatPearls, Epidural Hematoma (NCBI Bookshelf NBK518982)",
+          "WFSA Anaesthesia Tutorial of the Week, Management of the Head-Injured Patient",
+          "Updated Review of TBI Management and Guidelines, 2025 (PMC12525523)"
+        ]
+      }
+    },
+    {
+      "id": "q20_pediatric",
+      "text": "pediatric head injury assessment and management considerations",
+      "top_chunks": [
+        {
+          "rank": 1,
+          "chunk_id": "343b8a3b0f2051a1028e78ef4101681baac381409c415f37e81576e63ab39ebc6055e28a3bb10db6a599f892a696aecd56855b3c5959e50c8137a737ce43cf14",
+          "score": 0.629667,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Neurocritical Care Society, ENLS TBI Protocol v4.0",
+          "snippet": "because it may indicate secondary brain injury from hematoma expansion, increasing cerebral edema, brain shift/herniation or seizures. A repeat head CT should b"
+        },
+        {
+          "rank": 2,
+          "chunk_id": "31efb28275be8529ae2c78b63054581d42642608fe5e788f5133a2cd189c048dfddbbc9b0e4daf6ee9c2c964718ebafcd5b52ac593ab0801bd5ccb07eaf3e28e",
+          "score": 0.615534,
+          "via": "vector",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017",
+          "snippet": "74 9. Kostic A, Stefanovic I, Novak V, Veselinovic D, Ivanov G, Veselinovic A. Prognostic significance of intracranial pressure monitoring and intracranial hype"
+        },
+        {
+          "rank": 3,
+          "chunk_id": "a92f0d1493af82cd5d5d71e131ce368da1ef7c28a5a0fd1217322c94033cae765a8a22d2bd04ec39a09367f2d6ae2ab0bb9f8953aa6fe8d865d4b15c56e49af2",
+          "score": 0.368614,
+          "via": "graph",
+          "trust_tier": 0,
+          "kind": "text_unit",
+          "citation": "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017",
+          "snippet": "topic from the 3rd to the 4th Edition are in Appendix A. The Brain Trauma Evidence-Based Consortium The Brain Trauma Foundation recognizes that our responsibili"
+        },
+        {
+          "rank": 4,
+          "chunk_id": "cr_110",
+          "score": 0.651967,
+          "via": "vector",
+          "trust_tier": 1,
+          "kind": "community_report",
+          "citation": "Community summary (level 1)",
+          "snippet": "Community summary (level 1): PEGASUS STUDY, AVOIDANCE OF HYPOCARBIA, EARLY INITIATION OF ENTERAL NUTRITION, PEDIATRIC TRAUMATIC BRAIN INJURY, PACO2 MONITORING. "
+        },
+        {
+          "rank": 5,
+          "chunk_id": "152c4ef6a13bb11afb955117d53fbd860fdd07900d888915017fb42307ab7270fd50a3c3f2d52215ac05bf2a2d782d11730fbed2e226e6fa1c6c745fb1561b43",
+          "score": 0.650211,
+          "via": "vector",
+          "trust_tier": 1,
+          "kind": "text_unit",
+          "citation": "Greenberg MS, Handbook of Neurosurgery (Thieme)",
+          "snippet": "1971; 34:805\u2013807 [5] Miner ME. Comment on Benzel EC, et al. Civilian Craniocerebral Gunshot Wounds. Neurosurgery. 1991; 29 [6] Kaufman HH, Makela ME, Lee KF, et"
+        },
+        {
+          "rank": 6,
+          "chunk_id": "f58768cc282c5a3ffbfba31af5a64ad57f0d5c606f70755851c0b0db09de5a25546e8567f0e76fdb4ffd1a21d5fd6f7d62d5fd270456b4cdb4c1e8c749a7f4f6",
+          "score": 0.645499,
+          "via": "vector",
+          "trust_tier": 1,
+          "kind": "text_unit",
+          "citation": "Greenberg MS, Handbook of Neurosurgery (Thieme)",
+          "snippet": "darts f) cephalhematoma: see below g) leptomeningeal cysts, AKA \u201cgrowing skull fractures\u201d (p.915) 3. response to injury a) responses to head injury of older ado"
+        }
+      ],
+      "top3_set": [
+        "31efb28275be8529ae2c78b63054581d42642608fe5e788f5133a2cd189c048dfddbbc9b0e4daf6ee9c2c964718ebafcd5b52ac593ab0801bd5ccb07eaf3e28e",
+        "343b8a3b0f2051a1028e78ef4101681baac381409c415f37e81576e63ab39ebc6055e28a3bb10db6a599f892a696aecd56855b3c5959e50c8137a737ce43cf14",
+        "a92f0d1493af82cd5d5d71e131ce368da1ef7c28a5a0fd1217322c94033cae765a8a22d2bd04ec39a09367f2d6ae2ab0bb9f8953aa6fe8d865d4b15c56e49af2"
+      ],
+      "seed_nodes": [
+        {
+          "node_id": "8d2fffec-d5c1-4fc9-9ba0-7c4ea401c1c5",
+          "score": 0.737228
+        },
+        {
+          "node_id": "e3961478-73ac-41a1-a269-7d7c8f5c4c27",
+          "score": 0.720997
+        },
+        {
+          "node_id": "05249e96-f04c-450b-871d-58ace91f2bc2",
+          "score": 0.718266
+        },
+        {
+          "node_id": "3f5f39bf-10a1-4c8a-86be-64c610630ef0",
+          "score": 0.716889
+        }
+      ],
+      "coverage": {
+        "covered": true,
+        "score": 0.6296668455059216,
+        "top_trust_tier": 0,
+        "citations": [
+          "Neurocritical Care Society, ENLS TBI Protocol v4.0",
+          "Carney et al., BTF Guidelines for Management of Severe TBI, 4th ed., Neurosurgery 2017"
+        ]
+      }
+    }
+  ]
+}
