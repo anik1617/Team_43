@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 180" width="720" height="180" role="img" aria-label="Kyro logo">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2563EB"/>
+      <stop offset="1" stop-color="#38BDF8"/>
+    </linearGradient>
+    <radialGradient id="starglow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.8"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- ICON -->
+  <g transform="translate(24,30)">
+    <rect x="0" y="0" width="120" height="120" rx="28" fill="url(#bg)"/>
+    <path d="M32 92 C44 70 56 64 84 36" fill="none" stroke="#FFFFFF"
+          stroke-width="6" stroke-linecap="round" opacity="0.95"/>
+    <circle cx="32" cy="92" r="5.5" fill="#FFFFFF"/>
+    <circle cx="86" cy="32" r="17" fill="url(#starglow)"/>
+    <path d="M86 17 L89.4 28.6 L101 32 L89.4 35.4 L86 47 L82.6 35.4 L71 32 L82.6 28.6 Z" fill="#FFFFFF"/>
+  </g>
+
+  <!-- WORDMARK -->
+  <text x="172" y="100" font-family="'Montserrat','Segoe UI',Arial,sans-serif"
+        font-size="68" font-weight="800" letter-spacing="2" fill="#2563EB">KYRO</text>
+  <text x="174" y="132" font-family="'Montserrat','Segoe UI',Arial,sans-serif"
+        font-size="16.5" font-weight="600" letter-spacing="1.4" fill="#2563EB" opacity="0.78">THE GUIDE THAT NEVER DROPS THE CALL</text>
+</svg>
