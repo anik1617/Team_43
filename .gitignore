@@ -216,3 +216,10 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Node / edge app (React Native, E1–E7)
+node_modules/
+npm-debug.log*
+yarn-error.log*
+.pnp.*
+package-lock.json

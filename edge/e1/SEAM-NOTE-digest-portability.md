@@ -1,5 +1,11 @@
 # SEAM NOTE — the bundle signature digest isn't JS-portable (E1 ↔ signing.py)
 
+> ✅ **RESOLVED (cloud commit c17a9ad + edge parity GREEN).** The cloud signer was changed to the
+> language-neutral canonical row-walk proposed below. The identical rule is ported into
+> `./canonicalDigest.ts`; `edge/e1/parity.ts` reproduces the cloud golden hexes for the mock bundle
+> (manifest `b61dfaf3…`, cgt `d3dcdecb…`). `bundleLoader.ts` now verifies live and `__devSkipSignature`
+> is removed. This note is kept as the historical record of the problem + fix.
+
 **From:** edge (E1) · **For:** Aniket (cloud signer) · **Type:** seam-contract change, needs both sides
 
 ## The problem
