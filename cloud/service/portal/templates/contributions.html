@@ -37,19 +37,19 @@
  .rejected-box .row2 .note{color:var(--mut)}
 </style>
 
-{% set ns = namespace(approved=0, pending=0) %}
-{% for c in items %}{% if c.status.value == 'approved' %}{% set ns.approved = ns.approved + 1 %}{% elif c.status.value == 'pending' %}{% set ns.pending = ns.pending + 1 %}{% endif %}{% endfor %}
+{% set ns = namespace(total=0, custom=0) %}
+{% for c in items %}{% set ns.total = ns.total + 1 %}{% if not c.gap_id %}{% set ns.custom = ns.custom + 1 %}{% endif %}{% endfor %}
 
 <div class="prov-hero">
   <div style="flex:1;min-width:320px">
     <div class="eyebrow">Auditable feed</div>
     <h1 class="title">Provenance log</h1>
-    <p class="lede">Every contribution and its decision — contributor, trust tier, citation, the gap it addresses, and
-      where approved knowledge was staged. <span class="strong">Auditability is the moat.</span></p>
+    <p class="lede">Every contribution staged to the corpus — contributor, trust tier, citation, any attached file, and
+      the gap it addresses (or a custom upload). <span class="strong">Auditability is the moat.</span></p>
   </div>
   <div class="stats">
-    <div class="stat"><div class="n ok">{{ ns.approved }}</div><div class="l">Approved</div></div>
-    <div class="stat"><div class="n pend">{{ ns.pending }}</div><div class="l">Pending</div></div>
+    <div class="stat"><div class="n ok">{{ ns.total }}</div><div class="l">Contributed</div></div>
+    <div class="stat"><div class="n pend">{{ ns.custom }}</div><div class="l">Custom</div></div>
   </div>
 </div>
 
@@ -64,26 +64,28 @@
         <div style="flex:1;min-width:280px">
           <div class="event-titlerow">
             <h3>{{ c.title }}</h3>
-            {% if st == 'approved' %}<span class="pill pill-approved"><span class="d"></span>Approved</span>
-            {% elif st == 'rejected' %}<span class="pill pill-rejected"><span class="d"></span>Rejected</span>
-            {% else %}<span class="pill pill-pending"><span class="d"></span>Pending</span>{% endif %}
+            {% if st == 'rejected' %}<span class="pill pill-rejected"><span class="d"></span>Rejected</span>
+            {% elif st == 'pending' %}<span class="pill pill-pending"><span class="d"></span>Pending</span>
+            {% else %}<span class="pill pill-approved"><span class="d"></span>Contributed</span>{% endif %}
             {{ ui.tier_badge(c.tier) }}
           </div>
-          <div class="event-sub">addresses <b>{{ gaps[c.gap_id].summary if c.gap_id in gaps else '—' }}</b> ·
-            by <span class="who">{{ c.contributor }}</span> · cite <span class="cite">{{ c.citation }}</span></div>
+          <div class="event-sub">
+            {% if c.gap_id in gaps %}addresses <b>{{ gaps[c.gap_id].summary }}</b>{% else %}<b>custom contribution</b>{% endif %} ·
+            by <span class="who">{{ c.contributor }}</span> · cite <span class="cite">{{ c.citation or '—' }}</span></div>
         </div>
         <div class="event-ts">{{ ui.ts(c.created_at) }}</div>
       </div>
 
-      {% if st == 'approved' %}
+      {% if st != 'rejected' %}
       <div class="staged">
         <div class="row1"><span style="font-weight:500">✓ staged →</span><span class="file">{{ c.staged_path }}</span></div>
-        <div class="row2">reviewer <b>{{ c.reviewer }}</b> · {{ ui.ts(c.reviewed_at) }}{% if c.review_note %} · note: <span class="note">{{ c.review_note }}</span>{% endif %}</div>
+        {% if c.attachment_path %}<div class="row1" style="margin-top:6px"><span style="font-weight:500">📎 file →</span><span class="file">{{ c.attachment_path }}</span></div>{% endif %}
+        <div class="row2">contributed by <b>{{ c.contributor }}</b> · {{ ui.ts(c.created_at) }}</div>
       </div>
-      {% elif st == 'rejected' %}
+      {% else %}
       <div class="rejected-box">
         <div class="row1">✕ rejected — not staged</div>
-        <div class="row2">reviewer <b>{{ c.reviewer }}</b>{% if c.review_note %} · note: <span class="note">{{ c.review_note }}</span>{% endif %}</div>
+        {% if c.review_note %}<div class="row2">note: <span class="note">{{ c.review_note }}</span></div>{% endif %}
       </div>
       {% endif %}
     </article>

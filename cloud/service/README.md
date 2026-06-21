@@ -4,9 +4,12 @@ One small FastAPI app, **two functions, one deploy** — the thin cloud edge of 
 on-device product:
 
 - **C7 — Contribution portal** (`/portal`): the community-knowledge flywheel.
-  Gap inbox → contribute → curate/approve → **stage into the corpus**. An approved nugget is
-  written to `cloud/ingest/contributions/<id>.txt` (provenance-headed), so the next
-  `build_bundle` run ingests it. That staging step is the flywheel — and the moat.
+  Gap inbox → contribute (prose and/or an uploaded file) → **staged straight into the corpus**.
+  Each contribution is written to `cloud/ingest/contributions/<id>.txt` (provenance-headed, with
+  any attached source file beside it), so the next `build_bundle` run ingests it. There is **no
+  per-item curator gate** — the human-in-the-loop is the explicit, signed bundle build. A
+  contribution may address a gap or be a standalone **custom upload**. Provenance is logged for
+  every item — that auditable feed is the moat.
 - **E8 — Escalation relay** (`POST /escalate`): the device's 🔴 hard-stop handoff. Relays a
   pre-briefed encounter summary to the on-call neurosurgeon over Twilio WhatsApp.
   *"Continuity, not knowledge"* — a dropped call loses nothing.
@@ -22,7 +25,8 @@ cd cloud
 # open http://localhost:8000/portal
 ```
 
-Endpoints: `/portal` (gap inbox) · `/portal/curate` · `/portal/contributions` ·
+Endpoints: `/portal` (gap inbox + contribute) · `POST /portal/contribute` (multipart;
+optional `gap_id`, optional file `attachment`) · `/portal/contributions` (provenance log) ·
 `POST /escalate` · `/healthz`.
 
 ## Get a public URL (for the distributed demo: remote device + teammate)
@@ -63,8 +67,8 @@ service/
   app.py              FastAPI app (mounts portal + escalate, lifespan = init_db + seed)
   db.py  models.py    SQLite + SQLModel (Gap, Contribution)
   seed.py             seeds realistic gaps (abstentions / must-abstain vignettes)
-  portal/routes.py    the flywheel UI + endpoints
-  portal/export.py    approved contribution -> staged corpus file (the loop closing)
-  portal/templates/   inbox · curate · provenance-log (mobile-friendly)
+  portal/routes.py    the flywheel UI + endpoints (direct contribute, auto-stage)
+  portal/export.py    contribution -> staged corpus .txt + saved attachment (the loop closing)
+  portal/templates/   inbox (gaps + contribute) · provenance-log (mobile-friendly)
   escalate/routes.py  POST /escalate -> Twilio WhatsApp (graceful stub if unconfigured)
 ```

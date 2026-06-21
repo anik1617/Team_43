@@ -1,5 +1,55 @@
 {% extends "base.html" %}
 {% import "_ui.html" as ui %}
+
+{# One contribute form, reused by every gap row and by the custom-upload card.
+   Knowledge prose OR a file is enough; the server requires title + (text or file). #}
+{% macro contribute_form(container_class, toggle_id, gap_id=None, addresses='') %}
+<form class="cform {{ container_class }}" method="post" action="/portal/contribute" enctype="multipart/form-data">
+  <div class="head">
+    <span class="e">Contribute knowledge</span>
+    <span class="dot">·</span>
+    {% if gap_id %}<span class="ad">addresses <b>{{ addresses }}</b></span>
+    {% else %}<span class="ad">a custom upload — not tied to a request</span>{% endif %}
+  </div>
+  {% if gap_id %}<input type="hidden" name="gap_id" value="{{ gap_id }}">{% endif %}
+  <div class="grid2">
+    <label class="full">
+      <span class="lbl">Title</span>
+      <input class="inp" name="title" required maxlength="200" placeholder="Short name for this knowledge">
+    </label>
+    <label class="full">
+      <span class="lbl-rich"><span class="a">Knowledge</span><span class="b">prose for the graph — optional if you attach a file</span></span>
+      <textarea class="ta" name="body" rows="4" maxlength="8000"
+        placeholder="State the clinical knowledge precisely — thresholds, sequence, the hard stop."></textarea>
+    </label>
+    <label class="full">
+      <span class="lbl-rich"><span class="a">Attach a file</span><span class="b">PDF, image, or text · optional · up to 15 MB</span></span>
+      <input class="inp file" type="file" name="attachment" accept=".pdf,.txt,.md,.doc,.docx,.rtf,.csv,image/*">
+    </label>
+    <label>
+      <span class="lbl">Citation / source</span>
+      <input class="inp" name="citation" maxlength="300" placeholder="e.g. Youmans &amp; Winn, 7th ed.">
+    </label>
+    <label>
+      <span class="lbl">Your name <span class="soft">(provenance)</span></span>
+      <input class="inp" name="contributor" maxlength="120" placeholder="Dr. …">
+    </label>
+    <label class="full" style="max-width:340px">
+      <span class="lbl">Trust tier</span>
+      <select class="sel" name="tier">
+        <option value="2">2 · Community</option>
+        <option value="1">1 · Expert · textbook</option>
+      </select>
+    </label>
+  </div>
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit">Contribute → corpus</button>
+    <button class="btn btn-ghost" type="button" data-toggle="{{ toggle_id }}">Cancel</button>
+    <span class="hint">→ staged to the corpus for the next signed build</span>
+  </div>
+</form>
+{% endmacro %}
+
 {% block body %}
 <style>
  .hero{display:flex;align-items:flex-end;justify-content:space-between;gap:32px;flex-wrap:wrap}
@@ -47,13 +97,19 @@
  .gap-row.expanded .gap-action{background:var(--ink-deep);color:#fff;border-color:var(--ink-deep)}
  .gap-row.expanded .gap-action:hover{background:#13243B}
 
- .gap-form{display:none;margin-top:22px;padding:22px;border-radius:10px;background:var(--panel);border:1px solid var(--line-2)}
+ /* shared contribute form (used by gap rows and the custom-upload card) */
+ .cform{margin-top:22px;padding:22px;border-radius:10px;background:var(--panel);border:1px solid var(--line-2)}
+ .gap-form{display:none}
  .gap-row.expanded .gap-form{display:block;animation:kfade .2s ease}
- .gap-form .head{display:flex;align-items:center;gap:9px;margin-bottom:18px}
- .gap-form .head .e{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--acc);font-family:var(--mono);font-weight:500}
- .gap-form .head .dot{font-size:12px;color:#B4C2D4}
- .gap-form .head .ad{font-size:12px;color:var(--mut)}
- .gap-form .head .ad b{color:var(--acc-deep);font-weight:600}
+ .custom-form{display:none}
+ #custom-card.expanded .custom-form{display:block;animation:kfade .2s ease}
+ .cform .head{display:flex;align-items:center;gap:9px;margin-bottom:18px}
+ .cform .head .e{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--acc);font-family:var(--mono);font-weight:500}
+ .cform .head .dot{font-size:12px;color:#B4C2D4}
+ .cform .head .ad{font-size:12px;color:var(--mut)}
+ .cform .head .ad b{color:var(--acc-deep);font-weight:600}
+ .inp.file{padding:9px 13px;cursor:pointer;font-size:12.5px;color:var(--mut)}
+ .inp.file::file-selector-button{margin-right:12px;padding:6px 12px;border-radius:6px;border:1px solid var(--field);background:#fff;color:var(--acc-deep);font-family:var(--sans);font-size:12px;font-weight:600;cursor:pointer}
  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
  .grid2 .full{grid-column:1 / -1}
  .lbl-rich{display:flex;align-items:baseline;gap:8px;margin-bottom:6px}
@@ -61,6 +117,12 @@
  .lbl-rich .b{font-size:11px;color:var(--mut-3)}
  .form-actions{display:flex;align-items:center;gap:12px;margin-top:20px;flex-wrap:wrap}
  .form-actions .hint{margin-left:auto;font-size:11px;color:var(--mut-3);font-family:var(--mono)}
+
+ /* custom (gap-less) upload card */
+ .custom-card{margin-top:26px;border:1px solid var(--line);border-radius:13px;background:#fff;padding:22px;box-shadow:0 1px 3px rgba(19,36,59,.04)}
+ .custom-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;flex-wrap:wrap}
+ .custom-head h2{margin:8px 0 0;font-family:var(--serif);font-size:21px;font-weight:500;color:var(--ink-deep)}
+ .custom-head p{margin:9px 0 0;font-size:13.5px;line-height:1.6;color:var(--mut);max-width:600px}
  @media (max-width:640px){ .grid2{grid-template-columns:1fr} .gap-action span.lbl-long{display:none} }
 </style>
 
@@ -70,11 +132,11 @@
     <div class="eyebrow">Community knowledge flywheel</div>
     <h1>What the field told us<br>is <span class="em">missing.</span></h1>
     <p class="lede">Kyro abstained, hit a stop, or couldn't resolve a field. Contribute the knowledge that closes a
-      gap — it's curated, cited, and folded into the next release on the device.</p>
+      gap — prose or an uploaded source file — staged straight into the corpus for the next signed build.</p>
   </div>
-  <a class="pending-btn" href="/portal/curate">
-    <span class="n">{{ pending }}</span> pending review →
-  </a>
+  <button class="pending-btn" type="button" data-toggle="custom-card">
+    <span class="n">+</span> Contribute knowledge →
+  </button>
 </div>
 
 {# ---- 3D knowledge graph (the global community KB, live) ---- #}
@@ -94,6 +156,23 @@
     <span id="kyro-ticker">syncing contributions from the field…</span>
     <span>drag to orbit · scroll to zoom</span>
   </div>
+</section>
+
+{# ---- custom (gap-less) contribution ---- #}
+<section id="custom-card" class="custom-card">
+  <div class="custom-head">
+    <div>
+      <div class="eyebrow">Contribute directly</div>
+      <h2>Have knowledge that isn't listed?</h2>
+      <p>Upload a guideline, a textbook excerpt, an image, or your own note — with or without a matching
+        request below. It's staged straight into the corpus for the next build.{% if contributed %}
+        <b style="color:var(--acc-deep)">{{ contributed }}</b> contributed so far.{% endif %}</p>
+    </div>
+    <button class="gap-action" type="button" data-toggle="custom-card">
+      <span class="lbl-closed">Contribute custom →</span><span class="lbl-open" style="display:none">Close ×</span>
+    </button>
+  </div>
+  {{ contribute_form('custom-form', 'custom-card') }}
 </section>
 
 {# ---- open gaps registry ---- #}
@@ -132,45 +211,7 @@
       </div>
 
       {% if open %}
-      <form class="gap-form" method="post" action="/portal/contribute">
-        <div class="head">
-          <span class="e">Contribute knowledge</span>
-          <span class="dot">·</span>
-          <span class="ad">addresses <b>{{ g.summary }}</b></span>
-        </div>
-        <input type="hidden" name="gap_id" value="{{ g.id }}">
-        <div class="grid2">
-          <label class="full">
-            <span class="lbl">Title</span>
-            <input class="inp" name="title" required maxlength="200" placeholder="Short name for this knowledge">
-          </label>
-          <label class="full">
-            <span class="lbl-rich"><span class="a">Knowledge</span><span class="b">the nugget the graph will ingest</span></span>
-            <textarea class="ta" name="body" rows="4" required maxlength="8000"
-              placeholder="State the clinical knowledge precisely — thresholds, sequence, the hard stop."></textarea>
-          </label>
-          <label>
-            <span class="lbl">Citation / source</span>
-            <input class="inp" name="citation" required maxlength="300" placeholder="e.g. Youmans &amp; Winn, 7th ed.">
-          </label>
-          <label>
-            <span class="lbl">Your name <span class="soft">(provenance)</span></span>
-            <input class="inp" name="contributor" required maxlength="120" placeholder="Dr. …">
-          </label>
-          <label class="full" style="max-width:340px">
-            <span class="lbl">Trust tier</span>
-            <select class="sel" name="tier">
-              <option value="2">2 · Community</option>
-              <option value="1">1 · Expert · textbook</option>
-            </select>
-          </label>
-        </div>
-        <div class="form-actions">
-          <button class="btn btn-primary" type="submit">Submit contribution</button>
-          <button class="btn btn-ghost" type="button" data-toggle="gap-{{ g.id }}">Cancel</button>
-          <span class="hint">→ queues for curator approval</span>
-        </div>
-      </form>
+      {{ contribute_form('gap-form', 'gap-' ~ g.id, g.id, g.summary) }}
       {% endif %}
     </div>
   </div>
