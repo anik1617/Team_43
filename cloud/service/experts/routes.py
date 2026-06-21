@@ -160,7 +160,11 @@ async def auth_google(request: Request):
     if not google:
         return RedirectResponse(
             _flash("/experts/login", "Google sign-in isn't configured yet — use email/password."), 303)
-    redirect_uri = str(request.url_for("auth_google_callback"))
+    # Pin the callback from KYRO_OAUTH_REDIRECT when set — it MUST byte-match a Google "Authorized
+    # redirect URI". Deriving from request.url_for is fragile behind a TLS proxy (builds http:// if
+    # --proxy-headers isn't active → redirect_uri_mismatch). Authlib reuses this same value for the
+    # token exchange in the callback, so pinning here is sufficient.
+    redirect_uri = os.environ.get("KYRO_OAUTH_REDIRECT") or str(request.url_for("auth_google_callback"))
     return await google.authorize_redirect(request, redirect_uri)
 
 
