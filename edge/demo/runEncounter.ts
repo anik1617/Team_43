@@ -28,7 +28,8 @@ import { buildHandoff, type HandoffBrief } from '../e5/handoff.ts';
 import { manifestDigest, cgtDigest, type Query, type Cell } from '../e1/canonicalDigest.ts';
 import { createQwenL3 } from '../l3/qwenL3.ts';
 
-// ---- the scripted HM encounter (the vignette, as turn-by-turn operator answers) ----
+// ---- scripted vignettes (turn-by-turn operator answers) ----
+// HM = the dramatic herniating EDH → GUIDE + drill-abstain + expert handoff.
 const HM: Env = {
   mechanism: 'rta', mechanism_class: 'blunt', time_since_injury_hr: 3,
   anticoag_antiplatelet: 'none', known_coagulopathy: 'no',
@@ -37,11 +38,24 @@ const HM: Env = {
   spo2_pct: 95, spo2_available: 'yes', blood_glucose: 0, glucose_available: 'no',
   lucid_interval: 'yes', focal_weakness_side: 'right', posturing: 'none', seizure_status: 'none',
 };
+// STABLE = mild TBI, fully reassuring → 🟢 OBSERVE. Kyro answers DIRECTLY: no abstain, no handoff.
+const STABLE: Env = {
+  mechanism: 'fall', mechanism_class: 'blunt', time_since_injury_hr: 1,
+  anticoag_antiplatelet: 'none', known_coagulopathy: 'no',
+  gcs_e: 4, gcs_v: 5, gcs_m: 6, pupil_size_l_mm: 3, pupil_react_l: 'brisk',
+  pupil_size_r_mm: 3, pupil_react_r: 'brisk', sbp_mmhg: 130, age_yr: 25,
+  spo2_pct: 99, spo2_available: 'yes', blood_glucose: 90, glucose_available: 'yes',
+  lucid_interval: 'no', focal_weakness_side: 'none', posturing: 'none', seizure_status: 'none',
+};
+const CASES: Record<string, { label: string; env: Env; query: string }> = {
+  hm: { label: 'HM — herniating EDH, no transfer', env: HM, query: 'herniating EDH, lucid interval, blown left pupil, GCS dropping' },
+  stable: { label: 'Mild TBI — reassuring exam', env: STABLE, query: 'mild head injury, GCS 15, reactive pupils, observation' },
+};
 // Human-facing read-backs for the gather narration (only the critical fields get one).
 const READBACK: Record<string, (e: Env) => string> = {
   gcs_m: (e) => `GCS confirmed E${e.gcs_e}V${e.gcs_v}M${e.gcs_m} = ${Number(e.gcs_e) + Number(e.gcs_v) + Number(e.gcs_m)}`,
   pupil_react_r: (e) => `Pupils confirmed: left ${e.pupil_size_l_mm}mm ${e.pupil_react_l}, right ${e.pupil_size_r_mm}mm ${e.pupil_react_r}`,
-  lucid_interval: (e) => `Lucid interval: ${e.lucid_interval} (classic EDH pattern)`,
+  lucid_interval: (e) => `Lucid interval: ${e.lucid_interval}${e.lucid_interval === 'yes' ? ' (classic EDH pattern)' : ''}`,
 };
 
 const GOLDEN = {
@@ -63,11 +77,14 @@ export interface DemoResult {
   handoff: HandoffBrief;
 }
 
-export interface DemoOpts { dbPath: string; drop?: boolean; narrate?: boolean; modelPath?: string; }
+export interface DemoOpts { dbPath: string; drop?: boolean; narrate?: boolean; modelPath?: string; caseKey?: string; }
 
 export async function runEncounter(opts: DemoOpts): Promise<DemoResult> {
-  const { dbPath, drop = true, narrate = false, modelPath } = opts;
+  const { dbPath, drop = true, narrate = false, modelPath, caseKey = 'hm' } = opts;
+  const vignette = CASES[caseKey] ?? CASES.hm;
+  const CASE = vignette.env;
   const say = (s = '') => { if (narrate) console.log(s); };
+  say(`### CASE: ${vignette.label} ###\n`);
 
   const ndb = new DatabaseSync(dbPath);
   const opShim = { executeSync: (sql: string) => ({ rows: { _array: ndb.prepare(sql).all() } }) };
@@ -113,8 +130,8 @@ export async function runEncounter(opts: DemoOpts): Promise<DemoResult> {
 
   const scripted: GatherHost = {
     async ask(field, node) {
-      const value = HM[field];
-      say(`  Q(${node.id}) ${field} → "${value}"${READBACK[field] ? `   ⟲ ${READBACK[field](HM)}` : ''}`);
+      const value = CASE[field];
+      say(`  Q(${node.id}) ${field} → "${value}"${READBACK[field] ? `   ⟲ ${READBACK[field](CASE)}` : ''}`);
       return value;
     },
   };
@@ -143,7 +160,7 @@ export async function runEncounter(opts: DemoOpts): Promise<DemoResult> {
   // COVERAGE MECHANICS (trust-tier, threshold, citations) are real; the ranking is hardware-gated.
   const groundingKnn: Knn = (table) => table === 'chunk_vec'
     ? [{ id: 'ch01', score: 0.92 }, { id: 'ch03', score: 0.88 }] : [{ id: 'n_edh', score: 0.9 }];
-  const ret = retrieve(opShim, 'herniating EDH, lucid interval, blown left pupil', resumed.citation, embed, groundingKnn);
+  const ret = retrieve(opShim, vignette.query, resumed.citation, embed, groundingKnn);
   const gated = gate(resumed, ret.coverage, ndb.prepare("SELECT recommendation FROM cgt_strings WHERE node_id='L40' AND lang='en'").get()?.recommendation as string | undefined);
 
   say('━━━ SCENE ③ · DECISION (graduated assistance, gated on STRUCTURE not confidence) ━━━');
@@ -154,15 +171,25 @@ export async function runEncounter(opts: DemoOpts): Promise<DemoResult> {
   if (gated.degradeToTransfer) say('  ↓ operate-locally not 🟢-clearable → degraded to stabilize + transfer.');
   say('');
 
-  // ── SCENE ④ — pre-briefed expert handoff (E5), the reconnect payload ──
+  // ── SCENE ④ — outcome. Two shapes: a DIRECT answer (Kyro handles it, no escalation) when the
+  //    gate doesn't require a handoff (e.g. 🟢 OBSERVE), or the PRE-BRIEFED EXPERT HANDOFF otherwise.
   finalize(journal, resumed, gated, clock);
   const handoff = buildHandoff(reduce(journal.load()), gated, clock());
-  say('━━━ SCENE ④ · PRE-BRIEFED EXPERT HANDOFF (what the neurosurgeon receives) ━━━');
-  say(`  S: ${handoff.sbar.situation}`);
-  say(`  B: ${handoff.sbar.background}`);
-  say(`  A: ${handoff.sbar.assessment}`);
-  say(`  R: ${trimCitations(handoff.sbar.recommendation)}`);
-  say(`  active concerns: ${handoff.hypotheses.join('; ')}`);
+  const recommendation = await l3.synthesizeLeaf(resumed.leaf, resumed.citation ? [resumed.citation] : [], 'en');
+  if (!gated.requiresExpertHandoff && gated.badge !== 'RED') {
+    say('━━━ SCENE ④ · DIRECT RECOMMENDATION (Kyro handles this itself — no escalation needed) ━━━');
+    say(`  ${badgeEmoji(gated.badge)} ${gated.action} — answered on-device, offline.`);
+    say(`  ${trimCitations(recommendation)}`);
+    say(`  ${resumed.citation ? `[${resumed.citation.split('[')[0].slice(0, 70)}…]` : ''}`);
+    say('  No expert handoff fired — the deterministic tree + grounded retrieval cover this case.');
+  } else {
+    say('━━━ SCENE ④ · PRE-BRIEFED EXPERT HANDOFF (what the neurosurgeon receives) ━━━');
+    say(`  S: ${handoff.sbar.situation}`);
+    say(`  B: ${handoff.sbar.background}`);
+    say(`  A: ${handoff.sbar.assessment}`);
+    say(`  R: ${trimCitations(handoff.sbar.recommendation)}`);
+    say(`  active concerns: ${handoff.hypotheses.join('; ')}`);
+  }
   say('');
 
   if (dispose) await dispose();
@@ -187,7 +214,9 @@ if (isMain) {
   const drop = !args.includes('--no-drop');
   const mi = args.indexOf('--model');
   const modelPath = mi >= 0 ? args[mi + 1] : undefined;
-  const result = await runEncounter({ dbPath, drop, narrate: !json, modelPath });
+  const ci = args.indexOf('--case');
+  const caseKey = ci >= 0 ? args[ci + 1] : 'hm';
+  const result = await runEncounter({ dbPath, drop, narrate: !json, modelPath, caseKey });
   if (json) console.log(JSON.stringify(result, null, 2));
   else console.log(`RESULT: ${result.badge} ${result.action}@${result.leafId} · verified=${result.verified} · dropped=${result.dropped} · lossless handoff ✓`);
 }
