@@ -72,6 +72,30 @@ def enableProguardInReleaseBuilds = false
  */
 def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
 
+/**
+ * Real release signing for the Play Store.
+ *
+ * Credentials are read from android/keystore.properties, which is gitignored
+ * (never commit secrets). If that file is missing — e.g. a fresh clone or CI
+ * without the keystore — we fall back to debug signing so the build still
+ * parses and a release APK can be produced for local testing.
+ *
+ * Generate the keystore + properties file with:
+ *   keytool -genkeypair -v -keystore android/app/kyro-release.keystore \
+ *     -alias kyro -keyalg RSA -keysize 2048 -validity 10000 \
+ *     -storepass kyrodemo123 -keypass kyrodemo123 -dname "CN=Kyro,O=Team43,C=NA"
+ * keystore.properties keys: storeFile, storePassword, keyAlias, keyPassword
+ * (storeFile is resolved relative to this android/app module directory).
+ */
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+def hasReleaseKeystore = false
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+    hasReleaseKeystore = keystoreProperties['storeFile'] != null &&
+        file(keystoreProperties['storeFile']).exists()
+}
+
 android {
     ndkVersion rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -82,6 +106,9 @@ android {
         applicationId "com.kyroapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
+        // Play Store version scaffolding: bump versionCode (monotonic integer, must
+        // increase for EVERY upload to Play) and versionName (human-facing string)
+        // before each release. v1 keeps versionCode 1.
         versionCode 1
         versionName "1.0"
     }
@@ -92,15 +119,26 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        if (hasReleaseKeystore) {
+            release {
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+            }
+        }
     }
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
         }
         release {
-            // Caution! In production, you need to generate your own keystore file.
-            // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            // Real Play Store signing when android/keystore.properties is present;
+            // otherwise fall back to debug signing so the build still completes.
+            signingConfig hasReleaseKeystore ? signingConfigs.release : signingConfigs.debug
+            // NOTE: minification/R8 intentionally left OFF (enableProguardInReleaseBuilds=false).
+            // Kyro ships a native engine (llama.rn / whisper.rn / op-sqlite / sqlite-vec) on
+            // Hermes; enabling R8 risks stripping JNI-referenced classes. Leave as-is.
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }

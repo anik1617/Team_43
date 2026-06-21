@@ -14,14 +14,18 @@
  *   reproduces the cloud golden hexes for edh-core-v0-mock.kyro (manifest b61dfaf3…, cgt d3dcdecb…).
  *   Signature verification is now LIVE — there is no dev-skip.
  *
- * Deps (add in E0 scaffold):  @op-engineering/op-sqlite · @noble/ed25519 · @noble/hashes
+ * Deps (installed):  @op-engineering/op-sqlite · @noble/curves (ed25519) · @noble/hashes (sha2)
+ *   @noble/curves v2 exposes ed25519 at '@noble/curves/ed25519.js' with a SYNC verify(sig,msg,pub)→bool;
+ *   @noble/hashes v2 moved sha256 to '@noble/hashes/sha2.js'. (The bare '@noble/curves/ed25519' and
+ *   '@noble/hashes/sha256' subpaths do NOT resolve under Metro/bundler exports — keep the '.js'.)
  * Conformance oracles:  `python -m kyro_bundle.verify cloud/bundles/edh-core-v0-mock.kyro`
  *                       `node --experimental-sqlite --experimental-strip-types edge/e1/parity.ts`
+ *                       `node --experimental-sqlite edge/e1/verifyV1Check.mjs cloud/bundles/edh-core-v1.kyro`
  */
 
 import { open, type DB } from '@op-engineering/op-sqlite';
-import * as ed25519 from '@noble/ed25519';
-import { sha256 } from '@noble/hashes/sha256';
+import { ed25519 } from '@noble/curves/ed25519.js';
+import { sha256 } from '@noble/hashes/sha2.js';
 import { manifestDigest, cgtDigest, type Query, type Cell } from './canonicalDigest';
 
 /** This device's embedder + the pinned signer key. A bundle that doesn't match is rejected. */
@@ -31,6 +35,19 @@ export interface DeviceConfig {
   sqliteVecVersion: string;  // e.g. 'v0.1.9'
   pinnedPubkeyHex: string;   // hex of cloud/keys/dev_signer.pub, PINNED at build time
 }
+
+/**
+ * The real config the shipping app PINS for edh-core-v1.kyro. The pinned pubkey is the dev signer
+ * (cloud/keys/dev_signer.pub); embedder/version match the v1 manifest (bge-m3 / 1024 / v0.1.9).
+ * PROVEN: `node --experimental-sqlite edge/e1/verifyV1Check.mjs cloud/bundles/edh-core-v1.kyro`
+ * verifies BOTH ed25519 signatures against this pubkey and the embedder guard — fail-closed is safe.
+ */
+export const KYRO_DEVICE_CONFIG: DeviceConfig = {
+  embedderId: 'bge-m3',
+  embedderDim: 1024,
+  sqliteVecVersion: 'v0.1.9',
+  pinnedPubkeyHex: '5c5b7efeb258c2927f65019aa4cf032a8585fab449c818e66ab10018ddde65e2',
+};
 
 export interface Manifest {
   bundle_id: string; version: number; scope: string;
@@ -49,22 +66,36 @@ export class BundleRejected extends Error {
 }
 
 export async function loadBundle(dbName: string, dev: DeviceConfig): Promise<LoadedBundle> {
-  // 0 · open + load sqlite-vec (vec0 tables need the extension at READ time, not just build)
+  // 0 · open. sqlite-vec (vec0) auto-loads via the "op-sqlite": { "sqliteVec": true } flag in
+  //     package.json — no loadExtension call is needed, so the vec0 tables are readable at READ time.
   const db = open({ name: dbName });
-  loadSqliteVec(db);
+  const manifest = verifyOpenedBundle(db, dev);
+  return { db, manifest };
+}
 
+/**
+ * Run the full verification suite against an ALREADY-OPEN op-sqlite handle. Throws BundleRejected on
+ * any failed check (FAIL CLOSED); returns the verified manifest otherwise. kyroDb uses this so it can
+ * verify the exact DB it opened (with the right Android location + PRAGMA query_only) without re-opening.
+ */
+export function verifyOpenedBundle(db: DB, dev: DeviceConfig): Manifest {
   const manifest = readManifest(db);
   const cgtSignature = readScalar<string>(db, 'SELECT signature FROM cgt_meta');
 
-  // q adapter: op-sqlite rows are objects keyed in SELECT column order → Object.values = Cell[] in order.
-  const q: Query = (sql) => (db.executeSync(sql).rows?._array ?? []).map((r: any) => Object.values(r) as Cell[]);
+  // q adapter: op-sqlite v17 exposes rawRows = Cell[][] already in SELECT column order. Fall back to
+  // mapping rows (Array<Record<col,Scalar>>) → Object.values for safety if a build omits rawRows.
+  const q: Query = (sql) => {
+    const res = db.executeSync(sql);
+    if (res.rawRows) return res.rawRows as Cell[][];
+    return (res.rows ?? []).map((r: any) => Object.values(r) as Cell[]);
+  };
 
   // 1 · manifest signature — ed25519 over the canonical whole-bundle digest (canonicalDigest.ts == signing.py)
-  if (!(await verifyEd25519(manifestDigest(q, sha256), manifest.signature, manifest.signer_pubkey)))
+  if (!verifyEd25519(manifestDigest(q, sha256), manifest.signature, manifest.signer_pubkey))
     throw new BundleRejected('manifest-signature', 'manifest ed25519 signature did not verify');
 
   // 2 · CGT spine signature — signed separately so the mentor can re-sign the tree alone
-  if (!(await verifyEd25519(cgtDigest(q, sha256), cgtSignature, manifest.signer_pubkey)))
+  if (!verifyEd25519(cgtDigest(q, sha256), cgtSignature, manifest.signer_pubkey))
     throw new BundleRejected('cgt-signature', 'CGT spine ed25519 signature did not verify');
 
   // 3 · pinned-key check — the embedded signer MUST be the key the app trusts
@@ -80,31 +111,27 @@ export async function loadBundle(dbName: string, dev: DeviceConfig): Promise<Loa
       `bundle ${manifest.embedder_id}/${manifest.embedder_dim}/vec${manifest.sqlite_vec_version} ` +
       `≠ device ${dev.embedderId}/${dev.embedderDim}/vec${dev.sqliteVecVersion}`);
 
-  return { db, manifest };
+  return manifest;
 }
 
 // ---------- helpers ----------
 
-function loadSqliteVec(_db: DB): void {
-  // op-sqlite: load the bundled sqlite-vec native lib so vec0 (chunk_vec/node_vec) is readable.
-  // e.g. _db.loadExtension(resolveSqliteVecPath());   // E0 wires the resolved per-platform path
-  // Confirm at E0: op-sqlite loads the sqlite-vec extension on a real arm64 device.
-}
-
 function readManifest(db: DB): Manifest {
-  const row = db.executeSync('SELECT * FROM manifest LIMIT 1').rows?._array?.[0];
+  // op-sqlite v17: executeSync().rows is Array<Record<col,Scalar>> — the array itself, no ._array wrapper.
+  const row = db.executeSync('SELECT * FROM manifest LIMIT 1').rows?.[0];
   if (!row) throw new BundleRejected('no-manifest', 'bundle has no manifest row');
   return row as unknown as Manifest;
 }
 
 function readScalar<T>(db: DB, sql: string): T {
-  const row = db.executeSync(sql).rows?._array?.[0];
+  const row = db.executeSync(sql).rows?.[0];
   if (!row) throw new BundleRejected('missing-row', `no row for: ${sql}`);
   return Object.values(row)[0] as T;
 }
 
-async function verifyEd25519(digest: Uint8Array, sigHex: string, pubHex: string): Promise<boolean> {
-  try { return await ed25519.verifyAsync(hexToBytes(sigHex), digest, hexToBytes(pubHex)); }
+function verifyEd25519(digest: Uint8Array, sigHex: string, pubHex: string): boolean {
+  // @noble/curves v2: ed25519.verify(sig, msg, pubkey) is synchronous and returns a boolean.
+  try { return ed25519.verify(hexToBytes(sigHex), digest, hexToBytes(pubHex)); }
   catch { return false; }
 }
 

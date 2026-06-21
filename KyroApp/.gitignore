@@ -35,6 +35,12 @@ local.properties
 !debug.keystore
 .kotlin/
 
+# Kyro release-signing secrets — NEVER commit these.
+# kyro-release.keystore is already covered by *.keystore above; keystore.properties
+# holds the store/key passwords and must stay out of source control.
+android/keystore.properties
+**/keystore.properties
+
 # node.js
 #
 node_modules/

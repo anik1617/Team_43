@@ -18,9 +18,25 @@
 
 import { open, moveAssetsDatabase, ANDROID_DATABASE_PATH, IOS_LIBRARY_PATH, type DB } from '@op-engineering/op-sqlite';
 import { Platform } from 'react-native';
+import { verifyOpenedBundle, KYRO_DEVICE_CONFIG, BundleRejected } from '../engine/e1/bundleLoader';
 
-const BUNDLE = 'edh-core-v0-mock.kyro';
+// The REAL signed bundle (1415 chunks, bge-m3 1024-d, ed25519-signed with the pinned dev key).
+// The v0 mock stays in assets/sqlite/ as a fallback reference, but the app loads v1.
+const BUNDLE = 'edh-core-v1.kyro';
+
+/**
+ * Fail-closed switch. PROVEN safe for edh-core-v1.kyro on the laptop
+ * (`node --experimental-sqlite edge/e1/verifyV1Check.mjs cloud/bundles/edh-core-v1.kyro` → PASS:
+ * both ed25519 sigs verify, signer == pinned key, embedder guard matches). When true, a
+ * BundleRejected from verifyOpenedBundle() throws out of open() and the app must show a "bundle
+ * invalid" state — it MUST NOT serve guidance from an unverified bundle. If a future on-device issue
+ * (e.g. op-sqlite reading vec0 differently) made v1 fail to verify on the phone, flip this to
+ * false to fall back to verify-and-warn while the lead investigates — do NOT brick the demo.
+ */
+const FAIL_CLOSED_ON_REJECT = true;
+
 let _db: DB | null = null;
+let _bundleError: BundleRejected | Error | null = null;
 
 /** The DB shim the engine consumes (loadSpine / retrieval use executeSync; canonicalDigest uses q). */
 export interface EngineDb {
@@ -32,8 +48,25 @@ export interface EngineDb {
 async function ensureOpen(): Promise<DB> {
   if (!_db) {
     await moveAssetsDatabase({ filename: BUNDLE, path: 'sqlite', overwrite: true }); // copy out of APK assets
-    _db = open({ name: BUNDLE, location: Platform.OS === 'ios' ? IOS_LIBRARY_PATH : ANDROID_DATABASE_PATH });
-    _db.executeSync('PRAGMA query_only = ON'); // enforce read-only at the SQL layer
+    const db = open({ name: BUNDLE, location: Platform.OS === 'ios' ? IOS_LIBRARY_PATH : ANDROID_DATABASE_PATH });
+    db.executeSync('PRAGMA query_only = ON'); // enforce read-only at the SQL layer
+
+    // VERIFY BEFORE SERVING. Run the full ed25519 + pinned-key + embedder suite on the bundle the app
+    // is about to use. FAIL CLOSED: a rejected bundle must never reach the engine — we record the error
+    // (so the UI can show a "bundle invalid" state) and, when FAIL_CLOSED_ON_REJECT, refuse to open.
+    try {
+      verifyOpenedBundle(db, KYRO_DEVICE_CONFIG);
+      _bundleError = null;
+    } catch (e) {
+      _bundleError = e instanceof Error ? e : new Error(String(e));
+      if (FAIL_CLOSED_ON_REJECT) {
+        try { db.close(); } catch {} // don't leave an unverified handle open
+        throw _bundleError; // open()/ensureOpen() rejects → app shows "bundle invalid", never serves guidance
+      }
+      // verify-and-warn mode (demo safety valve): keep going but loudly flag the unverified bundle.
+      console.warn('[kyroDb] bundle verification FAILED but FAIL_CLOSED_ON_REJECT is off:', _bundleError.message);
+    }
+    _db = db;
   }
   return _db;
 }
@@ -54,5 +87,14 @@ export const kyroDb = {
     if (!_db) return null;
     const row = _db.executeSync('SELECT recommendation FROM cgt_strings WHERE node_id = ? AND lang = ?', [nodeId, lang]).rows[0] as any;
     return (row?.recommendation as string) ?? null;
+  },
+
+  /**
+   * The last bundle-verification error, or null if the loaded bundle verified (or open() not called yet).
+   * Lets the UI render a "bundle invalid" state. Under FAIL_CLOSED_ON_REJECT this is also thrown out of
+   * open(), but in verify-and-warn mode a non-null value here is the only signal the bundle is untrusted.
+   */
+  bundleError(): Error | null {
+    return _bundleError;
   },
 };
