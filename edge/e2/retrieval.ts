@@ -15,6 +15,11 @@
  * What's testable here is the MECHANICS; the Python oracle (e2/conformance.py) proves the vec wiring.
  */
 
+// `Buffer` is a Node global; Hermes/React-Native has no global Buffer, so import it explicitly
+// (node's builtin in tests, the `buffer` package on device) — makeVec0Knn serializes the query
+// vector to a hex blob via Buffer and would otherwise throw "Buffer is not defined" on-device.
+import { Buffer } from 'buffer';
+
 // ---- the bundle read surface (satisfied by op-sqlite on device, node:sqlite in tests) ----
 export interface RetrievalDB { executeSync(sql: string): { rows?: { _array?: any[] } }; }
 

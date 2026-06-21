@@ -30,7 +30,11 @@ import { initLlama, type LlamaContext } from 'llama.rn';
 
 export const BGE_MODEL_PATH = '/storage/emulated/0/Android/data/com.kyroapp/files/bge-m3.gguf';
 export const BGE_DIM = 1024;
-const POOLING_CLS = 2; // llama.cpp LLAMA_POOLING_TYPE_CLS — must match FlagEmbedding's dense pooling
+// llama.rn 0.12.4 maps a STRING key ('none'|'mean'|'cls'|'last'|'rank') → the llama.cpp pooling enum
+// (poolTypeMap, lib/module/index.js). Passing the numeric 2 hits poolTypeMap[2]===undefined and
+// SILENTLY drops to the GGUF's metadata-default pooling — a parity-critical bug. Pass the string so
+// CLS is forced explicitly regardless of the GGUF metadata. (Verified against installed llama.rn.)
+const POOLING_CLS = 'cls'; // → LLAMA_POOLING_TYPE_CLS (=2)
 
 let ctx: LlamaContext | null = null;
 let status: 'none' | 'loading' | 'ready' | 'failed' = 'none';
