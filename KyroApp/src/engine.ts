@@ -14,6 +14,17 @@ import { qwenL3, initModel, modelStatus } from './qwenL3';
 
 export { initModel, modelStatus };
 
+/**
+ * Optionally reword a leaf's recommendation with the on-device Qwen model (the model's "mouth" job).
+ * Returns null if the model isn't loaded — the UI then keeps the instant authored guideline text.
+ * Never changes the decision: the tree already reached the leaf; this only rephrases the wording.
+ */
+export async function rewordRecommendation(leafId: string, citation: string | null): Promise<string | null> {
+  if (modelStatus() !== 'ready') return null;
+  try { return await qwenL3().synthesizeLeaf({ id: leafId } as CgtNode, citation ? [citation] : [], 'en'); }
+  catch { return null; }
+}
+
 export interface KyroDecision {
   action: string; leafId: string; badge: Gated['badge']; label: string; cleared: boolean;
   drillAbstain: string | null; trace: string[]; recommendation: string; citation: string | null; handoff: HandoffBrief;
@@ -37,8 +48,10 @@ function stubL3(): L3 {
 export async function runDecision(seed: Env): Promise<KyroDecision> {
   const db = await kyroDb.open();
   const spine = loadSpine(db);
-  // Qwen rewords the leaf if the model is loaded; else the authored guideline text (always works).
-  const l3 = modelStatus() === 'ready' ? qwenL3() : stubL3();
+  // Decision uses the deterministic authored leaf text — INSTANT, always correct. The model rewords
+  // in the background via rewordRecommendation() so the result paints immediately (model rewording is
+  // seconds on a phone). The tree decides either way; this is purely about render latency.
+  const l3 = stubL3();
 
   let t = 0; const clock = () => ++t;
   const journal = new InMemoryJournal();

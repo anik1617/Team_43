@@ -53,6 +53,28 @@ const FIELD_VOCAB: Record<string, string[]> = {
   focal_weakness_side: ['left', 'right', 'none'], posturing: ['none', 'decorticate', 'decerebrate'],
 };
 
+/**
+ * Classify a spoken/free-text answer to one of a field's allowed values (the model's hardest job).
+ * Returns the in-vocab value, or null if the field isn't categorical / nothing matched. Uses Qwen
+ * when loaded; falls back to a literal-substring scan so voice still does something pre-model.
+ * This is what makes the mic actually STEER the tree (not just echo a transcript).
+ */
+export async function classifyUtterance(field: string, utterance: string): Promise<string | null> {
+  const vocab = FIELD_VOCAB[field];
+  if (!vocab || !utterance.trim()) return null;
+  const literal = vocab.find((v) => utterance.toLowerCase().includes(v));   // cheap fallback
+  if (status !== 'ready' || !ctx) return literal ?? null;
+  try {
+    const out = await gen(
+      `You map a first responder's words to exactly one clinical value from this list: ${vocab.join(', ')}. Reply with ONLY the single value, nothing else.`,
+      utterance, 8,
+    );
+    return vocab.find((v) => out.toLowerCase().includes(v)) ?? literal ?? null;
+  } catch {
+    return literal ?? null;
+  }
+}
+
 /** L3 backed by Qwen when loaded; otherwise the authored-text stub. */
 export function qwenL3(): L3 {
   return {

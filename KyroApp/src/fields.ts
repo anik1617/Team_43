@@ -58,14 +58,21 @@ export const STEPS: GatherStep[] = [
 ];
 
 /** Non-asked fields — a clean adult baseline so the spine reaches a real decision. */
-const BASELINE: Env = {
+export const BASELINE: Env = {
   mechanism: 'injury', time_since_injury_hr: 3, known_coagulopathy: 'no', age_yr: 35,
   spo2_pct: 96, spo2_available: 'yes', blood_glucose: 100, glucose_available: 'yes', seizure_status: 'none',
 };
 
-/** Build the Env seed from collected answers + baseline + derived pupil sizes. */
-export function buildSeed(answers: Record<string, string | number>): Env {
-  const e: Env = { ...BASELINE, ...answers };
+/** Every field the gather steps ask about — used to pre-select chips from a scenario seed. */
+export const STEP_FIELDS: string[] = STEPS.flatMap((s) => s.controls.map((c) => c.field));
+
+/**
+ * Build the Env seed from collected answers, over a baseline (a scenario's full seed when running a
+ * story mode, else the generic adult baseline), + derived pupil sizes. Answers win over baseline,
+ * so editing any field in a story mode re-steers the real decision.
+ */
+export function buildSeed(answers: Record<string, string | number>, baseline: Env = BASELINE): Env {
+  const e: Env = { ...baseline, ...answers };
   e.pupil_size_l_mm = e.pupil_react_l === 'fixed' ? 6 : 3;
   e.pupil_size_r_mm = e.pupil_react_r === 'fixed' ? 6 : 3;
   return e;
