@@ -23,6 +23,7 @@ import { classifyUtterance } from './src/qwenL3';
 import {
   escalate, openExpertCall, escalationStatus, onEscalationStatus, type EscalationStatus,
 } from './src/escalation';
+import { openKnowledgePortal, checkCloudHealth } from './src/cloud';
 import { C, F } from './src/theme';
 
 // Fields the model can classify from speech (categorical). Everything else (GCS components, SBP) is
@@ -163,6 +164,7 @@ export default function App() {
     initMic().then((ok) => setMicReady(ok));
     initModel().catch(() => {});
     const unsub = onEscalationStatus(setEsc);
+    checkCloudHealth().then(setOnline).catch(() => {}); // real online/offline from the cloud /healthz
     return unsub;
   }, []);
 
@@ -284,6 +286,7 @@ export default function App() {
   // escalation actions (Agent C module)
   const onSendExpert = () => { if (r) escalate(r.handoff).catch(() => {}); };
   const onOpenCall = () => { openExpertCall().catch(() => {}); };
+  const onContributeKnowledge = () => { openKnowledgePortal().catch(() => {}); };
 
   const answeredCount = Object.keys(answers).length;
   const showEvidence = phase !== 'intro' && answeredCount > 0;
@@ -483,6 +486,7 @@ export default function App() {
                     : <Btn label="Queue handoff" onPress={onSendExpert} style={{ flex: 1 }} />}
                   <Btn label={online ? 'Send to expert' : 'Send brief'} variant="ghost" onPress={onSendExpert} style={{ width: 140 }} />
                 </View>
+                <Btn label="Contribute to knowledge base ↗" variant="ghost" onPress={onContributeKnowledge} style={{ marginBottom: 10 }} />
                 <Btn label="New patient" variant="ghost" onPress={newPatient} />
               </>
         )}
