@@ -17,6 +17,7 @@ import { createHash } from 'node:crypto';
 import { loadSpine, execute, type GatherHost, type L3, type Spine } from '../e3/spineExecutor.ts';
 import type { Env } from '../e3/conditions.ts';
 import { gate, type Coverage } from '../e4/abstentionGate.ts';
+import { expandGraph, communitiesOf, computeCoverage, retrieve, type Knn, type Embed, type RetrievedChunk } from '../e2/retrieval.ts';
 import { InMemoryJournal, journalingHost, resumeSeed, finalize, reduce, type Event } from '../e5/stateMachine.ts';
 import { buildHandoff } from '../e5/handoff.ts';
 import { manifestDigest, cgtDigest, type Query, type Cell } from '../e1/canonicalDigest.ts';
@@ -135,6 +136,44 @@ const g = (name: string, cov: Coverage) => gate(results[name], cov);
   // Transfer-feasible herniation: abstain LOCAL op, transfer instead (L21a STABILIZE_TRANSFER, not GUIDE).
   const tf = await run({ ...HM, transfer_feasible_within_window: 'yes' });
   check('Herniation + transfer feasible → L21a STABILIZE_TRANSFER (abstain local op)', tf.action === 'STABILIZE_TRANSFER' && tf.leaf.id === 'L21a');
+}
+
+// ---------- E2: retrieval mechanics (pure graph + coverage) + the L1↔L2 loop closure ----------
+// vec-NN is injected (op-sqlite vec0 on device); here it's a deterministic stub, so we test the
+// graph expansion / trust ordering / coverage logic — and that REAL coverage drives E4's badge.
+{
+  const opShimRet = { executeSync: (sql: string) => ({ rows: { _array: ndb.prepare(sql).all() } }) };
+
+  // graph expansion over the real mock graph: seed n_edh, 1 hop → n_lucid + n_herniation, cite ch01.
+  const exp1 = expandGraph(opShimRet, ['n_edh'], 1);
+  check('E2 expand n_edh 1-hop → reaches n_lucid + n_herniation',
+    exp1.nodes.includes('n_lucid') && exp1.nodes.includes('n_herniation') && exp1.chunkIds.includes('ch01'));
+  const exp2 = expandGraph(opShimRet, ['n_edh'], 2);
+  check('E2 expand 2-hop → reaches n_gcs/n_anisocoria via n_herniation', exp2.nodes.includes('n_gcs') && exp2.chunkIds.includes('ch04'));
+  check('E2 communitiesOf → c_edh_core', communitiesOf(opShimRet, exp1.nodes).includes('c_edh_core'));
+
+  // coverage thresholding (pure): tier-0 above threshold = covered; tier-1-only or sub-threshold = not.
+  const o = { kChunks: 6, kNodes: 4, hops: 1, groundingThreshold: 0.30, maxTrustTier: 0 };
+  const mk = (tier: number, score: number): RetrievedChunk => ({ id: 'x', kind: 'text_unit', text: 't', source_citation: 'WFNS Peshawar 2019', trust_tier: tier, score, via: 'vector' });
+  check('E2 coverage: tier-0 above threshold → covered', computeCoverage('Peshawar', [mk(0, 0.9)], o).covered === true);
+  check('E2 coverage: tier-1 only (maxTrustTier 0) → NOT covered', computeCoverage('Peshawar', [mk(1, 0.9)], o).covered === false);
+  check('E2 coverage: tier-0 sub-threshold → NOT covered', computeCoverage('Peshawar', [mk(0, 0.1)], o).covered === false);
+
+  // full retrieve() with stubbed knn → the loop closure: retrieval coverage feeds E4's badge.
+  const embed: Embed = () => new Float32Array(1024);
+  const groundingKnn: Knn = (table) => table === 'chunk_vec' ? [{ id: 'ch01', score: 0.9 }] : [{ id: 'n_edh', score: 0.8 }];
+  const emptyKnn: Knn = () => [];
+
+  const covered = retrieve(opShimRet, 'herniating EDH, blown left pupil', 'Peshawar Sec D', embed, groundingKnn);
+  check('E2 retrieve (grounding) → covered, cites a tier-0 source', covered.coverage.covered && covered.coverage.topTrustTier === 0);
+  const uncovered = retrieve(opShimRet, 'herniating EDH', 'Peshawar Sec D', embed, emptyKnn);
+  check('E2 retrieve (no hits) → not covered', uncovered.coverage.covered === false);
+
+  // LOOP CLOSURE: HM's GUIDE leaf + REAL retrieval coverage → E4 badge (not a hand-passed boolean).
+  const hmGreen = gate(results['HM herniating EDH'], covered.coverage);
+  check('E2→E4 loop: grounded coverage → 🟢 GUIDE', hmGreen.badge === 'GREEN' && hmGreen.cleared);
+  const hmDegrade = gate(results['HM herniating EDH'], uncovered.coverage);
+  check('E2→E4 loop: ungrounded coverage → 🟡 degrade-to-transfer', hmDegrade.badge === 'YELLOW' && hmDegrade.degradeToTransfer);
 }
 
 // ---------- E5: real journal → drop → resume → same leaf → handoff ----------

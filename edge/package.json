@@ -7,6 +7,7 @@
   "scripts": {
     "test": "node --experimental-sqlite --import tsx tests/run.ts ../cloud/bundles/edh-core-v0-mock.kyro",
     "parity": "node --experimental-sqlite --experimental-strip-types e1/parity.ts ../cloud/bundles/edh-core-v0-mock.kyro",
+    "oracles:e2": "python e2/conformance.py",
     "oracles:e3": "python e3/conformance.py",
     "oracles:e4": "python e4/conformance.py",
     "oracles:e5": "python e5/conformance.py"
