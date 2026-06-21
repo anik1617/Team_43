@@ -7,7 +7,8 @@ import { kyroDb } from './kyroDb';
 import { loadSpine, execute, type GatherHost, type L3, type CgtNode, type ExecResult } from '../engine/e3/spineExecutor';
 import type { Env } from '../engine/e3/conditions';
 import { gate, type Gated } from '../engine/e4/abstentionGate';
-import { retrieve, type Knn, type Embed } from '../engine/e2/retrieval';
+import { retrieve } from '../engine/e2/retrieval';
+import { resolveRetrievalDeps } from './retrievalDeps';
 import { InMemoryJournal, journalingHost, finalize, reduce } from '../engine/e5/stateMachine';
 import { buildHandoff, type HandoffBrief } from '../engine/e5/handoff';
 import { qwenL3, initModel, modelStatus } from './qwenL3';
@@ -30,9 +31,7 @@ export interface KyroDecision {
   drillAbstain: string | null; trace: string[]; recommendation: string; citation: string | null; handoff: HandoffBrief;
 }
 
-const GROUNDING_KNN: Knn = (table) =>
-  table === 'chunk_vec' ? [{ id: 'ch01', score: 0.92 }, { id: 'ch03', score: 0.88 }] : [{ id: 'n_edh', score: 0.9 }];
-const EMBED: Embed = () => new Float32Array(1024);
+// query embedder + vec0 knn now resolved by ./retrievalDeps (real BGE-M3+vec0 on a real bundle, stub otherwise)
 
 function stubL3(): L3 {
   return {
@@ -60,7 +59,9 @@ export async function runDecision(seed: Env): Promise<KyroDecision> {
   const host = journalingHost(noAsk, journal, clock);
 
   const exec: ExecResult = await execute(spine, host, l3, { seed: { ...seed } });
-  const ret = retrieve(db, 'head injury, herniation, EDH', exec.citation, EMBED, GROUNDING_KNN);
+  const deps = await resolveRetrievalDeps(db);
+  const qv = await deps.embedQuery('head injury, herniation, EDH');
+  const ret = retrieve(db, 'head injury, herniation, EDH', exec.citation, () => qv, deps.knn);
   const gated = gate(exec, ret.coverage, {
     drillAbstainText: kyroDb.readLeafText('L40', 'en') ?? undefined,
     rawLeafString: kyroDb.readLeafText(exec.leaf.id, 'en') ?? undefined,

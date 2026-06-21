@@ -22,7 +22,7 @@ export interface RetrievalDB { executeSync(sql: string): { rows?: { _array?: any
  *  so retrieval.ts stays metric-agnostic. */
 export interface Hit { id: string; score: number; }
 /** Injected nearest-neighbour over a vec0 table. Device: `SELECT id FROM <table> WHERE embedding
- *  MATCH ? ORDER BY distance LIMIT k`. Test: a scripted map. */
+ *  MATCH ? AND k = ? ORDER BY distance`. Test: a scripted map. */
 export type Knn = (table: 'chunk_vec' | 'node_vec', queryEmbedding: Float32Array, k: number) => Hit[];
 /** Injected query embedder. Device: BGE-M3 via llama.rn. Test: irrelevant (knn is stubbed). */
 export type Embed = (text: string) => Float32Array;
@@ -152,12 +152,17 @@ export function retrieve(
 }
 
 /** On-device knn adapter (reference; not run in laptop tests). op-sqlite + sqlite-vec.
- *  vec0 returns L2 distance; for L2-normalized vectors similarity = 1 - dist²/2, clamped to [0,1]. */
+ *  vec0 returns L2 distance; for L2-normalized vectors similarity = 1 - dist²/2, clamped to [0,1].
+ *
+ *  PORTABILITY: sqlite-vec >=0.1.9 REQUIRES a `k = ?` (or `LIMIT`) constraint and REJECTS the bare
+ *  `ORDER BY distance LIMIT k` form with "A LIMIT or 'k = ?' constraint is required". The canonical,
+ *  version-stable form is `WHERE embedding MATCH ? AND k = ?` — it matches cloud/kyro_engine/retrieval.py
+ *  (make_vec0_knn) so both planes issue the identical knn query. */
 export function makeVec0Knn(db: RetrievalDB): Knn {
   return (table, queryEmbedding, k) => {
     const blob = Buffer.from(queryEmbedding.buffer).toString('hex');
     const sql = `SELECT ${table === 'chunk_vec' ? 'chunk_id AS id' : 'node_id AS id'}, distance
-                 FROM ${table} WHERE embedding MATCH x'${blob}' ORDER BY distance LIMIT ${k}`;
+                 FROM ${table} WHERE embedding MATCH x'${blob}' AND k = ${k} ORDER BY distance`;
     return rows(db, sql).map((r: any) => ({ id: r.id, score: Math.max(0, 1 - (r.distance * r.distance) / 2) }));
   };
 }

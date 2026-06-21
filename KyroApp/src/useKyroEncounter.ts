@@ -36,7 +36,8 @@ import {
 } from '../engine/e3/spineExecutor';
 import type { Env } from '../engine/e3/conditions';
 import { gate, type Gated } from '../engine/e4/abstentionGate';
-import { retrieve, type Knn, type Embed } from '../engine/e2/retrieval';
+import { retrieve } from '../engine/e2/retrieval';
+import { resolveRetrievalDeps } from './retrievalDeps';
 import {
   InMemoryJournal,
   journalingHost,
@@ -130,18 +131,9 @@ const NO_ASK_HOST: GatherHost = {
   },
 };
 
-/** Coverage grounding stub: a deterministic EDH hit-set so the coverage MECHANICS run for real.
- *  (The mock embedder is non-semantic; the real device uses BGE-M3 vec0 nearest-neighbour.) */
-const GROUNDING_KNN: Knn = (table) =>
-  table === 'chunk_vec'
-    ? [
-        { id: 'ch01', score: 0.92 },
-        { id: 'ch03', score: 0.88 },
-      ]
-    : [{ id: 'n_edh', score: 0.9 }];
-
-/** Query embedder. Irrelevant under the stubbed knn (1024-d zero vector, BGE-M3 dim). */
-const EMBED: Embed = () => new Float32Array(1024);
+// E2's two hardware-gated deps (query embedder + vec0 knn) now live in ./retrievalDeps:
+// resolveRetrievalDeps() returns the REAL BGE-M3 + sqlite-vec path on a real bge-m3 bundle when
+// the GGUF loads, and the deterministic EDH stub hit-set otherwise (mock bundle / laptop demo).
 
 // ─────────────────────────────────────────────────────────────────────────────
 // The pipeline. Pure async function so it is trivially testable outside React too.
@@ -164,7 +156,11 @@ async function runHmEncounter(): Promise<KyroDecision> {
   const exec: ExecResult = await execute(spine, host, l3, { seed: HM_SEVERE });
 
   // E2 · retrieval coverage for the leaf the tree reached → the signal E4 gates on.
-  const ret = retrieve(db, HM_QUERY, exec.citation, EMBED, GROUNDING_KNN);
+  // Resolve the hardware-gated deps (real BGE-M3 + vec0 on a real bundle+model; stub otherwise).
+  // The query embed is async on device, so precompute the vector and hand retrieve() a sync accessor.
+  const deps = await resolveRetrievalDeps(db);
+  const qv = await deps.embedQuery(HM_QUERY);
+  const ret = retrieve(db, HM_QUERY, exec.citation, () => qv, deps.knn);
 
   // E4 · the authoritative badge (🟢/🟡/🔴) from STRUCTURE + coverage. Pass the bundle's L40
   // drill-abstain string + the leaf's authored string for the audit cross-check.
