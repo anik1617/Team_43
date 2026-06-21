@@ -23,13 +23,16 @@ export function modelStatus() { return status; }
 export async function initModel(path: string = MODEL_PATH): Promise<boolean> {
   if (status === 'ready') return true;
   status = 'loading';
+  console.log('[Kyro] llama loading:', path);
   try {
-    ctx = await initLlama({ model: path, n_ctx: 2048, n_gpu_layers: 0 });
+    ctx = await initLlama({ model: path, n_ctx: 1024, n_gpu_layers: 0 });
     status = 'ready';
+    console.log('[Kyro] llama READY');
     return true;
   } catch (e) {
     status = 'failed';
     ctx = null;
+    console.log('[Kyro] llama FAILED:', String(e));
     return false;
   }
 }

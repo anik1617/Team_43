@@ -10,6 +10,9 @@ import { gate, type Gated } from '../engine/e4/abstentionGate';
 import { retrieve, type Knn, type Embed } from '../engine/e2/retrieval';
 import { InMemoryJournal, journalingHost, finalize, reduce } from '../engine/e5/stateMachine';
 import { buildHandoff, type HandoffBrief } from '../engine/e5/handoff';
+import { qwenL3, initModel, modelStatus } from './qwenL3';
+
+export { initModel, modelStatus };
 
 export interface KyroDecision {
   action: string; leafId: string; badge: Gated['badge']; label: string; cleared: boolean;
@@ -34,7 +37,8 @@ function stubL3(): L3 {
 export async function runDecision(seed: Env): Promise<KyroDecision> {
   const db = await kyroDb.open();
   const spine = loadSpine(db);
-  const l3 = stubL3();
+  // Qwen rewords the leaf if the model is loaded; else the authored guideline text (always works).
+  const l3 = modelStatus() === 'ready' ? qwenL3() : stubL3();
 
   let t = 0; const clock = () => ++t;
   const journal = new InMemoryJournal();

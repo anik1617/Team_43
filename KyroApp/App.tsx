@@ -8,9 +8,19 @@ import {
   Animated, Easing, Pressable, ScrollView, StatusBar, Text, View,
   type ViewStyle, type TextStyle,
 } from 'react-native';
-import { runDecision, type KyroDecision } from './src/engine';
+import { runDecision, initModel, type KyroDecision } from './src/engine';
 import { buildSeed } from './src/fields';
+import { speak, initMic, listen, micState } from './src/voice';
 import { C, F } from './src/theme';
+
+// what Kyro says aloud at each step (TTS)
+const SPEAK: Record<number, string> = {
+  0: "New encounter. I'll guide evidence-gathering by voice, hands-free. Everything runs on this phone.",
+  1: "First, the basics. What is the patient's G C S?",
+  2: 'I heard G C S six. Eyes one, verbal two, motor three. Is that correct?',
+  3: 'A fixed dilated left pupil, a lucid interval, and G C S six. That matches the lateralizing pattern for an extradural haematoma.',
+  5: "Burr-hole localization needs C T imaging I cannot supply. I won't invent this step. Handing to a human expert.",
+};
 
 // ── animated voice bars ────────────────────────────────────────────────────────
 function VoiceBars({ heights, color = '#fff', w = 3, animate = false }: { heights: number[]; color?: string; w?: number; animate?: boolean }) {
@@ -91,16 +101,38 @@ export default function App() {
   const [step, setStep] = useState(0);
   const [online, setOnline] = useState(false);
   const [r, setR] = useState<KyroDecision | null>(null);
+  const [transcript, setTranscript] = useState<string | null>(null);
+  const [listening, setListening] = useState(false);
+
+  const runEngine = () => runDecision(buildSeed({
+    mechanism_class: 'blunt', gcs_e: 1, gcs_v: 2, gcs_m: 3, pupil_react_l: 'fixed', pupil_react_r: 'brisk',
+    lucid_interval: 'yes', sbp_mmhg: 160, anticoag_antiplatelet: 'none', focal_weakness_side: 'right', posturing: 'none',
+  })).then(setR).catch(() => {});
 
   useEffect(() => {
-    // run the real engine in the background so steps 4–5 show real output
-    runDecision(buildSeed({
-      mechanism_class: 'blunt', gcs_e: 1, gcs_v: 2, gcs_m: 3, pupil_react_l: 'fixed', pupil_react_r: 'brisk',
-      lucid_interval: 'yes', sbp_mmhg: 160, anticoag_antiplatelet: 'none', focal_weakness_side: 'right', posturing: 'none',
-    })).then(setR).catch(() => {});
+    runEngine();
+    initMic();                                  // load whisper (mic)
+    initModel().then((ok) => { if (ok) runEngine(); }); // load Qwen; re-run so step 4 is model-worded
   }, []);
 
+  // Kyro speaks at each step (step 4 reads the real recommendation)
+  useEffect(() => {
+    const line = step === 4 ? (r?.recommendation ?? '') : SPEAK[step];
+    if (line) speak(line);
+  }, [step, r]);
+
   const next = () => setStep((s) => Math.min(5, s + 1));
+
+  // step 1 mic: actually listen via whisper, show the transcript, then advance
+  const onMic = async () => {
+    if (step !== 1 || micState() !== 'ready') { next(); return; }
+    setListening(true);
+    const t = await listen(6000);
+    setTranscript(t || null);
+    setListening(false);
+    next();
+  };
+
   const evidenceCount = step <= 1 ? 0 : step === 2 ? 1 : step === 3 ? 4 : 6;
 
   return (
@@ -149,8 +181,10 @@ export default function App() {
         {step === 1 && (
           <>
             <KyroMsg>First, the basics. <Text style={{ color: C.ink, fontWeight: '700' }}>What is the patient's GCS?</Text></KyroMsg>
-            <UserMsg>"GCS is six… eyes one, verbal two, motor three."</UserMsg>
-            <Text style={T({ fontFamily: F.sans, fontSize: 11, color: C.faint2, fontStyle: 'italic', textAlign: 'right' })}>transcribing your voice…</Text>
+            {transcript ? <UserMsg>"{transcript}"</UserMsg> : null}
+            <Text style={T({ fontFamily: F.sans, fontSize: 11, color: C.faint2, fontStyle: 'italic', textAlign: 'right' })}>
+              {listening ? 'listening… speak now' : transcript ? '' : micState() === 'ready' ? 'tap the mic and speak your answer' : 'tap the mic to continue'}
+            </Text>
           </>
         )}
 
@@ -260,13 +294,13 @@ export default function App() {
       {/* voice dock */}
       <View style={{ paddingVertical: 13, paddingHorizontal: 20, paddingBottom: 22, borderTopWidth: 1, borderTopColor: C.hair, backgroundColor: '#fff' }}>
         {(step === 0 || step === 1) && (
-          <Pressable onPress={next} style={{ alignItems: 'center', gap: 9 }}>
+          <Pressable onPress={step === 1 ? onMic : next} disabled={listening} style={{ alignItems: 'center', gap: 9 }}>
             <PulseRing on={step === 1}>
               <View style={{ width: 62, height: 62, borderRadius: 31, backgroundColor: C.brand, alignItems: 'center', justifyContent: 'center' }}>
-                <VoiceBars heights={[10, 18, 24, 14, 8]} animate={step === 1} />
+                <VoiceBars heights={[10, 18, 24, 14, 8]} animate={step === 1 || listening} />
               </View>
             </PulseRing>
-            <Text style={T({ fontFamily: F.sans, fontWeight: '500', fontSize: 13, color: step === 1 ? C.brand : C.muted })}>{step === 0 ? 'Tap to begin · voice-guided' : 'Listening… · tap to confirm'}</Text>
+            <Text style={T({ fontFamily: F.sans, fontWeight: '500', fontSize: 13, color: step === 1 ? C.brand : C.muted })}>{step === 0 ? 'Tap to begin · voice-guided' : listening ? 'Listening…' : 'Tap & speak the GCS'}</Text>
           </Pressable>
         )}
         {step === 2 && (
