@@ -88,6 +88,55 @@ const g = (name: string, cov: Coverage) => gate(results[name], cov);
   check('E4 invalid → 🔴 irreducible, not cleared', inv.badge === 'RED' && inv.irreducibleStop && !inv.cleared);
 }
 
+// ---------- NEGATIVE / EDGE SAFETY GUARDS: lock the 4 doc-22 tagged traps + both irreducible stops ----------
+// Trap-guards (PATCH no-platelets, hypotension-first, mannitol-withheld) are INTERMEDIATE nodes, so we
+// assert on the TRACE, not just the leaf. Expected leaves/traces are PROBED against the live spine, never
+// guessed (see tests/_probe.ts). A regression here = a safety guard silently dropped.
+{
+  const run = async (seed: Env) => execute(spine, noAsk, l3, { seed });
+  const has = (r: { trace: string[] }, node: string) => r.trace.includes(node);
+
+  // C14 — antiplatelet ICH: the PATCH harm-trap (L16Bb) MUST fire (no platelet transfusion).
+  const c14 = await run({ ...HM, anticoag_antiplatelet: 'antiplatelet' });
+  check('TRAP C14 antiplatelet → PATCH no-platelets guard (L16Bb) on path', has(c14, 'L16Bb'));
+  check('TRAP C14 → still GUIDE but operate funnels to N40 abstain', c14.action === 'GUIDE' && gate(c14, COVERED).drillSiteAbstain?.node === 'N40');
+
+  // B6 — warfarin: reverse-coagulopathy leaf (L16Ba) on path; routes to grounded transfer.
+  const b6 = await run({ ...HM, anticoag_antiplatelet: 'warfarin', lucid_interval: 'no', focal_weakness_side: 'none', gcs_e: 4, gcs_v: 5, gcs_m: 6 });
+  check('TRAP B6 warfarin → reverse-coagulopathy guard (L16Ba) on path', has(b6, 'L16Ba'));
+  check('TRAP B6 → STABILIZE_TRANSFER, expert handoff', b6.action === 'STABILIZE_TRANSFER' && gate(b6, COVERED).requiresExpertHandoff);
+
+  // D1 — hypotension trap: resuscitate FIRST (L11a) and mannitol WITHHELD while hypotensive (L14b).
+  const d1 = await run({ ...HM, sbp_mmhg: 80 });
+  check('TRAP D1 hypotension → resuscitate-first (L11a) on path', has(d1, 'L11a'));
+  check('TRAP D1 hypotension → mannitol withheld (L14b) on path, NOT L14a', has(d1, 'L14b') && !has(d1, 'L14a'));
+
+  // C6 — penetrating/GSW: MUST bypass the entire EDH operate gate (never N16B/N20/N21/N40 → never blind-drill).
+  const c6 = await run({ ...HM, mechanism: 'gsw', mechanism_class: 'penetrating' });
+  check('TRAP C6 GSW → bypasses EDH operate gate (no N20/N21/N40/N16B)',
+    c6.action === 'STABILIZE_TRANSFER' && !has(c6, 'N20') && !has(c6, 'N21') && !has(c6, 'N40') && !has(c6, 'N16B'));
+
+  // N97 — bilateral fixed pupils + coma: irreducible 🔴 (futility-aware), never blind-drills.
+  const n97 = await run({ ...HM, pupil_react_r: 'fixed' });
+  const gn97 = gate(n97, COVERED);
+  check('IRREDUCIBLE N97 bilateral-fixed → 🔴 ABSTAIN_STOP, irreducible, not cleared',
+    n97.leaf.id === 'N97' && gn97.badge === 'RED' && gn97.irreducibleStop && !gn97.cleared);
+
+  // N99 — SBP out of physiologic range: invalid-input irreducible 🔴.
+  const n99 = await run({ ...HM, sbp_mmhg: 350 });
+  const gn99 = gate(n99, COVERED);
+  check('IRREDUCIBLE N99 SBP-out-of-range → 🔴 ABSTAIN_STOP, irreducible', n99.leaf.id === 'N99' && gn99.badge === 'RED' && gn99.irreducibleStop);
+
+  // B-stable — mild/stable: OBSERVE 🟢, with mannitol NOT given (L14c) and NO hyperventilation (L16Hb).
+  const obs = await run({ ...HM, gcs_e: 4, gcs_v: 5, gcs_m: 6, pupil_react_l: 'brisk', pupil_size_l_mm: 3, lucid_interval: 'no', focal_weakness_side: 'none', posturing: 'none' });
+  check('STABLE → OBSERVE@L23, no mannitol (L14c) + no hyperventilation (L16Hb)',
+    obs.action === 'OBSERVE' && obs.leaf.id === 'L23' && has(obs, 'L14c') && has(obs, 'L16Hb'));
+
+  // Transfer-feasible herniation: abstain LOCAL op, transfer instead (L21a STABILIZE_TRANSFER, not GUIDE).
+  const tf = await run({ ...HM, transfer_feasible_within_window: 'yes' });
+  check('Herniation + transfer feasible → L21a STABILIZE_TRANSFER (abstain local op)', tf.action === 'STABILIZE_TRANSFER' && tf.leaf.id === 'L21a');
+}
+
 // ---------- E5: real journal → drop → resume → same leaf → handoff ----------
 {
   const clock = (() => { let t = 0; return () => ++t; })();
