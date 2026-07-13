@@ -28,8 +28,10 @@ export const KYRO_ESCALATE_TOKEN = '';
 export const ESCALATE_REGION = '';                 // e.g. 'Namibia'
 export const ESCALATE_CALLBACK = '';               // how the on-scene clinician is reached, e.g. 'BHU radio'
 
-// Direct-dial fallback (the cloud relay never returns the surgeon's number — this is a known hotline).
-export const EXPERT_CONTACT = 'tel:+10000000000';  // e.g. 'tel:+264...' or 'https://wa.me/264...'
+// Expert direct-contact for the demo (the cloud relay's matched specialist is separate PII-safe routing).
+// Digits only, country code, no '+'. WhatsApp chat (call), and the prefilled-brief message both target it.
+export const EXPERT_WA_NUMBER = '18647419374';                       // +1 864 741 9374
+export const EXPERT_CONTACT = `https://wa.me/${EXPERT_WA_NUMBER}`;   // opens WhatsApp chat → call/message there
 
 export const ESCALATE_URL = `${CLOUD_BASE}/escalate`;
 export const PORTAL_URL = `${CLOUD_BASE}/portal`;

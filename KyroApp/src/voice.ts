@@ -34,15 +34,36 @@ export async function initMic(): Promise<boolean> {
   catch (e) { micStatus = 'failed'; console.log('[Kyro] whisper FAILED:', String(e)); return false; }
 }
 
-/** Capture ~ms of mic speech and return the transcript. */
-export async function listen(ms = 6000): Promise<string> {
-  if (!wctx) return '';
+/** Result of a listen() turn: the cleaned transcript, plus WHY it's empty when it is. */
+export interface ListenResult {
+  text: string;                       // cleaned transcript ('' if nothing usable)
+  reason: 'ok' | 'silence' | 'unclear' | 'error' | 'unavailable';
+}
+
+// whisper.cpp emits these markers when it captured no speech (vs. speech it couldn't resolve).
+const SILENCE_MARKER = /\b(blank_?audio|silence|inaudible|no_?speech)\b/i;
+
+/**
+ * Capture ~ms of mic speech and return the transcript with a reason code.
+ *   ok         → got usable words
+ *   silence    → mic delivered no speech (dead/muted mic, nothing said) — whisper saw [BLANK_AUDIO] or nothing
+ *   unclear    → whisper heard sound but it didn't resolve to words
+ *   unavailable→ whisper context not loaded
+ *   error      → the realtime engine threw
+ */
+export async function listen(ms = 6000): Promise<ListenResult> {
+  if (!wctx) return { text: '', reason: 'unavailable' };
   try {
     const { stop, subscribe } = await wctx.transcribeRealtime({ language: 'en' });
-    let text = '';
-    subscribe((e: any) => { const r = e?.data?.result; if (r) text = r; });
+    let raw = '';
+    subscribe((e: any) => { const r = e?.data?.result; if (r) raw = r; });
     await new Promise((r) => setTimeout(r, ms));
     await stop();
-    return text.replace(/\[[^\]]*\]/g, '').replace(/\s+/g, ' ').trim();
-  } catch { return ''; }
+
+    const text = raw.replace(/\[[^\]]*\]/g, '').replace(/\s+/g, ' ').trim();
+    if (text) return { text, reason: 'ok' };
+    // No words: distinguish "no audio at all / only silence markers" from "heard sound, no words".
+    const silent = raw.trim() === '' || SILENCE_MARKER.test(raw);
+    return { text: '', reason: silent ? 'silence' : 'unclear' };
+  } catch { return { text: '', reason: 'error' }; }
 }

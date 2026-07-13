@@ -101,6 +101,12 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
+    // Ship the on-device models INSIDE the APK (assets/models/*). Store them uncompressed so the 1.9 GB
+    // Qwen file packages safely and copies out cleanly on first run (no inflate of a multi-GB stream).
+    androidResources {
+        noCompress += ['gguf', 'bin']
+    }
+
     namespace "com.kyroapp"
     defaultConfig {
         applicationId "com.kyroapp"

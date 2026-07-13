@@ -16,7 +16,8 @@
 import { Linking } from 'react-native';
 import type { HandoffBrief } from '../engine/e5/handoff';
 import {
-  ESCALATE_URL, KYRO_ESCALATE_TOKEN, ESCALATE_REGION, ESCALATE_CALLBACK, EXPERT_CONTACT, checkCloudHealth,
+  ESCALATE_URL, KYRO_ESCALATE_TOKEN, ESCALATE_REGION, ESCALATE_CALLBACK,
+  EXPERT_CONTACT, EXPERT_WA_NUMBER, checkCloudHealth,
 } from './cloud';
 
 const POST_TIMEOUT_MS = 8000;
@@ -208,12 +209,35 @@ export function pendingEscalations(): number { return queue.length; }
  * Open the dialer / WhatsApp so the operator reaches a hotline directly (the cloud relay never returns
  * the surgeon's number). Guards with canOpenURL and degrades gracefully. Never throws to the UI.
  */
-export async function openExpertCall(): Promise<void> {
-  try {
-    const can = await Linking.canOpenURL(EXPERT_CONTACT);
-    if (!can) { console.log('[Kyro] expert contact not openable:', EXPERT_CONTACT); return; }
-    await Linking.openURL(EXPERT_CONTACT);
-  } catch (e) {
-    console.log('[Kyro] openExpertCall failed:', String(e));
+// Try a list of contact URLs in order, opening the first that resolves. Each openURL rejects via
+// ActivityNotFoundException when no app handles it, so later fallbacks are genuinely reachable.
+// (Do NOT gate on Linking.canOpenURL — on Android 11+ it returns false unless the scheme/package is in
+// the manifest <queries>, which silently no-op'd these buttons.)
+async function openFirst(urls: string[]): Promise<void> {
+  for (const url of urls) {
+    try { await Linking.openURL(url); return; }
+    catch (e) { console.log('[Kyro] contact fallthrough:', url.split('?')[0], String(e)); }
   }
+}
+
+export async function openExpertCall(): Promise<void> {
+  // WhatsApp app directly (→ call/message there) → wa.me web link → phone dialer. The whatsapp:// scheme
+  // needs the <queries> com.whatsapp entry in AndroidManifest (Android 11+) to resolve when installed.
+  await openFirst([
+    `whatsapp://send?phone=${EXPERT_WA_NUMBER}`,
+    EXPERT_CONTACT,
+    `tel:+${EXPERT_WA_NUMBER}`,
+  ]);
+}
+
+/**
+ * Open WhatsApp with the pre-briefed handoff already typed in the chat to the expert — the operator just
+ * hits send, so the message ACTUALLY reaches the number (unlike the cloud relay, which is staged in demo).
+ */
+export async function openExpertMessage(text: string): Promise<void> {
+  const enc = encodeURIComponent(text);
+  await openFirst([
+    `whatsapp://send?phone=${EXPERT_WA_NUMBER}&text=${enc}`,
+    `https://wa.me/${EXPERT_WA_NUMBER}?text=${enc}`,
+  ]);
 }

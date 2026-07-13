@@ -21,10 +21,11 @@ import { STEPS, buildSeed, type GatherStep, type Opt } from './src/fields';
 import { speak, initMic, listen } from './src/voice';
 import { classifyUtterance } from './src/qwenL3';
 import {
-  escalate, openExpertCall, escalationStatus, onEscalationStatus, type EscalationStatus,
+  escalate, openExpertCall, openExpertMessage, escalationStatus, onEscalationStatus, type EscalationStatus,
 } from './src/escalation';
 import { openKnowledgePortal, checkCloudHealth } from './src/cloud';
-import { modelsPresent, downloadModels, MODELS, type DLProgress } from './src/modelDownload';
+import { modelsPresent, modelsBundled, downloadModels, copyBundledModels, MODELS, type DLProgress } from './src/modelDownload';
+import Clipboard from '@react-native-clipboard/clipboard';
 import { C, F } from './src/theme';
 
 // Fields the model can classify from speech (categorical). Everything else (GCS components, SBP) is
@@ -152,9 +153,9 @@ function ProgressBar({ pct }: { pct: number }) {
   );
 }
 
-function SetupScreen({ phase, dl, error, onDownload, onSkip }: {
+function SetupScreen({ phase, dl, error, bundled, onDownload, onSkip }: {
   phase: 'checking' | 'needed' | 'downloading';
-  dl: DLProgress | null; error: string | null; onDownload: () => void; onSkip: () => void;
+  dl: DLProgress | null; error: string | null; bundled: boolean; onDownload: () => void; onSkip: () => void;
 }) {
   const gb = (n: number) => (n / 1e9).toFixed(2);
   const pct = dl && dl.overallTotal > 0 ? Math.min(100, Math.round((dl.overallReceived / dl.overallTotal) * 100)) : 0;
@@ -172,7 +173,9 @@ function SetupScreen({ phase, dl, error, onDownload, onSkip }: {
         <SectionLabel style={{ color: C.faint2, letterSpacing: 1.3, fontSize: 11 }}>FIRST-TIME SETUP</SectionLabel>
       </View>
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 16 }} showsVerticalScrollIndicator={false}>
-        <KyroMsg>Kyro runs entirely on this phone. I need to download my on-device models once — about 3.4 GB. Use Wi-Fi if you can; this happens only once, then I work fully offline.</KyroMsg>
+        <KyroMsg>{bundled
+          ? 'Kyro runs entirely on this phone. My on-device models ship inside the app — I just need to unpack them once (~3.4 GB, no internet needed). Takes a minute, then I work fully offline.'
+          : 'Kyro runs entirely on this phone. I need to download my on-device models once — about 3.4 GB. Use Wi-Fi if you can; this happens only once, then I work fully offline.'}</KyroMsg>
         <View style={{ backgroundColor: C.card, borderWidth: 1, borderColor: C.cardLine, borderRadius: 14, padding: 15, marginTop: 4 }}>
           <SectionLabel>ON-DEVICE MODELS</SectionLabel>
           {MODELS.map((m) => {
@@ -190,7 +193,7 @@ function SetupScreen({ phase, dl, error, onDownload, onSkip }: {
         </View>
         {downloading ? (
           <View style={{ backgroundColor: C.navy, borderRadius: 14, padding: 16, marginTop: 13 }}>
-            <Text style={T({ fontFamily: F.sans, fontWeight: '700', fontSize: 11, letterSpacing: 1.2, color: C.sky })}>{`DOWNLOADING · ${pct}%`}</Text>
+            <Text style={T({ fontFamily: F.sans, fontWeight: '700', fontSize: 11, letterSpacing: 1.2, color: C.sky })}>{`${bundled ? 'INSTALLING' : 'DOWNLOADING'} · ${pct}%`}</Text>
             <ProgressBar pct={pct} />
             <Text style={T({ fontFamily: F.sans, fontSize: 13.5, color: '#fff' })}>{dl?.label ?? ''}</Text>
             <Text style={T({ fontFamily: F.mono, fontSize: 11.5, color: C.sky, marginTop: 4 })}>{`${gb(dl?.overallReceived ?? 0)} / ${gb(dl?.overallTotal ?? 0)} GB · keep Kyro open`}</Text>
@@ -203,10 +206,10 @@ function SetupScreen({ phase, dl, error, onDownload, onSkip }: {
         {phase === 'checking' ? (
           <Btn label="Checking…" onPress={() => {}} disabled />
         ) : downloading ? (
-          <Btn label={`Downloading… ${pct}%`} onPress={() => {}} disabled />
+          <Btn label={`${bundled ? 'Installing' : 'Downloading'}… ${pct}%`} onPress={() => {}} disabled />
         ) : (
           <>
-            <Btn label={error ? 'Retry download' : 'Download models · ~3.4 GB'} onPress={onDownload} />
+            <Btn label={bundled ? (error ? 'Retry install' : 'Install models · ~3.4 GB') : (error ? 'Retry download' : 'Download models · ~3.4 GB')} onPress={onDownload} />
             <Btn label="Skip — text-only mode" variant="ghost" onPress={onSkip} style={{ marginTop: 10 }} />
           </>
         )}
@@ -230,6 +233,8 @@ export default function App() {
   const [setupPhase, setSetupPhase] = useState<'checking' | 'needed' | 'downloading' | 'ready'>('checking');
   const [dl, setDl] = useState<DLProgress | null>(null);
   const [dlError, setDlError] = useState<string | null>(null);
+  const [bundled, setBundled] = useState(false); // models shipped inside this APK → install (copy), not download
+  const [kgCopied, setKgCopied] = useState(false);
   const scrollRef = useRef<ScrollView>(null);
 
   const step = STEPS[stepIdx];
@@ -239,7 +244,8 @@ export default function App() {
   useEffect(() => {
     const unsub = onEscalationStatus(setEsc);
     checkCloudHealth().then(setOnline).catch(() => {}); // real online/offline from the cloud /healthz
-    // First-run gate: are the on-device models present (adb-pushed or a prior download)? If not, setup.
+    modelsBundled().then(setBundled).catch(() => {});   // are the models inside this APK? (install vs download)
+    // First-run gate: are the on-device models present (bundled-copy, adb-pushed, or a prior download)? If not, setup.
     modelsPresent().then((present) => setSetupPhase(present ? 'ready' : 'needed')).catch(() => setSetupPhase('needed'));
     return unsub;
   }, []);
@@ -272,7 +278,7 @@ export default function App() {
   };
 
   const newPatient = () => {
-    setAnswers({}); setMessages([]); setR(null); setStepIdx(0); setListening(false); setDeciding(false);
+    setAnswers({}); setMessages([]); setR(null); setStepIdx(0); setListening(false); setDeciding(false); setKgCopied(false);
     setPhase('intro');
   };
 
@@ -316,9 +322,19 @@ export default function App() {
     if (phase !== 'gather' || listening || !micReady) return;
     if (!(await ensureMicPermission())) return;
     setListening(true);
-    const transcript = (await listen(6000)).trim();
+    const { text: transcript, reason } = await listen(6000);
     setListening(false);
-    if (!transcript) { pushMsg({ who: 'kyro', text: "I didn't catch that — tap your answer or try the mic again." }); return; }
+    if (!transcript) {
+      // Tell a dead/muted mic apart from a misheard answer — in the field that's the difference
+      // between "fix your microphone" and "say it again."
+      const msg = reason === 'silence'
+        ? "I didn't hear anything — check the mic isn't muted, then tap & speak and talk right after. Or tap your answer."
+        : reason === 'unavailable' || reason === 'error'
+        ? 'The mic isn’t available right now — please tap your answer.'
+        : "I didn't catch that — tap your answer or try the mic again.";
+      pushMsg({ who: 'kyro', text: msg });
+      return;
+    }
     pushMsg({ who: 'user', text: `"${transcript}"` });
 
     // classify every categorical field this step is asking for
@@ -366,21 +382,56 @@ export default function App() {
     }
   };
 
+  // The pre-briefed SBAR as a WhatsApp message body (what the operator sends to the expert).
+  const buildHandoffMessage = (d: KyroDecision): string => {
+    const s = d.handoff?.sbar;
+    return [
+      'KYRO HANDOFF — acute TBI / EDH',
+      s ? `S: ${s.situation}` : '',
+      s ? `B: ${s.background}` : '',
+      s ? `A: ${s.assessment}` : '',
+      s?.recommendation ? `R: ${s.recommendation}` : '',
+      d.drillAbstain ? `Kyro abstains on: ${d.drillAbstain}` : '',
+    ].filter(Boolean).join('\n');
+  };
+
+  // The full current session (evidence + decision + citation + SBAR) for the knowledge-base contribution.
+  const buildSessionExport = (): string => {
+    const ev = Object.entries(answers).map(([k, v]) => `- ${k.replace(/_/g, ' ')}: ${v}`).join('\n');
+    const lines = ['KYRO SESSION — acute TBI · EDH pathway', '', 'Evidence captured:', ev || '(none)'];
+    if (r) {
+      lines.push('', `Decision: ${r.label}`, `Recommendation: ${r.recommendation}`);
+      if (r.citation) lines.push(`Citation: ${r.citation}`);
+      if (r.drillAbstain) lines.push(`Boundary reached: ${r.drillAbstain}`);
+      const s = r.handoff?.sbar;
+      if (s) lines.push('', 'SBAR:', `S: ${s.situation}`, `B: ${s.background}`, `A: ${s.assessment}`, s.recommendation ? `R: ${s.recommendation}` : '');
+    }
+    return lines.filter((x) => x !== '').join('\n');
+  };
+
   // escalation actions (Agent C module)
-  const onSendExpert = () => { if (r) escalate(r.handoff).catch(() => {}); };
+  // Send the brief to the cloud (record/flywheel) AND open WhatsApp pre-filled so the message ACTUALLY
+  // reaches the expert number on send (the cloud relay is staged in the demo and doesn't deliver).
+  const onSendExpert = () => { if (!r) return; escalate(r.handoff).catch(() => {}); openExpertMessage(buildHandoffMessage(r)).catch(() => {}); };
   const onOpenCall = () => { openExpertCall().catch(() => {}); };
-  const onContributeKnowledge = () => { openKnowledgePortal().catch(() => {}); };
+  // Copy the whole session to the clipboard, then open the portal — paste it into the contribution form.
+  const onContributeKnowledge = () => {
+    try { Clipboard.setString(buildSessionExport()); setKgCopied(true); } catch {}
+    openKnowledgePortal().catch(() => {});
+  };
 
   const startDownload = () => {
     setDlError(null); setSetupPhase('downloading');
-    downloadModels(setDl)
+    // Bundled build: copy the models OUT of the APK (local, no network). Otherwise download them.
+    const provision = bundled ? copyBundledModels : downloadModels;
+    provision(setDl)
       .then(() => setSetupPhase('ready'))
       .catch((e) => { setDlError(String(e?.message ?? e)); setSetupPhase('needed'); });
   };
 
   // First-run model download gate — blocks the app until models are present (or the user skips).
   if (setupPhase !== 'ready') {
-    return <SetupScreen phase={setupPhase} dl={dl} error={dlError} onDownload={startDownload} onSkip={() => setSetupPhase('ready')} />;
+    return <SetupScreen phase={setupPhase} dl={dl} error={dlError} bundled={bundled} onDownload={startDownload} onSkip={() => setSetupPhase('ready')} />;
   }
 
   const answeredCount = Object.keys(answers).length;
@@ -516,7 +567,7 @@ export default function App() {
                   <View style={{ backgroundColor: '#F5F8F8', borderWidth: 1, borderColor: C.hair2, borderRadius: 10, padding: 12, marginTop: 4 }}>
                     <Text style={T({ fontFamily: F.mono, fontSize: 11.5, lineHeight: 18, color: '#3A444C' })}>
                       <Text style={{ color: C.brand, fontFamily: F.monoSemi }}>HANDOFF · SBAR · auto-generated{'\n'}</Text>
-                      {r.handoff.sbar.situation}
+                      {r.handoff?.sbar?.situation ?? ''}
                     </Text>
                   </View>
                 </View>
@@ -581,7 +632,12 @@ export default function App() {
                     : <Btn label="Queue handoff" onPress={onSendExpert} style={{ flex: 1 }} />}
                   <Btn label={online ? 'Send to expert' : 'Send brief'} variant="ghost" onPress={onSendExpert} style={{ width: 140 }} />
                 </View>
-                <Btn label="Contribute to knowledge base ↗" variant="ghost" onPress={onContributeKnowledge} style={{ marginBottom: 10 }} />
+                <Btn label="Contribute to knowledge base ↗" variant="ghost" onPress={onContributeKnowledge} style={{ marginBottom: 6 }} />
+                <Text style={T({ fontFamily: F.sans, fontSize: 11.5, lineHeight: 16, color: kgCopied ? C.brandInk : C.faint2, textAlign: 'center', marginBottom: 12 })}>
+                  {kgCopied
+                    ? '✓ Session copied. In the portal: Contribute → sign in → add data → paste.'
+                    : 'Tapping copies this session to your clipboard. In the portal: Contribute → sign in → add data → paste it in.'}
+                </Text>
                 <Btn label="New patient" variant="ghost" onPress={newPatient} />
               </>
         )}
