@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "Kyro",
+    "slug": "kyro-demo",
+    "version": "1.4.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#0A1626",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "org.missionbrain.kyrodemo"
+    },
+    "android": {
+      "package": "org.missionbrain.kyrodemo",
+      "adaptiveIcon": {
+        "backgroundColor": "#0A1626",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
