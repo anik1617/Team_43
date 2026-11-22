@@ -11,7 +11,9 @@ export default function Summary() {
   const nav = useNav();
   const e = nav.enc;
   const events = [
-    ['19:46', 'mic', 'History and exam captured by voice', '11 fields'],
+    e.intake?.source === 'typed'
+      ? ['19:46', 'type', 'History and exam entered and structured', `${e.intake.fields.length} fields`]
+      : ['19:46', 'mic', 'History and exam captured by voice', `${e.intake?.fields.length ?? 11} fields`],
     ['19:47', 'check-square', 'Critical fields read back and confirmed', '6/6'],
     ['19:48', 'lock', 'Guidance held until pupils and blood thinners recorded', '2 added'],
     ['19:48', 'user', `Clinician assessment: ${DISP_LABEL[e.selfAssessment ?? 'transfer']}`, 'before Kyro'],

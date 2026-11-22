@@ -113,7 +113,7 @@ export default function Handoff() {
           <View style={{ height: 1, backgroundColor: C.line, marginVertical: 14 }} />
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
             <Tag label="GCS trend attached" tone="brand" icon="trending-down" />
-            <Tag label={`${enc.stabilized.length} plan steps done`} tone="brand" icon="check-square" />
+            <Tag label={`${enc.stabilized.length} plan step${enc.stabilized.length === 1 ? '' : 's'} done`} tone="brand" icon="check-square" />
             <Tag label="Guideline path attached" tone="brand" icon="git-branch" />
           </View>
         </Card>

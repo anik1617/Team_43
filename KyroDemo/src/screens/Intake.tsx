@@ -26,6 +26,7 @@ export default function Intake() {
   const [n, setN] = useState(0); // sample mode: words revealed
   const live = useRef<LiveTranscriber | null>(null);
   const scroller = useRef<any>(null);
+  const fieldsScroller = useRef<any>(null);
 
   // Load the speech model as soon as the screen opens, so the mic is instant.
   useEffect(() => {
@@ -58,7 +59,7 @@ export default function Intake() {
   // Typed mode: fields are extracted one by one after "Structure case", not instantly while typing.
   useEffect(() => {
     if (mode !== 'typed' || state !== 'structuring' || shown >= allFields.length) return;
-    const t = setTimeout(() => setShown((s) => s + 1), shown === 0 ? 900 : 350 + Math.random() * 450);
+    const t = setTimeout(() => setShown((s) => s + 1), shown === 0 ? 800 : 220 + Math.random() * 300);
     return () => clearTimeout(t);
   }, [mode, state, shown, allFields.length]);
 
@@ -73,7 +74,7 @@ export default function Intake() {
       });
       setState('done');
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
-    }, mode === 'typed' ? 1300 : 1800);
+    }, mode === 'typed' ? 1000 : 1800);
     return () => clearTimeout(t);
   }, [state, shown]);
 
@@ -200,7 +201,7 @@ export default function Intake() {
       {/* Transcript */}
       <View style={{ flex: 1 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-          <Tag label={typing ? 'TYPING' : listening ? 'LISTENING' : state === 'idle' || state === 'preparing' || state === 'error' ? 'READY' : 'CAPTURED'} tone="navy" icon={typing ? 'type' : listening ? 'radio' : 'mic'} />
+          <Tag label={typing ? 'TYPING' : listening ? 'LISTENING' : state === 'idle' || state === 'preparing' || state === 'error' ? 'READY' : 'CAPTURED'} tone="navy" icon={typing ? 'type' : listening ? 'radio' : mode === 'typed' ? 'check' : 'mic'} />
           <Tag label={mode === 'typed' ? 'Structured on device' : 'Transcribed on device'} tone="navy" icon="cpu" />
         </View>
         {typing ? (
@@ -242,7 +243,7 @@ export default function Intake() {
             <Text style={{ fontFamily: F.semi, fontSize: 13, color: '#fff', marginLeft: 8, flex: 1 }}>Structured case record</Text>
             <Text style={{ fontFamily: F.mono, fontSize: 11, color: C.navyText }}>{fields.length} fields</Text>
           </View>
-          <ScrollView showsVerticalScrollIndicator={false}>
+          <ScrollView ref={fieldsScroller} showsVerticalScrollIndicator={false} onContentSizeChange={() => { if (state === 'structuring') fieldsScroller.current?.scrollToEnd({ animated: true }); }}>
             {fields.length === 0 ? (
               <Text style={{ fontFamily: F.regular, fontSize: 12.5, color: 'rgba(255,255,255,0.35)', marginTop: 6 }}>
                 {mode === 'typed' ? (state === 'structuring' ? 'Reading the case…' : 'Fields appear once Kyro structures the case.') : 'Fields appear here as Kyro hears them.'}

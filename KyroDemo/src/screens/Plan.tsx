@@ -179,7 +179,9 @@ function StepCard({ step, n, done, onToggle }: { step: Step; n: number; done: bo
               <Pressable key={s.src + s.loc} onPress={() => { tap(); setOpen(open === i ? null : i); }}
                 style={{ flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8, backgroundColor: open === i ? C.brand : C.brandWash }}>
                 <Feather name="book-open" size={10} color={open === i ? '#fff' : C.brandDeep} />
-                <Text style={{ fontFamily: F.medium, fontSize: 11, color: open === i ? '#fff' : C.brandDeep }}>{short(s.src)}</Text>
+                <Text style={{ fontFamily: F.medium, fontSize: 11, color: open === i ? '#fff' : C.brandDeep }}>
+                  {short(s.src)}{step.sources.filter((x) => short(x.src) === short(s.src)).length > 1 ? ` · ${s.loc}` : ''}
+                </Text>
               </Pressable>
             ))}
           </View>
