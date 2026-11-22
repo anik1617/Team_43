@@ -1,5 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, BackHandler, Easing, View } from 'react-native';
+import type { Field, ReadbackItem } from './voice/parse';
 
 export type Route =
   | 'splash' | 'home' | 'intake' | 'readback' | 'missing' | 'selfAssess' | 'analyzing' | 'guidance'
@@ -9,6 +10,8 @@ export type Disposition = 'observe' | 'transfer' | 'specialist';
 
 /** Everything the demo encounter accumulates as the clinician moves through it. */
 export type Encounter = {
+  /** What the voice intake heard and structured (absent until the intake screen finishes). */
+  intake?: { transcript: string; fields: Field[]; readback: ReadbackItem[]; source: 'voice' | 'sample' };
   pupils?: 'equal' | 'right_sluggish' | 'right_fixed';
   anticoag?: 'none' | 'yes' | 'unknown';
   selfAssessment?: Disposition;

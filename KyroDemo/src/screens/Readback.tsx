@@ -5,10 +5,12 @@ import * as Haptics from 'expo-haptics';
 import { C, F } from '../theme';
 import { useNav } from '../nav';
 import { Btn, Card, FadeIn, Label, Screen, Small, Tag, Waveform, tap } from '../ui';
-import { READBACK } from '../demoCase';
+import { READBACK as SCRIPTED } from '../demoCase';
 
 export default function Readback() {
   const nav = useNav();
+  // What the voice intake actually heard; any critical field it missed is flagged for confirmation.
+  const READBACK = nav.enc.intake?.readback ?? SCRIPTED.map((r) => ({ ...r, heard: true }));
   const [speaking, setSpeaking] = useState(0); // index Kyro is currently reading
   const [ok, setOk] = useState<Record<string, boolean>>({});
 
@@ -64,7 +66,7 @@ export default function Readback() {
                   <Small style={{ fontFamily: F.medium }}>{r.label}</Small>
                   <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 8, marginTop: 2 }}>
                     <Text style={{ fontFamily: F.bold, fontSize: 22, color: C.ink, letterSpacing: -0.3 }}>{r.value}</Text>
-                    <Text style={{ fontFamily: F.regular, fontSize: 12.5, color: C.muted, flexShrink: 1 }}>{r.detail}</Text>
+                    <Text style={{ fontFamily: F.regular, fontSize: 12.5, color: r.heard ? C.muted : C.amber, flexShrink: 1 }}>{r.detail}</Text>
                   </View>
                 </View>
                 <Feather name="edit-2" size={15} color={C.faint} style={{ marginRight: 14 }} />

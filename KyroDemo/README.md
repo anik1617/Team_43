@@ -1,8 +1,24 @@
 # Kyro demo app
 
-A clickable concept demo of Kyro for the Emergent Ventures and 1517 Medici applications. It shows how Kyro would look and feel fully built. **Everything is simulated:** the patient, the voice transcription, the guideline-tree walk, the sync and the specialist reply are all scripted. Nothing here is the real engine (that lives in `../KyroApp`).
+A clickable concept demo of Kyro for the Emergent Ventures and 1517 Medici applications. It shows how Kyro would look and feel fully built. **Voice is real:** the intake and the 45-minute check are transcribed live on the phone by whisper.cpp (no network), and the findings are pulled out of what you actually said by a deterministic parser. The rest is scripted: the patient, the guideline-tree walk, the sync and the specialist reply. Nothing here is the full engine (that lives in `../KyroApp`).
 
-Built with Expo SDK 58 (React Native 0.88). It has no native AI dependencies, so it builds fast and runs on any emulator.
+Built with Expo SDK 58 (React Native 0.88). Speech uses `whisper.rn` (whisper.cpp, model `ggml-base.en`, 148 MB, bundled in the APK) and a tiny local mic module (`modules/kyro-mic`). Both are native, so voice needs the **release build (Option B)**; Expo Go falls back to the scripted transcript. `npm install` downloads the model into `assets/models/` (it is too big for git). If that download failed, run `npm run fetch-model`.
+
+## Voice: what to say
+
+Turn on the emulator mic first: **⋯ (Extended controls) → Microphone → "Virtual microphone uses host audio input"** (it switches itself off each time the emulator restarts). Or run `adb emu avd hostmicon`. If the bars under the mic stay flat while you talk, the host mic is off; the app also says so after 3 seconds.
+
+On **Voice intake**, tap the mic, wait for "Tap to finish", then say this at a steady pace, pausing briefly at each full stop. Tap the red button when done.
+
+> Seventeen year old male. Motorcycle crash about two hours ago, no helmet. He lost consciousness for a minute or two at the scene, then was talking normally. Now he has a severe headache and has vomited twice. Eyes open spontaneously, he is confused, but obeys commands. GCS fourteen. Blood pressure one fifty over eighty five. Heart rate fifty eight. Sats ninety six percent on room air. Boggy swelling over the right temple. No CT here. The nearest neurosurgeon is one hundred and forty kilometres away.
+
+Don't mention the pupils: the next screen is meant to stop and ask for them. Any critical finding Kyro didn't catch shows on Read-back in amber as "Not clearly heard · please confirm", pre-filled with the case value, so the demo still flows.
+
+On **Neuro observations**, tap **Record 45-minute check by voice**, say this, then tap **Stop and save check**:
+
+> GCS eleven. Eyes open to voice, words inappropriate, localizes to pain. Right pupil five millimetres, sluggish. Left arm drifting. Pressure one sixty eight over ninety, pulse fifty two.
+
+If the mic or model fails, the intake screen offers **Play the sample case instead**, which runs the old scripted transcript through the same parser.
 
 ## Run it on the Android emulator (Windows)
 
@@ -46,14 +62,14 @@ The case follows the Loom script: a 17-year-old after a motorcycle crash at a di
 |---|---|---|---|
 | 1 | Splash | Wait, or tap | Models and the signed guideline bundle load on the phone, with no network |
 | 2 | Home | **Start a new assessment** | Offline status, sync queue, recent cases |
-| 3 | Voice intake | The **mic**, then wait about 15 s | Speech becomes a structured record as fields appear live |
+| 3 | Voice intake | The **mic**, say the intake lines above, tap again | Your speech is transcribed on the phone and fields appear live as you say them |
 | 4 | Read-back | **Confirm all**, then **Continue** | Kyro reads critical fields back. Numbers are never guessed |
 | 5 | Missing info | **Equal & reactive**, **None**, **Continue** | Guidance stays locked while a decision-changing finding is missing |
 | 6 | Your call first | **Prepare transfer**, **Fairly**, **Lock in** | The clinician commits before seeing Kyro, to counter automation bias |
 | 7 | Tree walk | Wait | A deterministic guideline tree with a citation at every node and 0 model decisions |
 | 8 | Guidance | Open 1 or 2 reasons, then **Start 15-minute neuro checks** | You vs Kyro, risk, why, and what Kyro will not decide |
 | 8b | "That was quick" | Tap **Start** within 8 s without opening reasons | The automation-bias nudge. Show it on purpose, it's a key feature |
-| 9 | Monitoring | **Record 45-minute check by voice** | GCS 14 → 11 triggers a deterioration alert |
+| 9 | Monitoring | **Record 45-minute check by voice**, say the check, **Stop and save check** | GCS 14 → 11 triggers a deterioration alert |
 | 10 | Re-run | **Re-run guideline tree** | The tree reaches a new leaf: specialist decision needed |
 | 11 | Deferral | Tick a few steps, then **Send handoff** | Kyro won't recommend surgery. It stabilizes and briefs a specialist |
 | 12 | Handoff | Wait about 10 s | Queued offline, then the signal returns, the brief is delivered and the specialist replies |
@@ -68,6 +84,8 @@ The Android back button and the ← arrow both go back. To restart, go Home and 
 - `App.tsx`: fonts and the screen registry
 - `src/nav.tsx`: tiny stack navigator with slide transitions, and the encounter state
 - `src/demoCase.ts`: **all scripted content** (transcript, fields, tree nodes, citations, readings, specialist reply). Edit text here.
+- `src/voice/asr.ts`: live on-device transcription (whisper.rn + the `kyro-mic` PCM stream)
+- `src/voice/parse.ts`: deterministic transcript → findings parser (number words, GCS from E/V/M, range checks)
 - `src/logic.ts`: picks the guidance from the encounter (pupils and deterioration decide the leaf)
 - `src/screens/*`: one file per screen
 - `src/ui.tsx` and `src/theme.ts`: design system (Inter and IBM Plex Mono, Mission:Brain blue, navy)
