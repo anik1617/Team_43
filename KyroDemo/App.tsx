@@ -15,7 +15,7 @@ import SelfAssess from './src/screens/SelfAssess';
 import Analyzing from './src/screens/Analyzing';
 import Guidance from './src/screens/Guidance';
 import Monitor from './src/screens/Monitor';
-import Defer from './src/screens/Defer';
+import Plan from './src/screens/Plan';
 import Handoff from './src/screens/Handoff';
 import Specialist from './src/screens/Specialist';
 import Summary from './src/screens/Summary';
@@ -23,7 +23,7 @@ import About from './src/screens/About';
 
 const SCREENS: Record<Route, React.ComponentType> = {
   splash: Splash, home: Home, intake: Intake, readback: Readback, missing: Missing, selfAssess: SelfAssess,
-  analyzing: Analyzing, guidance: Guidance, monitor: Monitor, defer: Defer, handoff: Handoff,
+  analyzing: Analyzing, guidance: Guidance, plan: Plan, monitor: Monitor, handoff: Handoff,
   specialist: Specialist, summary: Summary, about: About,
 };
 

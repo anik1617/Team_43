@@ -51,11 +51,12 @@ The case follows the Loom script: a 17-year-old after a motorcycle crash at a di
 | 5 | Missing info | **Equal & reactive**, **None**, **Continue** | Guidance stays locked while a decision-changing finding is missing |
 | 6 | Your call first | **Prepare transfer**, **Fairly**, **Lock in** | The clinician commits before seeing Kyro, to counter automation bias |
 | 7 | Tree walk | Wait | A deterministic guideline tree with a citation at every node and 0 model decisions |
-| 8 | Guidance | Open 1 or 2 reasons, then **Start 15-minute neuro checks** | You vs Kyro, risk, why, and what Kyro will not decide |
-| 8b | "That was quick" | Tap **Start** within 8 s without opening reasons | The automation-bias nudge. Show it on purpose, it's a key feature |
+| 8 | Guidance | Open 1 or 2 reasons, then **Show what to do now** | You vs Kyro, risk, why, and what Kyro will not decide |
+| 8b | "That was quick" | Tap **Show what to do now** within 8 s without opening reasons | The automation-bias nudge. Show it on purpose, it's a key feature |
+| 8c | What to do now | Wait ~3 s, open a source chip, tick **TXA** (leave glucose unticked so the mannitol hold shows on screen 11), then **Start neuro checks** | Kyro matches the patient to the library, then 8 steps with exact targets, doses and clocks (TXA by 20:45, 4-h window by 21:45), each with the verbatim passage it came from |
 | 9 | Monitoring | **Record 45-minute check by voice** | GCS 14 → 11 triggers a deterioration alert |
-| 10 | Re-run | **Re-run guideline tree** | The tree reaches a new leaf: specialist decision needed |
-| 11 | Deferral | Tick a few steps, then **Send handoff** | Kyro won't recommend surgery. It stabilizes and briefs a specialist |
+| 10 | Re-run | **Re-run guideline tree**, then **Show what to do now** | The tree reaches a new leaf: lateralizing signs without imaging |
+| 11 | Herniation protocol | Open the mannitol sources, adjust weight with −/+, tick a few steps, then **Send brief to neurosurgeon** | Doses scaled to weight (mannitol 15–60 g, ketamine 90–120 mg), criteria Kyro checks before each dose (mannitol is held if glucose wasn't checked), the 70-min pupil clock. Kyro still won't decide whether or where to operate |
 | 12 | Handoff | Wait about 10 s | Queued offline, then the signal returns, the brief is delivered and the specialist replies |
 | 12b | Specialist view | **Preview what the specialist sees** | Trend, two independent assessments, open questions |
 | 13 | Summary | **Close case** | Audit trail of every step, synced and encrypted |
@@ -68,6 +69,7 @@ The Android back button and the ← arrow both go back. To restart, go Home and 
 - `App.tsx`: fonts and the screen registry
 - `src/nav.tsx`: tiny stack navigator with slide transitions, and the encounter state
 - `src/demoCase.ts`: **all scripted content** (transcript, fields, tree nodes, citations, readings, specialist reply). Edit text here.
+- `src/guidelines.ts`: **the management plan**. Verbatim source passages (from the signed bundle `cloud/bundles/edh-core-v1.kyro` and the spine) and the per-patient steps, doses, gates and clocks built from them
 - `src/logic.ts`: picks the guidance from the encounter (pupils and deterioration decide the leaf)
 - `src/screens/*`: one file per screen
 - `src/ui.tsx` and `src/theme.ts`: design system (Inter and IBM Plex Mono, Mission:Brain blue, navy)

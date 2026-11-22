@@ -7,6 +7,7 @@ import { useNav } from '../nav';
 import { Btn, Card, FadeIn, Label, OfflinePill, Screen, Small, Spinner, Tag } from '../ui';
 import { PATIENT, SPECIALIST } from '../demoCase';
 import { DISP_LABEL } from '../logic';
+import { givenSummary } from '../guidelines';
 
 const STAGES = [
   { k: 'queued', t: 'Brief saved and queued', s: 'No signal. Kyro will retry automatically.', i: 'archive' },
@@ -100,8 +101,9 @@ export default function Handoff() {
           {[
             ['Situation', `${PATIENT.label}, ${PATIENT.mechanism.toLowerCase()} ~3 h ago. GCS 14 → 11 over 45 min with new right pupil change and left arm drift.`],
             ['Background', 'Brief LOC at scene, then lucid interval. Vomited ×2, severe headache. No blood thinners. No CT on site.'],
+            ['Given so far', givenSummary(enc)],
             ['Assessment', `Kyro: lateralizing signs without imaging (leaf L-12). Clinician's first call: ${DISP_LABEL[enc.selfAssessment ?? 'transfer']}.`],
-            ['Request', 'Decision on urgent transfer or local intervention. Advice on hyperosmolar therapy.'],
+            ['Request', 'Decision on operating locally vs transfer within the 70-minute pupil window. Advice on repeat osmotherapy and airway for the journey.'],
           ].map(([h, b], i) => (
             <View key={h} style={{ marginTop: i ? 12 : 0 }}>
               <Text style={{ fontFamily: F.semi, fontSize: 12, color: C.brandDeep }}>{h.toUpperCase()}</Text>
@@ -111,7 +113,7 @@ export default function Handoff() {
           <View style={{ height: 1, backgroundColor: C.line, marginVertical: 14 }} />
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
             <Tag label="GCS trend attached" tone="brand" icon="trending-down" />
-            <Tag label={`${enc.stabilized.length}/6 stabilization steps`} tone="brand" icon="check-square" />
+            <Tag label={`${enc.stabilized.length} plan steps done`} tone="brand" icon="check-square" />
             <Tag label="Guideline path attached" tone="brand" icon="git-branch" />
           </View>
         </Card>
