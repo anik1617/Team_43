@@ -61,7 +61,6 @@ export default function Home() {
             <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
               <Feather name="smartphone" size={15} color={C.ink2} />
               <Text style={{ fontFamily: F.semi, fontSize: 13.5, color: C.ink, marginLeft: 8, flex: 1 }}>Everything runs on this phone</Text>
-              <Tag label="No signal needed" tone="green" icon="check" />
             </View>
             <View style={{ flexDirection: 'row', gap: 8 }}>
               {[
@@ -87,7 +86,6 @@ export default function Home() {
             </View>
             <View style={{ flex: 1 }}>
               <Text style={{ fontFamily: F.semi, fontSize: 13.5, color: C.ink }}>1 case waiting to sync</Text>
-              <Small>Sends automatically when a signal returns</Small>
             </View>
             <Feather name="chevron-right" size={18} color={C.faint} />
           </Card>
