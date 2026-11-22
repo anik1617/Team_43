@@ -116,7 +116,7 @@ export default function Home() {
 
         <FadeIn delay={420}>
           <Text style={{ fontFamily: F.regular, fontSize: 11, color: C.faint, textAlign: 'center', marginTop: 22 }}>
-            Concept demo · simulated patients · not for clinical use
+            Kyro v1.4 · research prototype · not yet approved for clinical use
           </Text>
         </FadeIn>
       </ScrollView>

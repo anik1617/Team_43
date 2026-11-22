@@ -65,7 +65,7 @@ export default function About() {
           <Tag label="Open source" tone="violet" icon="github" />
         </View>
         <Text style={{ fontFamily: F.regular, fontSize: 11.5, lineHeight: 17, color: C.faint, marginTop: 18, textAlign: 'center' }}>
-          Concept demo with a simulated patient. Kyro is a research prototype under evaluation and is not approved for clinical use.
+          Kyro is a research prototype under evaluation and is not yet approved for clinical use.
         </Text>
       </FadeIn>
     </Screen>
