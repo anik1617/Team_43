@@ -53,7 +53,7 @@ The case follows the Loom script: a 17-year-old after a motorcycle crash at a di
 | 7 | Tree walk | Wait | A deterministic guideline tree with a citation at every node and 0 model decisions |
 | 8 | Guidance | Open 1 or 2 reasons, then **Show what to do now** | You vs Kyro, risk, why, and what Kyro will not decide |
 | 8b | "That was quick" | Tap **Show what to do now** within 8 s without opening reasons | The automation-bias nudge. Show it on purpose, it's a key feature |
-| 8c | What to do now | Wait ~3 s, open a source chip, tick **TXA** and **glucose**, then **Start neuro checks** | Kyro matches the patient to the library, then 8 steps with exact targets, doses and clocks (TXA by 20:45, 4-h window by 21:45), each with the verbatim passage it came from |
+| 8c | What to do now | Wait ~3 s, open a source chip, tick **TXA** (leave glucose unticked so the mannitol hold shows on screen 11), then **Start neuro checks** | Kyro matches the patient to the library, then 8 steps with exact targets, doses and clocks (TXA by 20:45, 4-h window by 21:45), each with the verbatim passage it came from |
 | 9 | Monitoring | **Record 45-minute check by voice** | GCS 14 → 11 triggers a deterioration alert |
 | 10 | Re-run | **Re-run guideline tree**, then **Show what to do now** | The tree reaches a new leaf: lateralizing signs without imaging |
 | 11 | Herniation protocol | Open the mannitol sources, adjust weight with −/+, tick a few steps, then **Send brief to neurosurgeon** | Doses scaled to weight (mannitol 15–60 g, ketamine 90–120 mg), criteria Kyro checks before each dose (mannitol is held if glucose wasn't checked), the 70-min pupil clock. Kyro still won't decide whether or where to operate |
