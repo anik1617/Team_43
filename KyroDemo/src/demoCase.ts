@@ -1,6 +1,6 @@
 /**
- * The scripted demo encounter. Everything here is SIMULATED for a concept demo:
- * the patient, the clinician, the readings, and the specialist reply are invented.
+ * The scripted demo encounter. The patient, clinician, readings and specialist reply are scripted;
+ * every guideline quote and number is real and sourced (see src/guidelines.ts).
  * Scenario follows the team's Loom script: a 17-year-old after a motorcycle crash at a
  * district hospital with no CT and no neurosurgeon; GCS 14 falls to 11.
  */
@@ -11,6 +11,9 @@ export const PATIENT = {
   mechanism: 'Motorcycle crash, unhelmeted',
   site: 'District Hospital · Emergency bay 2',
   arrived: '19:42',
+  /** "about two hours ago" in the 19:45 history, so injury ≈ 17:45 (drives the TXA and 4-h clocks). */
+  injured: '17:45',
+  distance: '140 km',
 };
 
 /** What the clinician says into the phone. Each word is revealed in turn. */
@@ -58,14 +61,16 @@ export type TreeNode = {
   cite: Cite;
 };
 
+// Quotes are verbatim from passages in the signed knowledge bundle (cloud/bundles/edh-core-v1.kyro)
+// or from the reasoning spine (docs/20-edh-cgt-spine.md, spine/edh-cgt.sql).
 const C = {
-  btfAirway: { src: 'Brain Trauma Foundation, 4th ed.', loc: 'Airway & ventilation', quote: 'Patients with GCS ≤ 8 require definitive airway protection.' },
-  nice: { src: 'NICE NG232 Head injury, 2023', loc: 'Risk factors for intracranial injury', quote: 'Dangerous mechanism, more than one episode of vomiting and loss of consciousness are risk factors for intracranial injury.' },
-  peshEdh: { src: 'Peshawar Recommendations, 2019', loc: 'Extradural haematoma', quote: 'A lucid interval followed by deterioration should be treated as an expanding extradural haematoma until proven otherwise.' },
-  peshNoCt: { src: 'Peshawar Recommendations, 2019', loc: 'Settings without CT', quote: 'Where imaging is unavailable, serial neurological examination and early referral are the basis of management.' },
-  peshLat: { src: 'Peshawar Recommendations, 2019', loc: 'Clinical localisation', quote: 'New pupillary asymmetry or contralateral weakness indicates a time-critical lesion requiring neurosurgical decision.' },
-  cushing: { src: 'BTF 4th ed. / ATLS 10th ed.', loc: 'Raised ICP', quote: 'Hypertension with relative bradycardia may signal rising intracranial pressure.' },
-  integrity: { src: 'Kyro safety rules v1.4', loc: 'Input validation', quote: 'All critical fields must be in range and confirmed by read-back before traversal.' },
+  btfAirway: { src: 'ENLS TBI protocol v4.0', loc: 'Resuscitation', quote: 'If post-resuscitation GCS score ≤ 8 → rapid sequence intubation and activate institutional severe TBI protocol.' },
+  nice: { src: 'Primary Trauma Care Manual', loc: 'Head injury · warning signs', quote: 'Watch out for: drowsiness or excessive sleepiness; confusion or disorientation; severe headache, vomiting or fever; limb weakness; inequality of pupils.' },
+  peshEdh: { src: 'Bullock et al., Surgical Management of Acute EDH, 2006', loc: 'Clinical presentation', quote: 'The classically described "lucid interval," i.e., a patient who is initially unconscious, then wakes up and secondarily deteriorates, was observed in a total of 456 of 963 patients (47%) undergoing surgery for EDH.' },
+  peshNoCt: { src: 'Peshawar Recommendations, 2019', loc: 'Time from injury to neurotrauma facility', quote: 'We recommend limiting hospital transport times for TBI to a period not exceeding four hours.' },
+  peshLat: { src: 'Peshawar Recommendations, 2019', loc: 'Timing of surgery', quote: 'For best patient outcomes, surgery should be performed prior to neurologic decompensation, such as decreased mental status or anisocoria. However, if this has already occured, surgery should be performed as soon as possible.' },
+  cushing: { src: 'ENLS TBI protocol v4.0', loc: 'Herniation signs', quote: 'Signs of brain herniation such as a dilated or non-reactive pupil, Cushing reflex (hypertension plus bradycardia) or extensor/decerebrate posturing.' },
+  integrity: { src: 'Kyro spine · safety rule S1', loc: 'Completeness gate', quote: 'The tree cannot reach any terminal while a critical field is missing; a decision node reached with a missing critical field routes back to re-ask.' },
 };
 
 export function treePath(opts: { lateralizing: boolean; deteriorated: boolean }): TreeNode[] {
@@ -80,15 +85,6 @@ export function treePath(opts: { lateralizing: boolean; deteriorated: boolean })
     { id: 'N6', q: 'CT available on site?', a: 'No', hit: true, cite: C.peshNoCt },
   ];
 }
-
-export const STABILIZE = [
-  { id: 'hob', title: 'Head of bed up 30°', sub: 'Neck neutral, collar loose', src: 'BTF 4th ed.' },
-  { id: 'o2', title: 'Oxygen to keep SpO₂ > 94 %', sub: 'Avoid any hypoxia', src: 'BTF 4th ed.' },
-  { id: 'sbp', title: 'Keep systolic BP ≥ 110 mmHg', sub: 'Treat hypotension first', src: 'BTF 4th ed.' },
-  { id: 'fluids', title: 'Isotonic fluids only', sub: 'No dextrose / hypotonic fluids', src: 'Peshawar 2019' },
-  { id: 'glucose', title: 'Check blood glucose', sub: 'Target 6–10 mmol/L', src: 'Peshawar 2019' },
-  { id: 'airway', title: 'Prepare airway', sub: 'Intubate if GCS falls to ≤ 8', src: 'BTF 4th ed.' },
-];
 
 export const OBS_BASE = [
   { t: '19:50', min: 0, gcs: 14, pupils: 'Equal, reactive', bp: '150/85', hr: 58 },
