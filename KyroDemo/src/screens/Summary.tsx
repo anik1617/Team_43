@@ -16,8 +16,10 @@ export default function Summary() {
     ['19:48', 'lock', 'Guidance held until pupils and blood thinners recorded', '2 added'],
     ['19:48', 'user', `Clinician assessment: ${DISP_LABEL[e.selfAssessment ?? 'transfer']}`, 'before Kyro'],
     ['19:49', 'git-branch', 'Guideline tree → L-07 Observe and prepare transfer', '7 citations'],
+    ['19:50', 'list', 'Management plan: TXA, BP, oxygen, glucose, neuro checks', '8 cited steps'],
     ['20:35', 'alert-triangle', 'Deterioration: GCS 14 → 11, right pupil change', 'alert'],
-    ['20:36', 'git-branch', 'Tree re-run → L-12 Specialist decision required', 'deferred'],
+    ['20:36', 'git-branch', 'Tree re-run → L-12 Lateralizing signs without imaging', 'herniation'],
+    ['20:37', 'list', 'Herniation protocol: mannitol, head up, SBP ≥ 110, airway plan', 'cited doses'],
     ['20:39', 'send', 'Handoff delivered when signal returned', 'auto-sent'],
     ['20:44', 'message-circle', 'Neurosurgeon accepted transfer', 'reply'],
   ];

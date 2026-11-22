@@ -17,7 +17,7 @@ export function evaluate(enc: Encounter) {
       ? 'Lucid interval after a high-energy crash, now with one-sided pupil signs. This pattern is time-critical. Whether and where to operate is a specialist decision that needs imaging Kyro does not have.'
       : lateralizing
       ? 'Lucid interval followed by a falling GCS and new one-sided signs. This pattern is time-critical. Whether and where to operate is a specialist decision that needs imaging Kyro does not have.'
-      : 'Loss of consciousness with a lucid interval after a high-energy crash, plus repeated vomiting. With no CT on site, guidelines advise neuro checks every 15 minutes and early referral.',
+      : 'Loss of consciousness with a lucid interval after a high-energy crash, plus repeated vomiting. With no CT on site: prevent secondary injury, give TXA inside the 3-hour window, run neuro checks and alert the referral centre early.',
     leaf: lateralizing ? 'Leaf L-12 · Lateralizing signs without imaging' : 'Leaf L-07 · High-risk mild TBI without imaging',
   };
 }

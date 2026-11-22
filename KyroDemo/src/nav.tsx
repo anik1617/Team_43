@@ -4,7 +4,7 @@ import type { Field, ReadbackItem } from './voice/parse';
 
 export type Route =
   | 'splash' | 'home' | 'intake' | 'readback' | 'missing' | 'selfAssess' | 'analyzing' | 'guidance'
-  | 'monitor' | 'defer' | 'handoff' | 'specialist' | 'summary' | 'about';
+  | 'plan' | 'monitor' | 'handoff' | 'specialist' | 'summary' | 'about';
 
 export type Disposition = 'observe' | 'transfer' | 'specialist';
 
@@ -18,7 +18,10 @@ export type Encounter = {
   selfConfidence?: 'low' | 'med' | 'high';
   guidanceViewedAt?: number;
   deteriorated: boolean;
+  /** Plan steps the clinician has ticked as done (ids from src/guidelines.ts). */
   stabilized: string[];
+  /** Estimated weight used to scale per-kg doses on the plan screen. */
+  weightKg?: number;
   synced: boolean;
   handoffAt?: number;
 };

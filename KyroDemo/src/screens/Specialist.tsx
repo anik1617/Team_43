@@ -65,7 +65,7 @@ export default function Specialist() {
 
       <FadeIn delay={260}>
         <Text style={{ fontFamily: F.semi, fontSize: 11, letterSpacing: 0.8, color: C.navyText, marginTop: 18, marginBottom: 8 }}>OPEN QUESTIONS FOR YOU</Text>
-        {['Operate locally or transfer 140 km?', 'Start hypertonic saline before transport?', 'Airway: intubate before the journey?'].map((q) => (
+        {['Operate locally or transfer 140 km?', 'Repeat mannitol during transport?', 'Airway: intubate before the journey?'].map((q) => (
           <View key={q} style={{ flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: C.navyLine }}>
             <Feather name="help-circle" size={15} color={C.sky} />
             <Text style={{ fontFamily: F.medium, fontSize: 13.5, color: '#fff', flex: 1 }}>{q}</Text>

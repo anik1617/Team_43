@@ -28,7 +28,7 @@ export default function Guidance() {
   };
   const go = () => {
     setNudge(false);
-    nav.push(ev.rec === 'specialist' ? 'defer' : 'monitor');
+    nav.push('plan');
   };
 
   return (
@@ -37,9 +37,7 @@ export default function Guidance() {
       title="Kyro's guidance"
       subtitle={ev.leaf}
       step={[5, 5]}
-      footer={ev.rec === 'specialist'
-        ? <Btn label="Hand off to a specialist" icon="phone-forwarded" variant="danger" onPress={proceed} />
-        : <Btn label="Start 15-minute neuro checks" icon="activity" onPress={proceed} />}
+      footer={<Btn label="Show what to do now" icon="list" variant={ev.rec === 'specialist' ? 'danger' : 'primary'} onPress={proceed} />}
     >
       {/* You vs Kyro */}
       <FadeIn>
