@@ -7,6 +7,8 @@ import { C, F, shadow } from '../theme';
 import { useNav } from '../nav';
 import { Btn, Card, FadeIn, Label, Screen, Small, Tag, Waveform } from '../ui';
 import { OBS_BASE, OBS_DROP, OBS_VOICE, PATIENT } from '../demoCase';
+import { parseIntake } from '../voice/parse';
+import { LiveTranscriber, asrSupported, requestMic } from '../voice/asr';
 
 type Obs = typeof OBS_BASE[number];
 const VWORDS = OBS_VOICE.split(' ');
@@ -14,8 +16,12 @@ const VWORDS = OBS_VOICE.split(' ');
 export default function Monitor() {
   const nav = useNav();
   const [obs, setObs] = useState<Obs[]>(OBS_BASE);
-  const [rec, setRec] = useState<'idle' | 'listening' | 'alert'>('idle');
+  const [rec, setRec] = useState<'idle' | 'listening' | 'finishing' | 'alert'>('idle');
   const [n, setN] = useState(0);
+  const [heard, setHeard] = useState<string | null>(null); // real transcript (voice mode)
+  const live = useRef<LiveTranscriber | null>(null);
+  const voice = asrSupported();
+  useEffect(() => () => live.current?.cancel(), []);
   const [secs, setSecs] = useState(14 * 60 + 52);
   const shake = useRef(new Animated.Value(0)).current;
 
@@ -25,16 +31,46 @@ export default function Monitor() {
     return () => clearInterval(t);
   }, [rec]);
 
+  const raise = (entry: Obs) => {
+    setObs((o) => [...o, entry]);
+    setRec('alert');
+    nav.setEnc({ deteriorated: true });
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error).catch(() => {});
+    Animated.sequence([0, 1, 2, 3].map((i) => Animated.timing(shake, { toValue: i % 2 ? -1 : 1, duration: 60, useNativeDriver: true })).concat([Animated.timing(shake, { toValue: 0, duration: 60, useNativeDriver: true })])).start();
+  };
+
+  /** The 45-minute reading from what was actually said; anything not heard keeps the expected value. */
+  const fromSpeech = (text: string): Obs => {
+    const p = parseIntake(text);
+    const gcs = p.gcs?.total ?? OBS_DROP.gcs;
+    const pupils = p.pupils === 'right_fixed' ? 'R fixed, dilated' : p.pupils === 'equal' ? 'Equal, reactive' : OBS_DROP.pupils;
+    return { ...OBS_DROP, gcs, pupils, bp: p.bp ? `${p.bp.sys}/${p.bp.dia}` : OBS_DROP.bp, hr: p.hr ?? OBS_DROP.hr };
+  };
+
+  const startCheck = async () => {
+    if (!voice) { setRec('listening'); setN(1); return; }
+    if (!(await requestMic())) { setRec('listening'); setN(1); return; }
+    const lt = new LiveTranscriber((u) => setHeard(u.text), () => {});
+    live.current = lt;
+    setHeard('');
+    setRec('listening');
+    try { await lt.start(); } catch { live.current = null; setHeard(null); setN(1); }
+  };
+
+  const stopCheck = async () => {
+    const lt = live.current;
+    if (!lt) return;
+    setRec('finishing');
+    const text = await lt.stop();
+    live.current = null;
+    setHeard(text);
+    setTimeout(() => raise(fromSpeech(text)), 400);
+  };
+
   useEffect(() => {
-    if (rec !== 'listening') return;
+    if (rec !== 'listening' || heard !== null) return;
     if (n >= VWORDS.length) {
-      const t = setTimeout(() => {
-        setObs((o) => [...o, OBS_DROP]);
-        setRec('alert');
-        nav.setEnc({ deteriorated: true });
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error).catch(() => {});
-        Animated.sequence([0, 1, 2, 3].map((i) => Animated.timing(shake, { toValue: i % 2 ? -1 : 1, duration: 60, useNativeDriver: true })).concat([Animated.timing(shake, { toValue: 0, duration: 60, useNativeDriver: true })])).start();
-      }, 500);
+      const t = setTimeout(() => raise(OBS_DROP), 500);
       return () => clearTimeout(t);
     }
     const t = setTimeout(() => setN((x) => x + 1), /[.,]$/.test(VWORDS[n - 1] ?? '') ? 260 : 130);
@@ -51,7 +87,9 @@ export default function Monitor() {
       subtitle={`${PATIENT.id} · ${PATIENT.label} · ${PATIENT.mechanism}`}
       footer={rec === 'alert'
         ? <Btn label="Re-run guideline tree" icon="refresh-cw" variant="danger" onPress={() => nav.push('analyzing')} />
-        : <Btn label={rec === 'listening' ? 'Listening…' : 'Record 45-minute check by voice'} icon="mic" disabled={rec === 'listening'} onPress={() => { setRec('listening'); setN(1); }} />}
+        : rec === 'listening' && heard !== null
+        ? <Btn label="Stop and save check" icon="square" onPress={stopCheck} />
+        : <Btn label={rec === 'finishing' ? 'Transcribing…' : rec === 'listening' ? 'Listening…' : 'Record 45-minute check by voice'} icon="mic" disabled={rec !== 'idle'} onPress={startCheck} />}
     >
       {rec === 'alert' ? (
         <Animated.View style={{ transform: [{ translateX: shake.interpolate({ inputRange: [-1, 1], outputRange: [-6, 6] }) }] }}>
@@ -62,7 +100,7 @@ export default function Monitor() {
             <View style={{ flex: 1 }}>
               <Text style={{ fontFamily: F.bold, fontSize: 16, color: '#fff' }}>Deterioration detected</Text>
               <Text style={{ fontFamily: F.regular, fontSize: 13, lineHeight: 19, color: '#FFE3DF', marginTop: 3 }}>
-                GCS fell 14 → 11 in 45 min. New right pupil change and left arm drift. BP rising while pulse falls.
+                GCS fell 14 → {last.gcs} in 45 min. New right pupil change and left arm drift. BP rising while pulse falls.
               </Text>
             </View>
           </View>
@@ -82,14 +120,14 @@ export default function Monitor() {
         </FadeIn>
       )}
 
-      {rec === 'listening' ? (
+      {rec === 'listening' || rec === 'finishing' ? (
         <FadeIn>
           <Card style={{ marginTop: 12, backgroundColor: C.navy, borderColor: C.navy }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
               <Text style={{ fontFamily: F.semi, fontSize: 12, color: C.sky, flex: 1 }}>LISTENING · 45-MIN CHECK</Text>
               <Waveform active color={C.sky} bars={10} height={18} />
             </View>
-            <Text style={{ fontFamily: F.medium, fontSize: 15, lineHeight: 22, color: '#fff' }}>{VWORDS.slice(0, n).join(' ')}</Text>
+            <Text style={{ fontFamily: F.medium, fontSize: 15, lineHeight: 22, color: '#fff' }}>{heard !== null ? heard || 'Listening…' : VWORDS.slice(0, n).join(' ')}</Text>
           </Card>
         </FadeIn>
       ) : null}

@@ -1,0 +1,7 @@
+{
+  "name": "kyro-mic",
+  "version": "1.0.0",
+  "description": "Streams raw 16 kHz mono PCM from the Android microphone to JS, for on-device whisper.cpp transcription.",
+  "main": "index.ts",
+  "private": true
+}

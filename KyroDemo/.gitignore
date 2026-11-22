@@ -39,3 +39,7 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# on-device speech model (148 MB, fetched by scripts/fetch-asr-model.js)
+assets/models/*.bin
+assets/models/*.part
