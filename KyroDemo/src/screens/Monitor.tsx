@@ -27,9 +27,13 @@ export default function Monitor() {
     if (!typed.trim()) return;
     Keyboard.dismiss();
     setTyping(false);
+    setTypedCheck(true);
     setHeard(typed.trim());
-    raise(fromSpeech(typed.trim()));
+    setRec('finishing');
+    const entry = fromSpeech(typed.trim());
+    setTimeout(() => raise(entry), 1800);
   };
+  const [typedCheck, setTypedCheck] = useState(false);
   useEffect(() => () => live.current?.cancel(), []);
   const [secs, setSecs] = useState(14 * 60 + 52);
   const shake = useRef(new Animated.Value(0)).current;
@@ -102,7 +106,7 @@ export default function Monitor() {
         ? <Btn label="Save 45-minute check" icon="check" disabled={!typed.trim()} onPress={saveTyped} />
         : rec === 'idle'
         ? <Btn label="Enter 45-minute check" icon="edit-3" onPress={() => setTyping(true)} />
-        : <Btn label={rec === 'finishing' ? 'Transcribing…' : 'Listening…'} icon="mic" disabled onPress={() => {}} />}
+        : <Btn label={rec === 'finishing' ? (typedCheck ? 'Comparing with earlier checks…' : 'Transcribing…') : 'Listening…'} icon={typedCheck ? 'activity' : 'mic'} disabled onPress={() => {}} />}
     >
       {rec === 'idle' && typing ? (
         <FadeIn>
@@ -158,7 +162,7 @@ export default function Monitor() {
         <FadeIn>
           <Card style={{ marginTop: 12, backgroundColor: C.navy, borderColor: C.navy }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
-              <Text style={{ fontFamily: F.semi, fontSize: 12, color: C.sky, flex: 1 }}>LISTENING · 45-MIN CHECK</Text>
+              <Text style={{ fontFamily: F.semi, fontSize: 12, color: C.sky, flex: 1 }}>{typedCheck ? 'CHECKING TREND · 45-MIN CHECK' : 'LISTENING · 45-MIN CHECK'}</Text>
               <Waveform active color={C.sky} bars={10} height={18} />
             </View>
             <Text style={{ fontFamily: F.medium, fontSize: 15, lineHeight: 22, color: '#fff' }}>{heard !== null ? heard || 'Listening…' : VWORDS.slice(0, n).join(' ')}</Text>

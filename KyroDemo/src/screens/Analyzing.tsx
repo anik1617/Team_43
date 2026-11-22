@@ -14,13 +14,14 @@ export default function Analyzing() {
 
   useEffect(() => {
     if (k > ev.path.length) {
-      const t = setTimeout(() => nav.replace('guidance'), 650);
+      const t = setTimeout(() => nav.replace('guidance'), 1100);
       return () => clearTimeout(t);
     }
+    // Uneven per-node pacing (retrieval + rule checks don't all take the same time on a phone).
     const t = setTimeout(() => {
       setK((x) => x + 1);
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
-    }, k === 0 ? 400 : 420);
+    }, k === 0 ? 1200 : 650 + Math.random() * 650);
     return () => clearTimeout(t);
   }, [k]);
 

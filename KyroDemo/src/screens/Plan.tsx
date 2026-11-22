@@ -22,7 +22,7 @@ export default function Plan() {
     const t = setTimeout(() => {
       setK((x) => x + 1);
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
-    }, k === 0 ? 500 : 480);
+    }, k === 0 ? 1300 : 600 + Math.random() * 600);
     return () => clearTimeout(t);
   }, [k, assembled]);
 

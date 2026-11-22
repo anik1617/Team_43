@@ -49,12 +49,22 @@ export default function Intake() {
 
   // Every field comes from the same deterministic parser, live, from whatever has been heard so far.
   const parsed = useMemo(() => parseIntake(text), [text]);
-  const fields = parsed.fields;
+  const allFields = parsed.fields;
+  const [shown, setShown] = useState(0);
+  const fields = mode === 'typed' && state !== 'done' ? allFields.slice(0, shown) : allFields;
 
   useEffect(() => { scroller.current?.scrollToEnd({ animated: true }); }, [text]);
 
+  // Typed mode: fields are extracted one by one after "Structure case", not instantly while typing.
+  useEffect(() => {
+    if (mode !== 'typed' || state !== 'structuring' || shown >= allFields.length) return;
+    const t = setTimeout(() => setShown((s) => s + 1), shown === 0 ? 900 : 350 + Math.random() * 450);
+    return () => clearTimeout(t);
+  }, [mode, state, shown, allFields.length]);
+
   useEffect(() => {
     if (state !== 'structuring') return;
+    if (mode === 'typed' && shown < allFields.length) return;
     const t = setTimeout(() => {
       const p = parseIntake(text);
       nav.setEnc({
@@ -63,9 +73,9 @@ export default function Intake() {
       });
       setState('done');
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
-    }, 1100);
+    }, mode === 'typed' ? 1300 : 1800);
     return () => clearTimeout(t);
-  }, [state]);
+  }, [state, shown]);
 
   const startVoice = async () => {
     setError(null);
@@ -141,6 +151,7 @@ export default function Intake() {
     live.current = null;
     setError(null);
     setText('');
+    setShown(0);
     setMode('typed');
     setState('typing');
   };
@@ -234,7 +245,7 @@ export default function Intake() {
           <ScrollView showsVerticalScrollIndicator={false}>
             {fields.length === 0 ? (
               <Text style={{ fontFamily: F.regular, fontSize: 12.5, color: 'rgba(255,255,255,0.35)', marginTop: 6 }}>
-                Fields appear here as Kyro hears them.
+                {mode === 'typed' ? (state === 'structuring' ? 'Reading the case…' : 'Fields appear once Kyro structures the case.') : 'Fields appear here as Kyro hears them.'}
               </Text>
             ) : null}
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
@@ -244,7 +255,7 @@ export default function Intake() {
               <Status icon="cpu" text="Finishing transcription on device…" />
             ) : null}
             {state === 'structuring' ? (
-              <Status icon="zap" text="Checking ranges and units…" />
+              <Status icon="zap" text={mode === 'typed' && shown < allFields.length ? 'Extracting findings on device…' : 'Checking ranges and units…'} />
             ) : null}
             {state === 'done' ? (
               <FadeIn>
