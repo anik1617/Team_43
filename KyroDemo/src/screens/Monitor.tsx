@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Animated, Text, View } from 'react-native';
+import { Animated, Keyboard, Pressable, Text, TextInput, View } from 'react-native';
 import Svg, { Circle, Line, Path, Rect, Text as SvgText } from 'react-native-svg';
 import { Feather } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
@@ -21,6 +21,15 @@ export default function Monitor() {
   const [heard, setHeard] = useState<string | null>(null); // real transcript (voice mode)
   const live = useRef<LiveTranscriber | null>(null);
   const voice = asrSupported();
+  const [typing, setTyping] = useState(false);
+  const [typed, setTyped] = useState('');
+  const saveTyped = () => {
+    if (!typed.trim()) return;
+    Keyboard.dismiss();
+    setTyping(false);
+    setHeard(typed.trim());
+    raise(fromSpeech(typed.trim()));
+  };
   useEffect(() => () => live.current?.cancel(), []);
   const [secs, setSecs] = useState(14 * 60 + 52);
   const shake = useRef(new Animated.Value(0)).current;
@@ -89,8 +98,33 @@ export default function Monitor() {
         ? <Btn label="Re-run guideline tree" icon="refresh-cw" variant="danger" onPress={() => nav.push('analyzing')} />
         : rec === 'listening' && heard !== null
         ? <Btn label="Stop and save check" icon="square" onPress={stopCheck} />
-        : <Btn label={rec === 'finishing' ? 'Transcribing…' : rec === 'listening' ? 'Listening…' : 'Record 45-minute check by voice'} icon="mic" disabled={rec !== 'idle'} onPress={startCheck} />}
+        : rec === 'idle' && typing
+        ? <Btn label="Save 45-minute check" icon="check" disabled={!typed.trim()} onPress={saveTyped} />
+        : rec === 'idle'
+        ? <Btn label="Enter 45-minute check" icon="edit-3" onPress={() => setTyping(true)} />
+        : <Btn label={rec === 'finishing' ? 'Transcribing…' : 'Listening…'} icon="mic" disabled onPress={() => {}} />}
     >
+      {rec === 'idle' && typing ? (
+        <FadeIn>
+          <Card style={{ marginBottom: 12 }}>
+            <Text style={{ fontFamily: F.semi, fontSize: 12, color: C.brand, marginBottom: 8 }}>45-MINUTE CHECK</Text>
+            <TextInput
+              value={typed}
+              onChangeText={setTyped}
+              autoFocus
+              multiline
+              placeholder="e.g. GCS 11, right pupil now fixed and dilated, BP 168/92, pulse 52."
+              placeholderTextColor={C.faint}
+              style={{ fontFamily: F.medium, fontSize: 15, lineHeight: 22, color: C.ink, minHeight: 80, maxHeight: 140, textAlignVertical: 'top', backgroundColor: C.bg, borderRadius: 12, padding: 10 }}
+            />
+            {voice ? (
+              <Pressable onPress={() => { setTyping(false); startCheck(); }} hitSlop={8} style={{ marginTop: 8 }}>
+                <Text style={{ fontFamily: F.medium, fontSize: 12.5, color: C.brand }}>Record by voice instead</Text>
+              </Pressable>
+            ) : null}
+          </Card>
+        </FadeIn>
+      ) : null}
       {rec === 'alert' ? (
         <Animated.View style={{ transform: [{ translateX: shake.interpolate({ inputRange: [-1, 1], outputRange: [-6, 6] }) }] }}>
           <View style={[{ backgroundColor: C.red, borderRadius: 20, padding: 16, flexDirection: 'row', gap: 12 }, shadow]}>

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, Pressable, ScrollView, Text, View } from 'react-native';
+import { Animated, Keyboard, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { C, F } from '../theme';
@@ -9,7 +9,7 @@ import { PATIENT, READBACK, TRANSCRIPT } from '../demoCase';
 import { buildReadback, parseIntake } from '../voice/parse';
 import { LiveTranscriber, asrSupported, requestMic, warmUp } from '../voice/asr';
 
-type State = 'idle' | 'preparing' | 'listening' | 'finishing' | 'structuring' | 'done' | 'error';
+type State = 'idle' | 'preparing' | 'listening' | 'finishing' | 'typing' | 'structuring' | 'done' | 'error';
 
 const SAMPLE_WORDS = TRANSCRIPT.split(' ');
 const LEVELS = 28;
@@ -17,7 +17,7 @@ const LEVELS = 28;
 export default function Intake() {
   const nav = useNav();
   const [state, setState] = useState<State>('idle');
-  const [mode, setMode] = useState<'voice' | 'sample'>(asrSupported() ? 'voice' : 'sample');
+  const [mode, setMode] = useState<'voice' | 'sample' | 'typed'>(asrSupported() ? 'voice' : 'sample');
   const [text, setText] = useState('');
   const [levels, setLevels] = useState<number[]>(() => Array(LEVELS).fill(0));
   const [silentMic, setSilentMic] = useState(false);
@@ -135,6 +135,25 @@ export default function Intake() {
     setState('listening');
   };
 
+  const startTyping = () => {
+    tap();
+    live.current?.cancel();
+    live.current = null;
+    setError(null);
+    setText('');
+    setMode('typed');
+    setState('typing');
+  };
+
+  const submitTyped = () => {
+    if (!text.trim()) return;
+    tap();
+    Keyboard.dismiss();
+    setText(text.trim());
+    setState('structuring');
+  };
+
+  const typing = state === 'typing';
   const listening = state === 'listening';
   const busy = state === 'preparing' || state === 'finishing';
   const criticalHeard = READBACK.filter((r) => fields.some((f) => f.key === r.key)).length;
@@ -152,11 +171,15 @@ export default function Intake() {
         <FadeIn>
           <Btn label="Review read-back" icon="arrow-right" onPress={() => nav.push('readback')} />
         </FadeIn>
+      ) : typing ? (
+        <Btn label="Structure case" icon="arrow-right" disabled={!text.trim()} onPress={submitTyped} />
       ) : (
         <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 18 }}>
-          <Text style={{ fontFamily: F.medium, fontSize: 12.5, color: C.navyText }}>
-            <Feather name="type" size={12} />  Type instead
-          </Text>
+          <Pressable onPress={startTyping} hitSlop={10} disabled={state === 'structuring'}>
+            <Text style={{ fontFamily: F.medium, fontSize: 12.5, color: C.navyText }}>
+              <Feather name="type" size={12} />  Type instead
+            </Text>
+          </Pressable>
           <Text style={{ fontFamily: F.medium, fontSize: 12.5, color: C.navyText }}>
             <Feather name="globe" size={12} />  English
           </Text>
@@ -166,9 +189,20 @@ export default function Intake() {
       {/* Transcript */}
       <View style={{ flex: 1 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-          <Tag label={listening ? 'LISTENING' : state === 'idle' || state === 'preparing' || state === 'error' ? 'READY' : 'CAPTURED'} tone="navy" icon={listening ? 'radio' : 'mic'} />
-          <Tag label="Transcribed on device" tone="navy" icon="cpu" />
+          <Tag label={typing ? 'TYPING' : listening ? 'LISTENING' : state === 'idle' || state === 'preparing' || state === 'error' ? 'READY' : 'CAPTURED'} tone="navy" icon={typing ? 'type' : listening ? 'radio' : 'mic'} />
+          <Tag label={mode === 'typed' ? 'Structured on device' : 'Transcribed on device'} tone="navy" icon="cpu" />
         </View>
+        {typing ? (
+          <TextInput
+            value={text}
+            onChangeText={setText}
+            autoFocus
+            multiline
+            placeholder="Type the case: what happened, how they are now, and your exam."
+            placeholderTextColor="rgba(255,255,255,0.4)"
+            style={{ fontFamily: F.medium, fontSize: 17, lineHeight: 25, color: '#fff', maxHeight: 170, minHeight: 110, textAlignVertical: 'top', backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: 14, borderWidth: 1, borderColor: C.navyLine, padding: 12 }}
+          />
+        ) : (
         <ScrollView ref={scroller} style={{ maxHeight: 150 }} showsVerticalScrollIndicator={false}>
           {!showText ? (
             <Text style={{ fontFamily: F.medium, fontSize: 20, lineHeight: 29, color: 'rgba(255,255,255,0.45)' }}>
@@ -181,6 +215,7 @@ export default function Intake() {
             </Text>
           )}
         </ScrollView>
+        )}
 
         {listening && silentMic ? (
           <Notice icon="mic-off" text="No sound is reaching the microphone. On the emulator, turn on ⋯ › Microphone › “Virtual microphone uses host audio input”." />
@@ -227,7 +262,7 @@ export default function Intake() {
 
         {/* Mic */}
         <View style={{ alignItems: 'center', paddingTop: 18, paddingBottom: 4 }}>
-          {state !== 'done' && state !== 'structuring' ? (
+          {state !== 'done' && state !== 'structuring' && state !== 'typing' && mode !== 'typed' ? (
             <>
               <View style={{ height: 40, justifyContent: 'center', marginBottom: 10 }}>
                 {listening ? (mode === 'voice' ? <LevelWave levels={levels} /> : <Waveform active color={C.sky} bars={28} height={36} />) : null}

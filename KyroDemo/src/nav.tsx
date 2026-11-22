@@ -11,7 +11,7 @@ export type Disposition = 'observe' | 'transfer' | 'specialist';
 /** Everything the demo encounter accumulates as the clinician moves through it. */
 export type Encounter = {
   /** What the voice intake heard and structured (absent until the intake screen finishes). */
-  intake?: { transcript: string; fields: Field[]; readback: ReadbackItem[]; source: 'voice' | 'sample' };
+  intake?: { transcript: string; fields: Field[]; readback: ReadbackItem[]; source: 'voice' | 'sample' | 'typed' };
   pupils?: 'equal' | 'right_sluggish' | 'right_fixed';
   anticoag?: 'none' | 'yes' | 'unknown';
   selfAssessment?: Disposition;
